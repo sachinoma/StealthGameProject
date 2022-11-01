@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerModel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    /*
+    [SerializeField]
+    private Animator animator;
+    */
+
+    public void Movement()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Attack()
     {
-        
+
     }
 }
