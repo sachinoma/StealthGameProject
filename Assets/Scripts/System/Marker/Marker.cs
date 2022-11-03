@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // TODO : ターゲットがなくなる場合の制御
 public class Marker : MonoBehaviour
 {
     [SerializeField] private RectTransform _rect;
+    [SerializeField] private Image _image;
     [SerializeField] private Transform _target;
     [SerializeField] private bool _isOn = true;
 
@@ -65,5 +67,6 @@ public class Marker : MonoBehaviour
 
         Vector3 screenPos = Camera.main.WorldToScreenPoint(_target.position);
         _rect.position = screenPos;
+        _image.enabled = screenPos.z > 0;  // カメラの後ろにあるMarkerを表示しない
     }
 }

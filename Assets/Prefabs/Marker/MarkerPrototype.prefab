@@ -90,5 +90,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rect: {fileID: 185240182331706709}
+  _image: {fileID: 185240182331706707}
   _target: {fileID: 0}
   _isOn: 1
