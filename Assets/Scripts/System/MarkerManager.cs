@@ -16,8 +16,6 @@ public class MarkerManager : MonoBehaviour
 
     private Marker _marker = null;
 
-    #region Singleton
-
     private void Awake()
     {
         if(Instance != null && Instance != this)
@@ -36,8 +34,6 @@ public class MarkerManager : MonoBehaviour
             Instance = null;
         }
     }
-
-    #endregion
 
     public void SetMarker(Transform target)
     {

@@ -20,7 +20,7 @@ public class LinSceneDummyPlayer : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(3.0f);
-            VisualRangeGenerator.Instance?.Generate(transform.position, 2);
+            VisualRangeGenerator.Instance?.Generate(transform.position, 1);
         }
     }
 }

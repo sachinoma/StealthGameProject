@@ -11,6 +11,7 @@ public class LinSceneDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetMiniMap();
         StartCoroutine(MarkObjectCoroutine());
     }
 
@@ -26,11 +27,20 @@ public class LinSceneDirector : MonoBehaviour
     private void MarkObject()
     {
         ++_currentObjectIndex;
-        if (_currentObjectIndex >= _objectsBaseTransform.childCount)
+        if(_currentObjectIndex >= _objectsBaseTransform.childCount)
         {
             _currentObjectIndex = 0;
         }
 
         MarkerManager.Instance?.SetMarker(_objectsBaseTransform.GetChild(_currentObjectIndex));
+    }
+
+    private void SetMiniMap()
+    {
+        LinSceneDummyPlayer player = FindObjectOfType<LinSceneDummyPlayer>();
+        if(player != null)
+        {
+            MiniMapManager.Instance?.SetFocus(player.transform);
+        }
     }
 }
