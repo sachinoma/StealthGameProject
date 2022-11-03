@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO : 動的に MiniMapCamera と MiniMap UI を生成する？
-public class MiniMapManager : MonoBehaviour
+public class MiniMapManager : SceneSingleton<MiniMapManager>
 {
-    // Singletonパターン
-    public static MiniMapManager Instance { get; private set; }
-
     [SerializeField] private MiniMapCamera _camera;
     [SerializeField] private GameObject _miniMap;
 
@@ -15,25 +12,6 @@ public class MiniMapManager : MonoBehaviour
 
     private bool _isOn = false;
     private bool _hasFocus = false;
-
-    private void Awake()
-    {
-        if(Instance != null && Instance != this)
-        {
-            Debug.LogWarning("すでに他のMiniMapManager Instanceがある");
-            return;
-        }
-
-        Instance = this;
-    }
-
-    private void OnDestroy()
-    {
-        if(Instance != null && Instance == this)
-        {
-            Instance = null;
-        }
-    }
 
     private void Start()
     {
