@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO : ターゲットがなくなる場合の制御
 public class Marker : MonoBehaviour
 {
     [SerializeField] private RectTransform _rect;
@@ -49,7 +50,7 @@ public class Marker : MonoBehaviour
         }
     }
 
-    private void SetIsOn(bool isOn)
+    public void SetIsOn(bool isOn)
     {
         _isOn = isOn;
         gameObject.SetActive(isOn);
