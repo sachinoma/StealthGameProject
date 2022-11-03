@@ -6,19 +6,35 @@ public class LinSceneDirector : MonoBehaviour
 {
     [SerializeField] private Transform _objectsBaseTransform;
 
+    private bool _isMarkerOn = true;
+
     // Start is called before the first frame update
     void Start()
     {
-        MarkObjects();
+        MarkObjects(_isMarkerOn);
         SetMiniMap();
     }
 
-    private void MarkObjects()
+    private void MarkObjects(bool isMarkerOn)
     {
         foreach(Transform child in _objectsBaseTransform)
         {
-            MarkerManager.Instance?.SetMarker(child);
+            if(isMarkerOn)
+            {
+                MarkerManager.Instance?.SetMarker(child);
+            }
+            else
+            {
+                MarkerManager.Instance?.CancelMarker(child);
+            }
+
         }
+    }
+
+    public void SwitchMarkerStatus()
+    {
+        _isMarkerOn = !_isMarkerOn;
+        MarkObjects(_isMarkerOn);
     }
 
     private void SetMiniMap()

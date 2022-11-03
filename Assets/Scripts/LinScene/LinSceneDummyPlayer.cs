@@ -62,6 +62,8 @@ public class LinSceneDummyPlayer : MonoBehaviour, PlayerInputAction.IPlayerActio
 
     public void OnFire(InputAction.CallbackContext context)
     {
+        LinSceneDirector director = FindObjectOfType<LinSceneDirector>();
+        director?.SwitchMarkerStatus();
     }
 
     public void OnJump(InputAction.CallbackContext context)
