@@ -17,29 +17,36 @@ public class PlayerSc : MonoBehaviour
         Transform trans = transform;
         transform.position = trans.position;
 
+        col.enabled = false;
+        col.radius = 0f;
         if (Keyboard.current.wKey.IsPressed())
         {
             trans.position += trans.TransformDirection(Vector3.forward) * 1 * 0.5f;
+            col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.aKey.IsPressed())
         {
             trans.position += trans.TransformDirection(Vector3.right) * -1 * 0.5f;
+            col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.sKey.IsPressed())
         {
             trans.position += trans.TransformDirection(Vector3.forward) * -1 * 0.5f;
+            col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.dKey.IsPressed())
         {
             trans.position += trans.TransformDirection(Vector3.right) * 1 * 0.5f;
+            col.enabled = true;
             col.radius = 10f;
         }
-        else
+        if (Keyboard.current.qKey.IsPressed())
         {
-            col.radius = 0.5f;
+            col.enabled = false;
+            col.radius = 0f;
         }
     }
 
