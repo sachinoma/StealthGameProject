@@ -39,7 +39,7 @@ public class LinSceneDirector : MonoBehaviour
 
     private void SetMiniMap()
     {
-        LinSceneDummyPlayer player = FindObjectOfType<LinSceneDummyPlayer>();
+        PlayerModel player = FindObjectOfType<PlayerModel>();
         if(player != null)
         {
             MiniMapManager.Instance?.SetFocus(player.transform);
