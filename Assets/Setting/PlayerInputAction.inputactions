@@ -2,7 +2,7 @@
     "name": "PlayerInputAction",
     "maps": [
         {
-            "name": "Battle",
+            "name": "Crouched",
             "id": "d0b4e2af-e058-4317-ba1d-bbac97f6019f",
             "actions": [
                 {
@@ -31,15 +31,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "3c0da941-23b1-464e-ac26-3db1aab09ff2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
                 {
                     "name": "ModeChange",
@@ -195,28 +186,6 @@
                 },
                 {
                     "name": "",
-                    "id": "dc81f1e1-b10c-4d52-9e38-27440d1a049a",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cc3b3302-ab85-4531-bb95-9ca7462805c0",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "c3f096f1-dfab-4df3-a891-3e17281854a6",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
@@ -315,15 +284,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Action",
-                    "type": "Button",
-                    "id": "c8ab9405-5dd9-4d4d-b01a-eab74135fff3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "ModeChange",
                     "type": "Button",
                     "id": "c6889866-feee-4deb-97a4-19fdbd6d670f",
@@ -336,6 +296,33 @@
                     "name": "OpenMenu",
                     "type": "Button",
                     "id": "1e642a8f-9966-40cd-813f-fde36fbae5df",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "52870368-3bb3-48e1-ba2d-3f846626192a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "c74fd77a-e6e7-43ad-8a08-605355446118",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action",
+                    "type": "Button",
+                    "id": "c8ab9405-5dd9-4d4d-b01a-eab74135fff3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -362,17 +349,6 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "381937a7-33bb-4c3d-9d79-190a3c6eb0f4",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -549,6 +525,61 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "OpenMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1017d68-3d1b-4743-882b-a35034573b29",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00b6f696-893d-460c-b5d6-20d01ab39b47",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee546712-0268-4ce0-a200-bb68578d5956",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e4597cf-df7e-4316-bb49-2527b1f17dbe",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "381937a7-33bb-4c3d-9d79-190a3c6eb0f4",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

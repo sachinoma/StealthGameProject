@@ -4,5 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Kou/KouScene.unity
+    guid: 0befa2bec3968374cbb5924011183e7c
+  - enabled: 1
+    path: Assets/Scenes/Kou/Menu.unity
+    guid: 6416af34714dcaf41842721e196c7373
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 69919d8b27cc12941a47a3e4a8d28ba7, type: 2}

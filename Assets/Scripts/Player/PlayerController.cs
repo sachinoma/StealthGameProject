@@ -6,11 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    /*
-    [SerializeField]
-    private Text _mode;
-    */
-
     private PlayerInput _input;
     [SerializeField]
     private PlayerModel _playerModel;
@@ -27,18 +22,19 @@ public class PlayerController : MonoBehaviour
         _input.actions["Jump"].started   += OnJump;
         _input.actions["Dash"].started   += OnDash;
         _input.actions["Dash"].canceled  += OnDash;
+        _input.actions["Attack"].started += OnAttack;
         var normal = _input.actions.FindActionMap("Normal");
-        var battle = _input.actions.FindActionMap("Battle");
-        battle["ModeChange"].started += ToNormalMode;
-        normal["ModeChange"].started += ToBattleMode;
-        battle["Move"].performed += OnMove;
-        battle["Move"].canceled += OnMoveStop;
-        normal["Move"].performed += OnMove;
+        var crouched = _input.actions.FindActionMap("Crouched");
+        crouched["Move"].canceled += OnMoveStop;
         normal["Move"].canceled += OnMoveStop;
-        battle["Look"].performed += OnLook;
-        battle["Look"].canceled += OnLookStop;
+        crouched["Move"].performed += OnMove;    
+        normal["Move"].performed += OnMove;      
+        crouched["Look"].performed += OnLook;
+        crouched["Look"].canceled += OnLookStop;
         normal["Look"].performed += OnLook;
         normal["Look"].canceled += OnLookStop;
+        crouched["ModeChange"].started += ToNormalMode;
+        normal["ModeChange"].started += ToCrouchedMode;
     }
 
     void OnDisable()
@@ -46,32 +42,40 @@ public class PlayerController : MonoBehaviour
         _input.actions["Jump"].started   -= OnJump;
         _input.actions["Dash"].started   -= OnDash;
         _input.actions["Dash"].canceled  -= OnDash;
+        _input.actions["Attack"].started -= OnAttack;
         var normal = _input.actions.FindActionMap("Normal");
-        var battle = _input.actions.FindActionMap("Battle");
-        battle["ModeChange"].started -= ToNormalMode;
-        normal["ModeChange"].started -= ToBattleMode;
-        battle["Move"].performed -= OnMove;
-        battle["Move"].canceled -= OnMoveStop;
-        normal["Move"].performed -= OnMove;
+        var crouched = _input.actions.FindActionMap("Crouched");
+        crouched["Move"].canceled -= OnMoveStop;
         normal["Move"].canceled -= OnMoveStop;
-        battle["Look"].performed -= OnLook;
-        battle["Look"].canceled -= OnLookStop;
+        crouched["Move"].performed -= OnMove;
+        normal["Move"].performed -= OnMove;     
+        crouched["Look"].performed -= OnLook;
+        crouched["Look"].canceled -= OnLookStop;
         normal["Look"].performed -= OnLook;
         normal["Look"].canceled -= OnLookStop;
+        crouched["ModeChange"].started -= ToNormalMode;
+        normal["ModeChange"].started -= ToCrouchedMode;
     }
     #endregion
 
     #region Mode
-    private void ToBattleMode(InputAction.CallbackContext obj)
+    private void ToCrouchedMode(InputAction.CallbackContext obj)
     {
-        _input.SwitchCurrentActionMap("Battle");
-        //_mode.text = "Battle";
+        _input.SwitchCurrentActionMap("Crouched");
+        _playerModel.SetCrouched(true);
     }
 
     private void ToNormalMode(InputAction.CallbackContext obj)
     {
         _input.SwitchCurrentActionMap("Normal");
-        //_mode.text = "Normal";
+        _playerModel.SetCrouched(false);
+    }
+    #endregion
+    #region Attack
+    private void OnAttack(InputAction.CallbackContext obj)
+    {
+        //AttackÇâüÇµÇΩèuä‘
+        _playerModel.Attack();
     }
     #endregion
     #region Dash
@@ -97,6 +101,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnMove(InputAction.CallbackContext obj)
+    {
+        //MoveÇâüÇµÇΩèuä‘
+        var value = obj.ReadValue<Vector2>();
+        var direction = new Vector3(value.x, 0, value.y);
+        _playerModel.SetMovement(direction);
+
+    }
+
+    private void OnMoveKeyboard(InputAction.CallbackContext obj)
     {
         //MoveÇâüÇµÇΩèuä‘
         var value = obj.ReadValue<Vector2>();

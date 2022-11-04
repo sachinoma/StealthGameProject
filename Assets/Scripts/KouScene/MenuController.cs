@@ -11,6 +11,9 @@ public class MenuController : MonoBehaviour
     [SerializeField]
     private string _sceneName;
 
+    //現在のアクションマップの取得
+    private InputActionMap map;
+
     void Awake()
     {
         TryGetComponent(out _input);
@@ -19,30 +22,31 @@ public class MenuController : MonoBehaviour
     void OnEnable()
     {
         var normal = _input.actions.FindActionMap("Normal");
-        var battle = _input.actions.FindActionMap("Battle");
+        var crouched = _input.actions.FindActionMap("Crouched");
         normal["OpenMenu"].started += OnOpenMenu;
-        battle["OpenMenu"].started += OnOpenMenu;
+        crouched["OpenMenu"].started += OnOpenMenu;
         _input.actions["CloseMenu"].started += OnCloseMenu;
     }
 
     void OnDisable()
     {
         var normal = _input.actions.FindActionMap("Normal");
-        var battle = _input.actions.FindActionMap("Battle");
+        var crouched = _input.actions.FindActionMap("Crouched");
         normal["OpenMenu"].started -= OnOpenMenu;
-        battle["OpenMenu"].started -= OnOpenMenu;
+        crouched["OpenMenu"].started -= OnOpenMenu;
         _input.actions["CloseMenu"].started -= OnCloseMenu;
     }
 
     private void OnCloseMenu(InputAction.CallbackContext obj)
     {
         SceneManager.UnloadSceneAsync(_sceneName);
-        _input.SwitchCurrentActionMap("Normal");
+        _input.currentActionMap = map;
     }
 
     private void OnOpenMenu(InputAction.CallbackContext obj)
     {
         SceneManager.LoadSceneAsync(_sceneName, LoadSceneMode.Additive);
+        map = _input.currentActionMap;
         _input.SwitchCurrentActionMap("UI");
     }
 }
