@@ -4,6 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Enemy
+  - Sounds
+  - Wall
   - Ground
   layers:
   - Default
