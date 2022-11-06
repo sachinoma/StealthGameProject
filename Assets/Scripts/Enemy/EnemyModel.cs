@@ -27,10 +27,9 @@ public class EnemyModel : MonoBehaviour
 
     [SerializeField] Transform point1;
     [SerializeField] Transform point2;
-
+    [SerializeField] Transform enemySarch;
     [SerializeField] float searchAngle = 100f;
     private NavMeshAgent _agent;
-
     [SerializeField] private SphereCollider searchArea;
 
     void Start()
@@ -83,6 +82,7 @@ public class EnemyModel : MonoBehaviour
                     stateEnter = false;
                 }
                 _agent.destination = point1.position;
+                enemySarch.position = point1.position;
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = State.PatrolPoint2;
@@ -97,6 +97,7 @@ public class EnemyModel : MonoBehaviour
                     stateEnter = false;
                 }
                 _agent.destination = point2.position;
+                enemySarch.position = point2.position;
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = State.PatrolPoint1;
@@ -133,6 +134,7 @@ public class EnemyModel : MonoBehaviour
                         isChase = true;
                         isSarch = false;
                         _agent.destination = collider.transform.position;
+                        enemySarch.position = collider.transform.position;
                     }
                     else if(isChase)
                     {
@@ -159,6 +161,7 @@ public class EnemyModel : MonoBehaviour
         {
             isSarch = true;
             _agent.destination = collider.transform.position;
+            enemySarch.position = collider.transform.position;
         }
     }
 
