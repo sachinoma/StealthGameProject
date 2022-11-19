@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Kou/MicRecognition.unity
+    guid: 7b708416f6f1c9d4f92b41449b95ffdf
+  - enabled: 1
     path: Assets/Scenes/Kou/KouScene.unity
     guid: 0befa2bec3968374cbb5924011183e7c
   - enabled: 1
