@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -8,19 +8,19 @@ using UnityEngine.UI;
 public class MicAudio : MonoBehaviour
 {
     public Slider volumeSlider;
-    [SerializeField, Range(0f, 10f)] float m_gain = 1f; // ‰¹—Ê‚ÉŠ|‚¯‚é”{—¦
-    float m_volumeRate; // ‰¹—Ê(0-1)
+    [SerializeField, Range(0f, 10f)] float m_gain = 1f; // éŸ³é‡ã«æ›ã‘ã‚‹å€ç‡
+    float m_volumeRate; // éŸ³é‡(0-1)
     // Use this for initialization
     void Start()
     {
         AudioSource aud = GetComponent<AudioSource>();
-        if ((aud != null) && (Microphone.devices.Length > 0)) // ƒI[ƒfƒBƒIƒ\[ƒX‚Æƒ}ƒCƒN‚ª‚ ‚é
+        if ((aud != null) && (Microphone.devices.Length > 0)) // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹ã¨ãƒã‚¤ã‚¯ãŒã‚ã‚‹
         {
-            string devName = Microphone.devices[0]; // •¡”Œ©‚Â‚©‚Á‚Ä‚à‚Æ‚è‚ ‚¦‚¸0”Ô–Ú‚Ìƒ}ƒCƒN‚ğg—p
+            string devName = Microphone.devices[0]; // è¤‡æ•°è¦‹ã¤ã‹ã£ã¦ã‚‚ã¨ã‚Šã‚ãˆãš0ç•ªç›®ã®ãƒã‚¤ã‚¯ã‚’ä½¿ç”¨
             int minFreq, maxFreq;
-            Microphone.GetDeviceCaps(devName, out minFreq, out maxFreq); // Å‘åÅ¬ƒTƒ“ƒvƒŠƒ“ƒO”‚ğ“¾‚é
-            aud.clip = Microphone.Start(devName, true, 2, minFreq); // ‰¹‚Ì‘å‚«‚³‚ğæ‚é‚¾‚¯‚È‚Ì‚ÅÅ¬ƒTƒ“ƒvƒŠƒ“ƒO‚Å\•ª
-            aud.Play(); //ƒ}ƒCƒN‚ğƒI[ƒfƒBƒIƒ\[ƒX‚Æ‚µ‚ÄÀs(Play)ŠJn
+            Microphone.GetDeviceCaps(devName, out minFreq, out maxFreq); // æœ€å¤§æœ€å°ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°æ•°ã‚’å¾—ã‚‹
+            aud.clip = Microphone.Start(devName, true, 2, minFreq); // éŸ³ã®å¤§ãã•ã‚’å–ã‚‹ã ã‘ãªã®ã§æœ€å°ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã§ååˆ†
+            aud.Play(); //ãƒã‚¤ã‚¯ã‚’ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹ã¨ã—ã¦å®Ÿè¡Œ(Play)é–‹å§‹
         }
     }
 
@@ -31,15 +31,15 @@ public class MicAudio : MonoBehaviour
         volumeSlider.value = m_volumeRate;
     }
 
-    // ƒI[ƒfƒBƒI‚ª“Ç‚Ü‚ê‚é‚½‚Ñ‚ÉÀs‚³‚ê‚é
+    // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãŒèª­ã¾ã‚Œã‚‹ãŸã³ã«å®Ÿè¡Œã•ã‚Œã‚‹
     private void OnAudioFilterRead(float[] data, int channels)
     {
         float sum = 0f;
         for (int i = 0; i < data.Length; ++i)
         {
-            sum += Mathf.Abs(data[i]); // ƒf[ƒ^i”gŒ`j‚Ìâ‘Î’l‚ğ‘«‚·
+            sum += Mathf.Abs(data[i]); // ãƒ‡ãƒ¼ã‚¿ï¼ˆæ³¢å½¢ï¼‰ã®çµ¶å¯¾å€¤ã‚’è¶³ã™
         }
-        // ƒf[ƒ^”‚ÅŠ„‚Á‚½‚à‚Ì‚É”{—¦‚ğ‚©‚¯‚Ä‰¹—Ê‚Æ‚·‚é
+        // ãƒ‡ãƒ¼ã‚¿æ•°ã§å‰²ã£ãŸã‚‚ã®ã«å€ç‡ã‚’ã‹ã‘ã¦éŸ³é‡ã¨ã™ã‚‹
         m_volumeRate = Mathf.Clamp01(sum * m_gain / (float)data.Length);
         if(m_volumeRate < 0.001f) { m_volumeRate = 0; }
     }

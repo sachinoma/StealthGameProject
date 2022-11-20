@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -74,14 +74,14 @@ public class PlayerController : MonoBehaviour
     #region Attack
     private void OnAttack(InputAction.CallbackContext obj)
     {
-        //Attack‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Attackã‚’æŠ¼ã—ãŸç¬é–“
         _playerModel.Attack();
     }
     #endregion
     #region Dash
     private void OnDash(InputAction.CallbackContext obj)
     {
-        //Dash‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Dashã‚’æŠ¼ã—ãŸç¬é–“
         switch (obj.phase)
         {
             case InputActionPhase.Started:
@@ -96,13 +96,13 @@ public class PlayerController : MonoBehaviour
     #region Move
     private void OnMoveStop(InputAction.CallbackContext obj)
     {
-        //Move‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Moveã‚’æŠ¼ã—ãŸç¬é–“
         _playerModel.SetMovement(Vector3.zero);
     }
 
     private void OnMove(InputAction.CallbackContext obj)
     {
-        //Move‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Moveã‚’æŠ¼ã—ãŸç¬é–“
         var value = obj.ReadValue<Vector2>();
         var direction = new Vector3(value.x, 0, value.y);
         _playerModel.SetMovement(direction);
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveKeyboard(InputAction.CallbackContext obj)
     {
-        //Move‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Moveã‚’æŠ¼ã—ãŸç¬é–“
         var value = obj.ReadValue<Vector2>();
         var direction = new Vector3(value.x, 0, value.y);
         _playerModel.SetMovement(direction);
@@ -121,13 +121,13 @@ public class PlayerController : MonoBehaviour
     #region Look
     private void OnLookStop(InputAction.CallbackContext obj)
     {
-        //Look‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Lookã‚’æŠ¼ã—ãŸç¬é–“
         _playerCameraTest.SetMovement(Vector3.zero, 1.0f);
     }
 
     private void OnLook(InputAction.CallbackContext obj)
     {
-        //Look‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Lookã‚’æŠ¼ã—ãŸç¬é–“
         float sensitivity = 1.0f;
         if(_input.currentControlScheme == "Keyboard")
         {
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
     #region Jump
     private void OnJump(InputAction.CallbackContext obj)
     {
-        //Jump‚ğ‰Ÿ‚µ‚½uŠÔ
+        //Jumpã‚’æŠ¼ã—ãŸç¬é–“
         _playerModel.Jump();
     }
     #endregion

@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +16,10 @@ public class UnityVoiceTest : MonoBehaviour
     void Start()
     {
         //_keywordRecognizer = new KeywordRecognizer(_keywords);
-        actions.Add("Ç‹Ç¶", Forward);
-        actions.Add("Ç§Ç¶", Up);
-        actions.Add("ÇµÇΩ", Down);
-        actions.Add("Ç§ÇµÇÎ", Back);
+        actions.Add("„Åæ„Åà", Forward);
+        actions.Add("„ÅÜ„Åà", Up);
+        actions.Add("„Åó„Åü", Down);
+        actions.Add("„ÅÜ„Åó„Çç", Back);
 
         _keywordRecognizer = new KeywordRecognizer(actions.Keys.ToArray());
         _keywordRecognizer.OnPhraseRecognized += RecognizedSpeech;

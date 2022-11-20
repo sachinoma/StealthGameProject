@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,13 +18,13 @@ public class PlayerCameraTest : MonoBehaviour
 
     void Update()
     {
-        // target‚ÌˆÚ“®—Ê•ªA©•ªiƒJƒƒ‰j‚àˆÚ“®‚·‚é
+        // targetã®ç§»å‹•é‡åˆ†ã€è‡ªåˆ†ï¼ˆã‚«ãƒ¡ãƒ©ï¼‰ã‚‚ç§»å‹•ã™ã‚‹
         transform.position += targetObj.transform.position - targetPos;
         targetPos = targetObj.transform.position;
 
-        // target‚ÌˆÊ’u‚ÌY²‚ğ’†S‚ÉA‰ñ“]iŒö“]j‚·‚é
+        // targetã®ä½ç½®ã®Yè»¸ã‚’ä¸­å¿ƒã«ã€å›è»¢ï¼ˆå…¬è»¢ï¼‰ã™ã‚‹
         transform.RotateAround(targetPos, Vector3.up, _inputHorizontal * Time.deltaTime * 150f);
-        // ƒJƒƒ‰‚Ì‚’¼ˆÚ“®i¦Šp“x§ŒÀ‚È‚µA•K—v‚ª–³‚¯‚ê‚ÎƒRƒƒ“ƒgƒAƒEƒgj
+        // ã‚«ãƒ¡ãƒ©ã®å‚ç›´ç§»å‹•ï¼ˆâ€»è§’åº¦åˆ¶é™ãªã—ã€å¿…è¦ãŒç„¡ã‘ã‚Œã°ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆï¼‰
         transform.RotateAround(targetPos, transform.right, _inputVertical * Time.deltaTime * 150f);
     }
 

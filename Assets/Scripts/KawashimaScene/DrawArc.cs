@@ -1,82 +1,82 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawArc : MonoBehaviour
 {
-    // •ú•¨ü‚Ì•`‰æON/OFF
+    // æ”¾ç‰©ç·šã®æç”»ON/OFF
     private bool _drawArc = true;
 
-    // •ú•¨ü‚ğ\¬‚·‚éü•ª‚Ì”
-    [SerializeField, Range(10, 100),Tooltip("•ú•¨ü‚ğ\¬‚·‚éü•ª‚Ì”")]
+    // æ”¾ç‰©ç·šã‚’æ§‹æˆã™ã‚‹ç·šåˆ†ã®æ•°
+    [SerializeField, Range(10, 100),Tooltip("æ”¾ç‰©ç·šã‚’æ§‹æˆã™ã‚‹ç·šåˆ†ã®æ•°")]
     private int _segmentCnt = 60;
 
-    // •ú•¨ü‚ğ‰½•b•ªŒvZ‚·‚é‚©
-    [SerializeField, Range(0.5f, 6.0f), Tooltip("•ú•¨ü‚ğ‰½•b•ªŒvZ‚·‚é‚©")]
+    // æ”¾ç‰©ç·šã‚’ä½•ç§’åˆ†è¨ˆç®—ã™ã‚‹ã‹
+    [SerializeField, Range(0.5f, 6.0f), Tooltip("æ”¾ç‰©ç·šã‚’ä½•ç§’åˆ†è¨ˆç®—ã™ã‚‹ã‹")]
     private float _predictionTime = 6.0f;
 
-    // •ú•¨ü‚ÌMaterial
-    [SerializeField, Tooltip("•ú•¨ü‚Ìƒ}ƒeƒŠƒAƒ‹")]
+    // æ”¾ç‰©ç·šã®Material
+    [SerializeField, Tooltip("æ”¾ç‰©ç·šã®ãƒãƒ†ãƒªã‚¢ãƒ«")]
     private Material _arcMaterial;
 
-    // •ú•¨ü‚Ì•
-    [SerializeField, Tooltip("•ú•¨ü‚Ì•")]
+    // æ”¾ç‰©ç·šã®å¹…
+    [SerializeField, Tooltip("æ”¾ç‰©ç·šã®å¹…")]
     private float _arcWidth = 0.02f;
 
-    // •ú•¨ü‚ğ\¬‚·‚éLineRenderer
+    // æ”¾ç‰©ç·šã‚’æ§‹æˆã™ã‚‹LineRenderer
     private LineRenderer[] _lineRenderers;
 
-    // ’e‚Ì‰‘¬“x‚â¶¬À•W‚ğ‚ÂƒRƒ“ƒ|[ƒlƒ“ƒg
+    // å¼¾ã®åˆé€Ÿåº¦ã‚„ç”Ÿæˆåº§æ¨™ã‚’æŒã¤ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
     private ThrowController _shootBullet;
 
-    // ’e‚Ì‰‘¬“x
+    // å¼¾ã®åˆé€Ÿåº¦
     private Vector3 _initialVelocity;
 
-    // •ú•¨ü‚ÌŠJnÀ•W
+    // æ”¾ç‰©ç·šã®é–‹å§‹åº§æ¨™
     private Vector3 _arcStartPosition;
 
     void Start()
     {
-        // •ú•¨ü‚ÌLineRendererƒIƒuƒWƒFƒNƒg‚ğ—pˆÓ
+        // æ”¾ç‰©ç·šã®LineRendererã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”¨æ„
         CreateLineRendererObjects();
 
-        // ’e‚Ì‰‘¬“x‚â¶¬À•W‚ğ‚ÂƒXƒNƒŠƒvƒg
+        // å¼¾ã®åˆé€Ÿåº¦ã‚„ç”Ÿæˆåº§æ¨™ã‚’æŒã¤ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
         _shootBullet = gameObject.GetComponent<ThrowController>();
     }
 
     void Update()
     {
-        // ‰‘¬“x‚Æ•ú•¨ü‚ÌŠJnÀ•W‚ğXV
+        // åˆé€Ÿåº¦ã¨æ”¾ç‰©ç·šã®é–‹å§‹åº§æ¨™ã‚’æ›´æ–°
         _initialVelocity = _shootBullet.copyShootVelocity;
         _arcStartPosition = _shootBullet.copyInstantiatePosition;
 
         if(_drawArc)
         {
-            // •ú•¨ü‚ğ•\¦
+            // æ”¾ç‰©ç·šã‚’è¡¨ç¤º
             float timeStep = _predictionTime / _segmentCnt;
             bool draw = false;
             float hitTime = float.MaxValue;
             for(int i = 0; i < _segmentCnt; i++)
             {
-                // ü‚ÌÀ•W‚ğXV
+                // ç·šã®åº§æ¨™ã‚’æ›´æ–°
                 float startTime = timeStep * i;
                 float endTime = startTime + timeStep;
                 SetLineRendererPosition(i, startTime, endTime, !draw);
 
-                // Õ“Ë”»’è
+                // è¡çªåˆ¤å®š
                 if(!draw)
                 {
                     hitTime = GetArcHitTime(startTime, endTime);
                     if(hitTime != float.MaxValue)
                     {
-                        draw = true; // Õ“Ë‚µ‚½‚ç‚»‚Ìæ‚Ì•ú•¨ü‚Í•\¦‚µ‚È‚¢
+                        draw = true; // è¡çªã—ãŸã‚‰ãã®å…ˆã®æ”¾ç‰©ç·šã¯è¡¨ç¤ºã—ãªã„
                     }
                 }
             }
         }
         else
         {
-            // •ú•¨ü‚Æƒ}[ƒJ[‚ğ•\¦‚µ‚È‚¢
+            // æ”¾ç‰©ç·šã¨ãƒãƒ¼ã‚«ãƒ¼ã‚’è¡¨ç¤ºã—ãªã„
             for(int i = 0; i < _lineRenderers.Length; i++)
             {
                 _lineRenderers[i].enabled = false;
@@ -84,13 +84,13 @@ public class DrawArc : MonoBehaviour
         }
     }
 
-    // w’èŠÔ‚É‘Î‚·‚éƒA[ƒ`‚Ì•ú•¨üã‚ÌÀ•W‚ğ•Ô‚·
+    // æŒ‡å®šæ™‚é–“ã«å¯¾ã™ã‚‹ã‚¢ãƒ¼ãƒã®æ”¾ç‰©ç·šä¸Šã®åº§æ¨™ã‚’è¿”ã™
     private Vector3 GetArcPositionAtTime(float time)
     {
         return (_arcStartPosition + ((_initialVelocity * time) + (0.5f * time * time) * Physics.gravity));
     }
 
-    // LineRenderer‚ÌÀ•W‚ğXV
+    // LineRendererã®åº§æ¨™ã‚’æ›´æ–°
     private void SetLineRendererPosition(int index, float startTime, float endTime, bool draw = true)
     {
         _lineRenderers[index].SetPosition(0, GetArcPositionAtTime(startTime));
@@ -98,10 +98,10 @@ public class DrawArc : MonoBehaviour
         _lineRenderers[index].enabled = draw;
     }
 
-    // LineRendererƒIƒuƒWƒFƒNƒg‚ğì¬
+    // LineRendererã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
     private void CreateLineRendererObjects()
     {
-        // eƒIƒuƒWƒFƒNƒg‚ğì‚èALineRenderer‚ğ‚ÂqƒIƒuƒWƒFƒNƒg‚ğì‚é
+        // è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚Šã€LineRendererã‚’æŒã¤å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹
         GameObject arcObjectsParent = new GameObject("ArcObject");
 
         _lineRenderers = new LineRenderer[_segmentCnt];
@@ -111,13 +111,13 @@ public class DrawArc : MonoBehaviour
             newObject.transform.SetParent(arcObjectsParent.transform);
             _lineRenderers[i] = newObject.AddComponent<LineRenderer>();
 
-            // ŒõŒ¹ŠÖ˜A‚ğg—p‚µ‚È‚¢
+            // å…‰æºé–¢é€£ã‚’ä½¿ç”¨ã—ãªã„
             _lineRenderers[i].receiveShadows = false;
             _lineRenderers[i].reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
             _lineRenderers[i].lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
             _lineRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-            // ü‚Ì•‚Æƒ}ƒeƒŠƒAƒ‹
+            // ç·šã®å¹…ã¨ãƒãƒ†ãƒªã‚¢ãƒ«
             _lineRenderers[i].material = _arcMaterial;
             _lineRenderers[i].startWidth = _arcWidth;
             _lineRenderers[i].endWidth = _arcWidth;
@@ -126,18 +126,18 @@ public class DrawArc : MonoBehaviour
         }
     }
 
-    // 2“_ŠÔ‚Ìü•ª‚ÅÕ“Ë”»’è‚µAÕ“Ë‚·‚éŠÔ‚ğ•Ô‚·
+    // 2ç‚¹é–“ã®ç·šåˆ†ã§è¡çªåˆ¤å®šã—ã€è¡çªã™ã‚‹æ™‚é–“ã‚’è¿”ã™
     private float GetArcHitTime(float startTime, float endTime)
     {
-        // Linecast‚·‚éü•ª‚ÌnI“_‚ÌÀ•W
+        // Linecastã™ã‚‹ç·šåˆ†ã®å§‹çµ‚ç‚¹ã®åº§æ¨™
         Vector3 startPosition = GetArcPositionAtTime(startTime);
         Vector3 endPosition = GetArcPositionAtTime(endTime);
 
-        // Õ“Ë”»’è
+        // è¡çªåˆ¤å®š
         RaycastHit hitInfo;
         if(Physics.Linecast(startPosition, endPosition, out hitInfo))
         {
-            // Õ“Ë‚µ‚½Collider‚Ü‚Å‚Ì‹——£‚©‚çÀÛ‚ÌÕ“ËŠÔ‚ğZo
+            // è¡çªã—ãŸColliderã¾ã§ã®è·é›¢ã‹ã‚‰å®Ÿéš›ã®è¡çªæ™‚é–“ã‚’ç®—å‡º
             float distance = Vector3.Distance(startPosition, endPosition);
             return startTime + (endTime - startTime) * (hitInfo.distance / distance);
         }

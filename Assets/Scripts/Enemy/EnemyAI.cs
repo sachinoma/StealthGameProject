@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,23 +14,23 @@ public class EnemyAI : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerStay(Collider other)
     {
-        // Inspectorƒ^ƒu‚ÌonTriggerStay‚Åw’è‚³‚ê‚½ˆ—‚ğÀs‚·‚é
+        // Inspectorã‚¿ãƒ–ã®onTriggerStayã§æŒ‡å®šã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
         onTriggerStay.Invoke(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Inspectorƒ^ƒu‚ÌonTriggerStay‚Åw’è‚³‚ê‚½ˆ—‚ğÀs‚·‚é
+        // Inspectorã‚¿ãƒ–ã®onTriggerStayã§æŒ‡å®šã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
         onTriggerExit.Invoke(other);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Inspectorƒ^ƒu‚ÌonTriggerStay‚Åw’è‚³‚ê‚½ˆ—‚ğÀs‚·‚é
+        // Inspectorã‚¿ãƒ–ã®onTriggerStayã§æŒ‡å®šã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
         onTriggerEnter.Invoke(other);
     }
 
-    // UnityEvent‚ğŒp³‚µ‚½ƒNƒ‰ƒX‚É[Serializable]‘®«‚ğ•t—^‚·‚é‚±‚Æ‚ÅAInspectorƒEƒCƒ“ƒhƒEã‚É•\¦‚Å‚«‚é‚æ‚¤‚É‚È‚éB
+    // UnityEventã‚’ç¶™æ‰¿ã—ãŸã‚¯ãƒ©ã‚¹ã«[Serializable]å±æ€§ã‚’ä»˜ä¸ã™ã‚‹ã“ã¨ã§ã€Inspectorã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä¸Šã«è¡¨ç¤ºã§ãã‚‹ã‚ˆã†ã«ãªã‚‹ã€‚
     [Serializable]
     public class TriggerEvent : UnityEvent<Collider>
     {

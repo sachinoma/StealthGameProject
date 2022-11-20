@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.InputSystem;
@@ -9,22 +9,22 @@ public class PlayerModel : MonoBehaviour
     [SerializeField]
     private Animator _animator;
 
-    //ƒXƒs[ƒh
+    //ã‚¹ãƒ”ãƒ¼ãƒ‰
     [SerializeField]
     private float _basicMoveSpeed = 10.0f;
     private float _speed;
     private float _speedAnimatorParameter = 0.0f;
     private bool isMove = false;
-    //‰ñ“]
+    //å›è»¢
     [SerializeField]
-    private bool _isRotate = true; //‰ñ“]‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è
+    private bool _isRotate = true; //å›è»¢ã§ãã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®š
     //HP
     [SerializeField]
     private float _life = 10.0f;
-    //ƒWƒƒƒ“ƒv
+    //ã‚¸ãƒ£ãƒ³ãƒ—
     [SerializeField]
-    private float _upForce = 200f; //ã•ûŒü‚É‚©‚¯‚é—Í
-    private bool  _isGround; //’…’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ì”»’è
+    private float _upForce = 200f; //ä¸Šæ–¹å‘ã«ã‹ã‘ã‚‹åŠ›
+    private bool  _isGround; //ç€åœ°ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®š
 
     private float _inputHorizontal;
     private float _inputVertical;
@@ -44,30 +44,30 @@ public class PlayerModel : MonoBehaviour
 
     void FixedUpdate()
     {
-        // ƒJƒƒ‰‚Ì•ûŒü‚©‚çAX-Z•½–Ê‚Ì’PˆÊƒxƒNƒgƒ‹‚ğæ“¾
+        // ã‚«ãƒ¡ãƒ©ã®æ–¹å‘ã‹ã‚‰ã€X-Zå¹³é¢ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
 
-        // •ûŒüƒL[‚Ì“ü—Í’l‚ÆƒJƒƒ‰‚ÌŒü‚«‚©‚çAˆÚ“®•ûŒü‚ğŒˆ’è
+        // æ–¹å‘ã‚­ãƒ¼ã®å…¥åŠ›å€¤ã¨ã‚«ãƒ¡ãƒ©ã®å‘ãã‹ã‚‰ã€ç§»å‹•æ–¹å‘ã‚’æ±ºå®š
         Vector3 moveForward = cameraForward * _inputVertical + Camera.main.transform.right * _inputHorizontal;
 
-        // ˆÚ“®•ûŒü‚ÉƒXƒs[ƒh‚ğŠ|‚¯‚éBƒWƒƒƒ“ƒv‚â—‰º‚ª‚ ‚éê‡‚ÍA•Ê“rY²•ûŒü‚Ì‘¬“xƒxƒNƒgƒ‹‚ğ‘«‚·B
+        // ç§»å‹•æ–¹å‘ã«ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’æ›ã‘ã‚‹ã€‚ã‚¸ãƒ£ãƒ³ãƒ—ã‚„è½ä¸‹ãŒã‚ã‚‹å ´åˆã¯ã€åˆ¥é€”Yè»¸æ–¹å‘ã®é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¶³ã™ã€‚
         _rb.velocity = moveForward * _speed + new Vector3(0, _rb.velocity.y, 0);
 
         
 
-        // ƒLƒƒƒ‰ƒNƒ^[‚ÌŒü‚«‚ğis•ûŒü‚É
+        // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å‘ãã‚’é€²è¡Œæ–¹å‘ã«
         if(_isRotate)
         {
             if(moveForward != Vector3.zero)
             {
-                //‰ñ“]‚É•âŠÔ‚·‚é
+                //å›è»¢ã«è£œé–“ã™ã‚‹
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveForward), Time.deltaTime * 15.0f);
-                //•âŠÔ‚µ‚È‚¢
+                //è£œé–“ã—ãªã„
                 //transform.rotation = Quaternion.LookRotation(moveForward);
             }
         }
 
-        //ˆÚ“®animator‚Ì•\Œ»
+        //ç§»å‹•animatorã®è¡¨ç¾
         if(isMove)
         {
             _animator.SetFloat("Move", _speedAnimatorParameter);
@@ -119,8 +119,8 @@ public class PlayerModel : MonoBehaviour
         {
             if(CheckAnimatorState("BasicMovement"))
             {
-                _isGround = false;//  isGround‚ğfalse‚É‚·‚é
-                _rb.AddForce(new Vector3(0, _upForce, 0)); //ã‚ÉŒü‚©‚Á‚Ä—Í‚ğ‰Á‚¦‚é
+                _isGround = false;//  isGroundã‚’falseã«ã™ã‚‹
+                _rb.AddForce(new Vector3(0, _upForce, 0)); //ä¸Šã«å‘ã‹ã£ã¦åŠ›ã‚’åŠ ãˆã‚‹
                 _animator.SetTrigger("Jump");
                 _animator.SetBool("isGround", false);
             }
@@ -128,11 +128,11 @@ public class PlayerModel : MonoBehaviour
     }
 
 
-    void OnCollisionEnter(Collision other) //’n–Ê‚ÉG‚ê‚½‚Ìˆ—
+    void OnCollisionEnter(Collision other) //åœ°é¢ã«è§¦ã‚ŒãŸæ™‚ã®å‡¦ç†
     {
-        if(other.gameObject.tag == "Ground") //Groundƒ^ƒO‚ÌƒIƒuƒWƒFƒNƒg‚ÉG‚ê‚½‚Æ‚«
+        if(other.gameObject.tag == "Ground") //Groundã‚¿ã‚°ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«è§¦ã‚ŒãŸã¨ã
         {
-            _isGround = true; //isGround‚ğtrue‚É‚·‚é
+            _isGround = true; //isGroundã‚’trueã«ã™ã‚‹
             _animator.SetBool("isGround", true);
         }
     }

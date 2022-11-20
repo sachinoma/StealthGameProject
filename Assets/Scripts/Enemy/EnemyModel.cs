@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -67,7 +67,7 @@ public class EnemyModel : MonoBehaviour
         {
             case State.Free:
                 #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
+                if (stateEnter)//é–‹å§‹1å›ã®å‡¦ç†
                 {
                     stateEnter = false;
                 }
@@ -77,7 +77,7 @@ public class EnemyModel : MonoBehaviour
                 break;
             case State.PatrolPoint1:
                 #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
+                if (stateEnter)//é–‹å§‹1å›ã®å‡¦ç†
                 {
                     stateEnter = false;
                 }
@@ -92,7 +92,7 @@ public class EnemyModel : MonoBehaviour
                 break;
             case State.PatrolPoint2:
                 #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
+                if (stateEnter)//é–‹å§‹1å›ã®å‡¦ç†
                 {
                     stateEnter = false;
                 }
@@ -111,22 +111,22 @@ public class EnemyModel : MonoBehaviour
 
     public void OnDetectObjectStay(Collider collider)
     {
-        // ŒŸ’mƒIƒuƒWƒFƒNƒg‚ªPlayer‚È‚ç’Ç‚¢‚©‚¯‚é
+        // æ¤œçŸ¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒPlayerãªã‚‰è¿½ã„ã‹ã‘ã‚‹
         if(collider.CompareTag("Player"))
         {
-            var positionDiff = collider.transform.position - transform.position;  // ©gi“Gj‚ÆƒvƒŒƒCƒ„[‚Ì‹——£
-            var angle = Vector3.Angle(transform.forward, positionDiff);  // “G‚©‚çŒ©‚½ƒvƒŒƒCƒ„[‚Ì•ûŒü
-            if (angle <= searchAngle)//‹ŠE‚Ì’†‚É‚¢‚½‚ç
+            var positionDiff = collider.transform.position - transform.position;  // è‡ªèº«ï¼ˆæ•µï¼‰ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è·é›¢
+            var angle = Vector3.Angle(transform.forward, positionDiff);  // æ•µã‹ã‚‰è¦‹ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘
+            if (angle <= searchAngle)//è¦–ç•Œã®ä¸­ã«ã„ãŸã‚‰
             {
                 RaycastHit hit;
-                Vector3 direction;   // Ray‚ğ”ò‚Î‚·•ûŒü
-                float distance = 10;    // Ray‚ğ”ò‚Î‚·‹——£
+                Vector3 direction;   // Rayã‚’é£›ã°ã™æ–¹å‘
+                float distance = 10;    // Rayã‚’é£›ã°ã™è·é›¢
 
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;
 
-                Ray ray = new Ray(transform.position, direction);  // Ray‚ğ”ò‚Î‚·
-                Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Ray‚ğƒV[ƒ“ã‚É•`‰æ
+                Ray ray = new Ray(transform.position, direction);  // Rayã‚’é£›ã°ã™
+                Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayã‚’ã‚·ãƒ¼ãƒ³ä¸Šã«æç”»
                 if (Physics.Raycast(ray.origin, ray.direction * distance, out hit))
                 {
                     if (hit.collider.CompareTag("Player"))

@@ -1,4 +1,4 @@
-public interface ISoundSource
+﻿public interface ISoundSource
 {
     float GetCurrentSoundRadius();
 }

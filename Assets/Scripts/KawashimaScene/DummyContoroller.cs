@@ -1,18 +1,18 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
 {
-    //Dummy‚ÌˆÚ“®‘¬“x
-    [SerializeField, Range(1.0f, 10.0f), Tooltip("Dummy‚ÌˆÚ“®‘¬“x")]
+    //Dummyã®ç§»å‹•é€Ÿåº¦
+    [SerializeField, Range(1.0f, 10.0f), Tooltip("Dummyã®ç§»å‹•é€Ÿåº¦")]
     private float _moveSpeed = 5f;
 
-    //…•½ˆÚ“®‚Ì“ü—Í
+    //æ°´å¹³ç§»å‹•ã®å…¥åŠ›
     private Vector2 _moveInput = Vector2.zero;
 
-    //ƒAƒCƒeƒ€‚ğ“Š‚°‚éŠÖ”‚ğ‚ÂƒRƒ“ƒ|[ƒlƒ“ƒg
+    //ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŠ•ã’ã‚‹é–¢æ•°ã‚’æŒã¤ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
     private ThrowController _throwController;
 
     private void Start()
@@ -52,12 +52,12 @@ public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        //ƒJƒƒ‰‚ÌŒü‚«‚©‚çY²‚ÌŒü‚«‚ğæ“¾
+        //ã‚«ãƒ¡ãƒ©ã®å‘ãã‹ã‚‰Yè»¸ã®å‘ãã‚’å–å¾—
         var horizontalRotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-        //ƒJƒƒ‰‚ÌŒü‚­³–Ê•ûŒü‚Ö‚Ì²‚ğì¬
+        //ã‚«ãƒ¡ãƒ©ã®å‘ãæ­£é¢æ–¹å‘ã¸ã®è»¸ã‚’ä½œæˆ
         var lookFront = horizontalRotation * new Vector3(0, 0, 1);
 
-        //³–Ê‚ÖŒü‚©‚¹‚é
+        //æ­£é¢ã¸å‘ã‹ã›ã‚‹
         transform.rotation = Quaternion.LookRotation(lookFront, Vector3.up);
     }
 

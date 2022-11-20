@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +11,7 @@ public class MenuController : MonoBehaviour
     [SerializeField]
     private string _sceneName;
 
-    //Œ»İ‚ÌƒAƒNƒVƒ‡ƒ“ƒ}ƒbƒv‚Ìæ“¾
+    //ç¾åœ¨ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—ã®å–å¾—
     private InputActionMap map;
 
     void Awake()
