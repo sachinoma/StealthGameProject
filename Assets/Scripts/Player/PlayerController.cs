@@ -42,7 +42,8 @@ public class PlayerController : MonoBehaviour
         _input.actions["Jump"].started   -= OnJump;
         _input.actions["Dash"].started   -= OnDash;
         _input.actions["Dash"].canceled  -= OnDash;
-        _input.actions["Attack"].started -= OnAttack;
+        //_input.actions["Attack"].started -= OnAttack;
+        _input.actions["Action"].started -= OnAction;
         var normal = _input.actions.FindActionMap("Normal");
         var crouched = _input.actions.FindActionMap("Crouched");
         crouched["Move"].canceled -= OnMoveStop;
@@ -76,6 +77,13 @@ public class PlayerController : MonoBehaviour
     {
         //Attackを押した瞬間
         _playerModel.Attack();
+    }
+    #endregion
+    #region Action
+    private void OnAction(InputAction.CallbackContext obj)
+    {
+        //Attackを押した瞬間
+        _playerModel.DoAction();
     }
     #endregion
     #region Dash

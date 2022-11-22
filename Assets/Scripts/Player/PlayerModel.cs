@@ -1,39 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.InputSystem;
 
 public class PlayerModel : MonoBehaviour
 {
-    //Animator
-    [SerializeField]
-    private Animator _animator;
+    [Header("コンポーネント")]
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Rigidbody _rb;
+    [SerializeField] private ReactableDetector _reactableDetector;
 
+    [Header("基本")]
+    //HP
+    [SerializeField] private float _life = 10.0f;
+    private float _currentLife;
+
+    [Header("移動")]
     //スピード
-    [SerializeField]
-    private float _basicMoveSpeed = 10.0f;
+    [SerializeField] private float _basicMoveSpeed = 10.0f;
     private float _speed;
     private float _speedAnimatorParameter = 0.0f;
     private bool isMove = false;
     //回転
-    [SerializeField]
-    private bool _isRotate = true; //回転できるかどうかの判定
-    //HP
-    [SerializeField]
-    private float _life = 10.0f;
+    [SerializeField] private bool _isRotate = true; //回転できるかどうかの判定
     //ジャンプ
-    [SerializeField]
-    private float _upForce = 200f; //上方向にかける力
+    [SerializeField] private float _upForce = 200f; //上方向にかける力
     private bool  _isGround; //着地しているかどうかの判定
 
     private float _inputHorizontal;
     private float _inputVertical;
-    private Rigidbody _rb;
 
+    // TODO : Enum で Mode/State を表す
+    private bool _isNormalMode = true;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        _currentLife = _life;
         _speed = _basicMoveSpeed;
     }
 
@@ -83,6 +85,14 @@ public class PlayerModel : MonoBehaviour
 
     public void SetMovement(Vector3 direction)
     {
+        // TODO : _isNormalModeについての制御は一時的なコードだけだ
+        if(!_isNormalMode)
+        {
+            _inputHorizontal = 0;
+            _inputVertical = 0;
+            return;
+        }
+
         isMove = direction.magnitude > 0.0f;
         _inputHorizontal = direction.x;
         _inputVertical = direction.z;
@@ -111,6 +121,31 @@ public class PlayerModel : MonoBehaviour
             _animator.SetTrigger("Attack");
             SetSpeed(0.0f);
         } 
+    }
+
+    public void DoAction()
+    {
+        ReactableType type = _reactableDetector.TriggerReactable();
+        // TODO
+        switch(type)
+        {
+            case ReactableType.None:
+                print("何もアクションできない");
+                break;
+            case ReactableType.Key:
+                print("鍵を取った！");
+                break;
+            case ReactableType.HidingPlace:
+                _isNormalMode = !_isNormalMode;
+                print(_isNormalMode ? "現れる" : "隠れる");
+                SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+                foreach(SkinnedMeshRenderer renderer in renderers)
+                {
+                    renderer.enabled = _isNormalMode;
+                }
+                
+                break;
+        }
     }
 
     public void Jump()

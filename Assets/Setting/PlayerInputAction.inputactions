@@ -574,8 +574,30 @@
                 },
                 {
                     "name": "",
-                    "id": "381937a7-33bb-4c3d-9d79-190a3c6eb0f4",
-                    "path": "",
+                    "id": "6beae5d6-de20-42cd-96ac-d46d8c3daaff",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "677f350a-6d64-4c34-9590-dd0222217255",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cacb3272-dc0c-4081-8870-190848a1b89b",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
