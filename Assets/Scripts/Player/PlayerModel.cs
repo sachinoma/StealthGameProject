@@ -33,6 +33,8 @@ public class PlayerModel : MonoBehaviour
     // TODO : Enum で Mode/State を表す
     private bool _isNormalMode = true;
 
+    public static event Action Died = null;
+
     void Start()
     {
         _currentLife = _life;
@@ -197,4 +199,32 @@ public class PlayerModel : MonoBehaviour
             _isRotate = false;
         }
     }
+
+    #region 攻撃を受ける
+
+    public void Damage(float damage)
+    {
+        if(_currentLife <= 0)
+        {
+            print("すでに死亡した。");
+            return;
+        }
+
+        print($"{damage} ダメージを受ける");
+        _currentLife = Mathf.Max(0, _currentLife - damage);
+
+        if(_currentLife <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        // TODO
+        print("死亡");
+        Died?.Invoke();
+    }
+
+    #endregion
 }
