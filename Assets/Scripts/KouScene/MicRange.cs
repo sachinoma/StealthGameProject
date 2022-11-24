@@ -10,9 +10,16 @@ public class MicRange : MonoBehaviour
     public Slider volumeSlider;
     [SerializeField, Range(0f, 20f)] float m_gain = 1f; // 音量に掛ける倍率
     float m_volumeRate; // 音量(0-1)
+
+    [SerializeField] private GameObject _circleBlack;
+    private Vector3 _circleBlackBasic = new Vector3(1, 1, 1);
+    private float _circleBlackValue = 1.0f;
+
     // Use this for initialization
     void Start()
     {
+
+
         AudioSource aud = GetComponent<AudioSource>();
         if((aud != null) && (Microphone.devices.Length > 0)) // オーディオソースとマイクがある
         {
@@ -27,10 +34,55 @@ public class MicRange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(m_volumeRate);
-        volumeSlider.value = m_volumeRate;
-        //RenderSettings.fogDensity = 1.0f - m_volumeRate;
+        
     }
+
+    void FixedUpdate()
+    {
+        //Debug.Log(m_volumeRate);
+        volumeSlider.value = m_volumeRate;
+        //0 0.1   1 0.03
+        //RenderSettings.fogDensity -= 0.0005f;
+        if(m_volumeRate > 0.2f)
+        {
+            RenderSettings.fogDensity = FogValue(m_volumeRate, 0.18f, 0.03f);
+            _circleBlackValue = CircleBlackValue(m_volumeRate, 4.5f, 1.0f);
+        }
+        
+        if(RenderSettings.fogDensity < 0.18f)
+        {
+            RenderSettings.fogDensity += 0.001f;
+        }
+        if(_circleBlackValue >1.0f)
+        {
+            _circleBlackValue -= 0.019f;
+        }
+        _circleBlack.transform.localScale = _circleBlackValue * _circleBlackBasic;
+
+        Debug.Log(RenderSettings.fogDensity);
+    }
+
+    float FogValue(float num , float max , float min)
+    {
+        //max + (num * -0.07f)
+        float _tmpValue = max + (num * -(max - min));
+        if(RenderSettings.fogDensity > _tmpValue)
+        {
+            return _tmpValue;
+        }
+        return RenderSettings.fogDensity;
+    }
+
+    float CircleBlackValue(float num, float max, float min)
+    {
+        float _tmpValue = min + (num * (max - min));
+        if(_circleBlackValue < _tmpValue)
+        {
+            return _tmpValue;
+        }
+        return _circleBlackValue;
+    }
+
 
     // オーディオが読まれるたびに実行される
     private void OnAudioFilterRead(float[] data, int channels)
