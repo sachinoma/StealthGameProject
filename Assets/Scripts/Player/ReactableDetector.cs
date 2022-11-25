@@ -23,8 +23,14 @@ public class ReactableDetector : MonoBehaviour
         IReactable reactable = GetReactable();
         if(reactable == null)
         {
+            //print("反応できるオブジェクトがない");
             return ReactableType.None;
         }
+
+        //if(reactable is MonoBehaviour monoBehaviour)
+        //{
+        //    print($"反応しているオブジェクト：{monoBehaviour.name}");
+        //}
 
         ReactableType returnType = reactable.GetReactableType();
         bool canReactAgain = reactable.React();
@@ -39,7 +45,6 @@ public class ReactableDetector : MonoBehaviour
     #region Trigger
     private void OnTriggerEnter(Collider other)
     {
-        print(other);
         IReactable reactable = other.GetComponent<IReactable>();
         if(reactable != null)
         {
@@ -52,7 +57,6 @@ public class ReactableDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print("Exit : " + other);
         IReactable reactable = other.GetComponent<IReactable>();
         if(reactable != null)
         {
