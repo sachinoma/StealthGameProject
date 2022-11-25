@@ -10,6 +10,10 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private ReactableDetector _reactableDetector;
 
+    [Header("カメラ")]
+    [SerializeField] private PlayerCamera _playerCameraTemplate;
+    private PlayerCamera _playerCamera;
+
     [Header("基本")]
     //HP
     [SerializeField] private float _life = 10.0f;
@@ -39,6 +43,10 @@ public class PlayerModel : MonoBehaviour
     {
         _currentLife = _life;
         _speed = _basicMoveSpeed;
+
+        _playerCamera = Instantiate(_playerCameraTemplate);
+        _playerCamera.gameObject.name = "PlayerCamera";
+        _playerCamera.Init(transform);
     }
 
     void Update()

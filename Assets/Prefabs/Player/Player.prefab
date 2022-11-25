@@ -154,6 +154,7 @@ MonoBehaviour:
   _animator: {fileID: 3216148253537758215}
   _rb: {fileID: 3216148253537758239}
   _reactableDetector: {fileID: 4958403609414736488}
+  _playerCameraTemplate: {fileID: 8854209127091662917, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
   _life: 10
   _basicMoveSpeed: 10
   _isRotate: 1

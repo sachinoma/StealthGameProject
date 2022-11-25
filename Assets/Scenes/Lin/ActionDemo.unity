@@ -371,11 +371,6 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: -4626640654751079503, guid: d9763cb670e130a4bbccd92cb673df2d, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
---- !u!1 &1492049480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3216148253537758236, guid: 90fab666181bd9e40b5f754cc931fcf5, type: 3}
-  m_PrefabInstance: {fileID: 3216148252343841364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1962253203
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +382,6 @@ GameObject:
   - component: {fileID: 1962253206}
   - component: {fileID: 1962253205}
   - component: {fileID: 1962253204}
-  - component: {fileID: 1962253207}
   - component: {fileID: 1962253208}
   m_Layer: 0
   m_Name: Main Camera
@@ -462,19 +456,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 13.433, y: -90, z: 0}
---- !u!114 &1962253207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1962253203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3063b7adc371b3c4ca185163d06fd1fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetObj: {fileID: 1492049480}
 --- !u!114 &1962253208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,10 +553,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3216148253537758213, guid: 90fab666181bd9e40b5f754cc931fcf5, type: 3}
-      propertyPath: _playerCameraTest
-      value: 
-      objectReference: {fileID: 1962253207}
     - target: {fileID: 3216148253537758235, guid: 90fab666181bd9e40b5f754cc931fcf5, type: 3}
       propertyPath: m_RootOrder
       value: 2

@@ -9,8 +9,6 @@ public class PlayerController : MonoBehaviour
     private PlayerInput _input;
     [SerializeField]
     private PlayerModel _playerModel;
-    [SerializeField]
-    private PlayerCameraTest _playerCameraTest;
 
     void Awake()
     {
@@ -29,10 +27,6 @@ public class PlayerController : MonoBehaviour
         normal["Move"].canceled += OnMoveStop;
         crouched["Move"].performed += OnMove;    
         normal["Move"].performed += OnMove;      
-        crouched["Look"].performed += OnLook;
-        crouched["Look"].canceled += OnLookStop;
-        normal["Look"].performed += OnLook;
-        normal["Look"].canceled += OnLookStop;
         crouched["ModeChange"].started += ToNormalMode;
         normal["ModeChange"].started += ToCrouchedMode;
     }
@@ -50,10 +44,6 @@ public class PlayerController : MonoBehaviour
         normal["Move"].canceled -= OnMoveStop;
         crouched["Move"].performed -= OnMove;
         normal["Move"].performed -= OnMove;     
-        crouched["Look"].performed -= OnLook;
-        crouched["Look"].canceled -= OnLookStop;
-        normal["Look"].performed -= OnLook;
-        normal["Look"].canceled -= OnLookStop;
         crouched["ModeChange"].started -= ToNormalMode;
         normal["ModeChange"].started -= ToCrouchedMode;
     }
@@ -126,26 +116,7 @@ public class PlayerController : MonoBehaviour
 
     }
     #endregion
-    #region Look
-    private void OnLookStop(InputAction.CallbackContext obj)
-    {
-        //Lookを押した瞬間
-        _playerCameraTest.SetMovement(Vector3.zero, 1.0f);
-    }
 
-    private void OnLook(InputAction.CallbackContext obj)
-    {
-        //Lookを押した瞬間
-        float sensitivity = 1.0f;
-        if(_input.currentControlScheme == "Keyboard")
-        {
-            sensitivity = 0.05f;
-        }
-        var value = obj.ReadValue<Vector2>();
-        var direction = new Vector3(value.x, 0, value.y);
-        _playerCameraTest.SetMovement(direction, sensitivity);
-    }
-    #endregion
     #region Jump
     private void OnJump(InputAction.CallbackContext obj)
     {
