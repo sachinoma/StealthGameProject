@@ -5,19 +5,19 @@ public class RangeVisualChanger: MonoBehaviour
     [SerializeField]
     private GameObject _player;
 
-    [Header("距離で透過、距離＆時間経過で透過")]
-    [SerializeField]
-    private bool _isTimeChange = false;
-
     [Header("透過開始、透過解除の距離設定")]
     [SerializeField, Range(1f, 20f), Tooltip("透過解除を開始する距離")]
     private float _startDistance = 7f;
     [SerializeField, Range(1f, 5f), Tooltip("透過が完全に解除される距離")]
     private float _endDistance = 2f;
 
-    [Header("透過解除までの時間")]
-    [SerializeField, Range(0.1f, 20f), Tooltip("透過解除にかかる時間")]
+    [Header("距離で透過、距離＆時間経過で透過を切り替え")]
+    [SerializeField]
+    private bool _isTimeChange = false;
+    [Header("透過解除にかかる時間")]
+    [SerializeField, Range(0.1f, 20f)]
     private float _releaseTime = 3f;
+
     private float _seconds;
 
     void Update()
