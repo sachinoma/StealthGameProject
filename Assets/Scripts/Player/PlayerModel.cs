@@ -175,7 +175,7 @@ public class PlayerModel : MonoBehaviour
 
     void OnCollisionEnter(Collision other) //地面に触れた時の処理
     {
-        if(other.gameObject.tag == "Ground") //Groundタグのオブジェクトに触れたとき
+        if(other.gameObject.tag == Tag.Ground) //Groundタグのオブジェクトに触れたとき
         {
             _isGround = true; //isGroundをtrueにする
             _animator.SetBool("isGround", true);

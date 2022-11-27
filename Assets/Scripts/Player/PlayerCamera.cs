@@ -16,7 +16,7 @@ public class PlayerCamera : MonoBehaviour
             GameObject go = new GameObject();
             go.name = "Main Camera";
             _controllingCamera = go.AddComponent<Camera>();
-            _controllingCamera.tag = "MainCamera";
+            _controllingCamera.tag = Tag.MainCamera;
             go.AddComponent<AudioListener>();
         }
 
