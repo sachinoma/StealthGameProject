@@ -2,7 +2,6 @@
 
 public class RangeVisualChanger: MonoBehaviour
 {
-    [SerializeField]
     private GameObject _player;
 
     [Header("透過開始、透過解除の距離設定")]
@@ -19,6 +18,15 @@ public class RangeVisualChanger: MonoBehaviour
     private float _releaseTime = 3f;
 
     private float _seconds;
+
+    private void OnEnable()
+    {
+        _player = GameObject.FindWithTag(Tag.Player);
+        if(_player == null)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
     void Update()
     {
