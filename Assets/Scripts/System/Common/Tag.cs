@@ -1,4 +1,4 @@
-public static class Tag
+﻿public static class Tag
 {
     public const string Respawn = "Respawn";
     public const string Finish = "Finish";
@@ -10,4 +10,5 @@ public static class Tag
     public const string Sounds = "Sounds";
     public const string Wall = "Wall";
     public const string Ground = "Ground";
+    public const string SoundChecker = "SoundChecker";
 }

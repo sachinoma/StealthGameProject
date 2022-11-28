@@ -19,21 +19,21 @@ public class MicRangeCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == Tag.Enemy)
+        if(other.gameObject.tag == Tag.SoundChecker)
         {
             Debug.Log("Enter");
         }
     }
     void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.tag == Tag.Enemy)
+        if(other.gameObject.tag == Tag.SoundChecker)
         {
             Debug.Log("Stay");
         }
     }
     void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == Tag.Enemy)
+        if(other.gameObject.tag == Tag.SoundChecker)
         {
             Debug.Log("Exit");
         }
