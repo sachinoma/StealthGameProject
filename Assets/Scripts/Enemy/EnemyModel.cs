@@ -31,6 +31,7 @@ public class EnemyModel : MonoBehaviour
     [SerializeField] float searchAngle = 100f;
     private NavMeshAgent _agent;
     [SerializeField] private SphereCollider searchArea;
+    public PlayerModel script;
 
     void Start()
     {
@@ -44,6 +45,15 @@ public class EnemyModel : MonoBehaviour
     {
         if(isChase)
         {
+            if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+            {
+                GetComponent<Renderer>().material.color = Color.red;
+                Attack();
+            }
+            else
+            {
+                GetComponent<Renderer>().material.color = Color.white;
+            }
             return;
         }
         else
@@ -112,7 +122,7 @@ public class EnemyModel : MonoBehaviour
     public void OnDetectObjectStay(Collider collider)
     {
         // 検知オブジェクトがPlayerなら追いかける
-        if(collider.CompareTag("Player"))
+        if(collider.CompareTag(Tag.Player))
         {
             var positionDiff = collider.transform.position - transform.position;  // 自身（敵）とプレイヤーの距離
             var angle = Vector3.Angle(transform.forward, positionDiff);  // 敵から見たプレイヤーの方向
@@ -129,7 +139,7 @@ public class EnemyModel : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayをシーン上に描画
                 if (Physics.Raycast(ray.origin, ray.direction * distance, out hit))
                 {
-                    if (hit.collider.CompareTag("Player"))
+                    if (hit.collider.CompareTag(Tag.Player))
                     {
                         isChase = true;
                         isSarch = false;
@@ -148,7 +158,7 @@ public class EnemyModel : MonoBehaviour
 
     public void OnDetectObjectExit(Collider collider)
     {
-        if (collider.CompareTag("Player"))
+        if (collider.CompareTag(Tag.Player))
         {
             isChase = false;
             chaseTimer = 180;
@@ -157,7 +167,7 @@ public class EnemyModel : MonoBehaviour
 
     public void OnDetectObjectEnter(Collider collider)
     {
-        if (collider.CompareTag("Sounds"))
+        if (collider.CompareTag(Tag.Sounds))
         {
             isSarch = true;
             _agent.destination = collider.transform.position;
@@ -185,5 +195,11 @@ public class EnemyModel : MonoBehaviour
     bool RandomBool()
     {
         return UniRandom.Range(0, 2) == 0;
+    }
+
+    void Attack()
+    {
+        //PlayerModel.csをアタッチしたら関数を呼び出す
+        //script.Damage(5f);
     }
 }

@@ -20,13 +20,13 @@ public class EnemyAI : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // InspectorタブのonTriggerStayで指定された処理を実行する
+        // InspectorタブのonTriggerExitで指定された処理を実行する
         onTriggerExit.Invoke(other);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // InspectorタブのonTriggerStayで指定された処理を実行する
+        // InspectorタブのonTriggerEnterで指定された処理を実行する
         onTriggerEnter.Invoke(other);
     }
 
