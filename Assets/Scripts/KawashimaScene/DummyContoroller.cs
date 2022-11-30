@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
+public class DummyContoroller : MonoBehaviour
 {
     //Dummyの移動速度
     [SerializeField, Range(1.0f, 10.0f), Tooltip("Dummyの移動速度")]
@@ -15,22 +15,35 @@ public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
     //アイテムを投げる関数を持つコンポーネント
     private ThrowController _throwController;
 
+    private PlayerInput _input;
+
+    void Awake()
+    {
+        TryGetComponent(out _input);
+    }
+
     private void Start()
     {
-        PlayerInputAction userinput = new PlayerInputAction();
-        userinput.Player.SetCallbacks(this);
-        userinput.Player.Enable();
-
         _throwController = gameObject.GetComponent<ThrowController>();
+
+        _input.actions["Jump"].started += OnAttack;
+        InputActionMap normal = _input.actions.FindActionMap("Normal");
+        normal["Move"].performed += OnMove;
+        normal["Move"].canceled += OnMoveStop;
+        normal["Look"].performed += OnLook;
+    }
+
+    private void OnDestroy()
+    {
+        _input.actions["Jump"].started -= OnAttack;
+        InputActionMap normal = _input.actions.FindActionMap("Normal");
+        normal["Move"].performed -= OnMove;
+        normal["Move"].canceled -= OnMoveStop;
+        normal["Look"].performed -= OnLook;
     }
 
     private void Update()
     {
-        var keybard = Keyboard.current;
-
-        if(keybard.spaceKey.wasPressedThisFrame)
-            _throwController.ShootItem();
-
         Move();
     }
 
@@ -43,14 +56,19 @@ public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
         transform.position += moveVector;
     }
 
-    #region PlayerInputAction.IPlayerActions
+    #region User Input
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    private void OnMoveStop(InputAction.CallbackContext context)
+    {
+        _moveInput = Vector2.zero;
+    }
+
+    private void OnLook(InputAction.CallbackContext context)
     {
         //カメラの向きからY軸の向きを取得
         var horizontalRotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
@@ -61,12 +79,9 @@ public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
         transform.rotation = Quaternion.LookRotation(lookFront, Vector3.up);
     }
 
-    public void OnFire(InputAction.CallbackContext context)
+    private void OnAttack(InputAction.CallbackContext context)
     {
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
+        _throwController.ShootItem();
     }
 
     #endregion
