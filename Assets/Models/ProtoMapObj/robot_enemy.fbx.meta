@@ -49,7 +49,7 @@ ModelImporter:
       takeName: Enemy_Idle
       internalID: 0
       firstFrame: 0
-      lastFrame: 31
+      lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -107,7 +107,7 @@ ModelImporter:
       takeName: Enemy_Chase
       internalID: 0
       firstFrame: 0
-      lastFrame: 31
+      lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

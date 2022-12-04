@@ -22,8 +22,14 @@ public class EnemyModel : MonoBehaviour
     bool stateEnter = true;
     bool isChase;
     bool isSarch;
+    bool isAttack;
 
     int chaseTimer;
+
+    private Animator _animator;
+
+    BoxCollider leftCollider;
+    BoxCollider rightCollider;
 
     [SerializeField] Transform point1;
     [SerializeField] Transform point2;
@@ -37,32 +43,43 @@ public class EnemyModel : MonoBehaviour
     {
         isChase = false;
         isSarch = false;
+        isAttack = false;
         chaseTimer = 0;
         _agent = GetComponent<NavMeshAgent>();
+        GameObject obj = GameObject.Find("robot_enemy");
+        _animator = obj.GetComponent<Animator>();
+        leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
+        rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
     }
 
     void Update()
     {
+        _animator.SetFloat("Speed", _agent.speed);
+        if(isAttack)
+        {
+            _agent.speed = 0.0f;
+        }
+        else
+        {
+            _agent.speed = 3.5f;
+        }
         if(isChase)
         {
-            if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+            _animator.SetBool("isChase",true);
+            if(_agent.remainingDistance <= 1.5f && !_agent.pathPending && !isAttack)
             {
-                GetComponent<Renderer>().material.color = Color.red;
                 Attack();
-            }
-            else
-            {
-                GetComponent<Renderer>().material.color = Color.white;
             }
             return;
         }
         else
         {
-            if(chaseTimer > 0)
+            if (chaseTimer > 0)
             {
                 chaseTimer--;
                 return;
             }
+            _animator.SetBool("isChase", false);
             if(isSarch)
             {
                 if(_agent.remainingDistance <= 0.1f && !_agent.pathPending)
@@ -83,6 +100,7 @@ public class EnemyModel : MonoBehaviour
                 }
                 bool rnd = RandomBool();
                 currentState =  rnd ? State.PatrolPoint1: State.PatrolPoint2;
+                stateEnter = true;
                 #endregion
                 break;
             case State.PatrolPoint1:
@@ -96,6 +114,7 @@ public class EnemyModel : MonoBehaviour
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = State.PatrolPoint2;
+                    stateEnter = true;
                     return;
                 }
                 #endregion
@@ -111,6 +130,7 @@ public class EnemyModel : MonoBehaviour
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = State.PatrolPoint1;
+                    stateEnter = true;
                     return;
                 }
                 #endregion
@@ -199,7 +219,27 @@ public class EnemyModel : MonoBehaviour
 
     void Attack()
     {
-        //PlayerModel.csをアタッチしたら関数を呼び出す
-        //script.Damage(5f);
+        isAttack = true;
+        Invoke("ColliderStart", 0.2f);
+        _animator.SetTrigger("Attack Trigger");
+        Invoke("ColliderReset", 1.12f);
+        Invoke("AttackEnd", 2.15f);
+    }
+
+    private void AttackEnd()
+    {
+        isAttack = false;
+    }
+
+    private void ColliderStart()
+    {
+        rightCollider.enabled = true;
+        leftCollider.enabled = true;
+    }
+
+    private void ColliderReset()
+    {
+        rightCollider.enabled = false;
+        leftCollider.enabled = false;
     }
 }

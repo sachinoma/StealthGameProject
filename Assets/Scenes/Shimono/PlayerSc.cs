@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 public class PlayerSc : MonoBehaviour
 {
     [SerializeField] private SphereCollider col;
+    public Transform cameratrans;
 
     void Update()
     {
@@ -21,25 +22,25 @@ public class PlayerSc : MonoBehaviour
         col.radius = 0f;
         if (Keyboard.current.wKey.IsPressed())
         {
-            trans.position += trans.TransformDirection(Vector3.forward) * 1 * 0.5f;
+            trans.position += trans.TransformDirection(Vector3.forward) * 1 * 0.1f;
             col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.aKey.IsPressed())
         {
-            trans.position += trans.TransformDirection(Vector3.right) * -1 * 0.5f;
+            trans.position += trans.TransformDirection(Vector3.right) * -1 * 0.1f;
             col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.sKey.IsPressed())
         {
-            trans.position += trans.TransformDirection(Vector3.forward) * -1 * 0.5f;
+            trans.position += trans.TransformDirection(Vector3.forward) * -1 * 0.1f;
             col.enabled = true;
             col.radius = 10f;
         }
         else if (Keyboard.current.dKey.IsPressed())
         {
-            trans.position += trans.TransformDirection(Vector3.right) * 1 * 0.5f;
+            trans.position += trans.TransformDirection(Vector3.right) * 1 * 0.1f;
             col.enabled = true;
             col.radius = 10f;
         }
