@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
+    [SerializeField] private float _damage = 5.0f;
     BoxCollider leftCollider;
     BoxCollider rightCollider;
 
@@ -19,6 +20,12 @@ public class EnemyAttack : MonoBehaviour
         {
             Debug.Log("hit");
             ColliderReset();
+
+            PlayerModel playerModel = other.GetComponentInParent<PlayerModel>();
+            if(playerModel != null)
+            {
+                playerModel.TakeDamage(_damage);
+            }
         }
     }
 
