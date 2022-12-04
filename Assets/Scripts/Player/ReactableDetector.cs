@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class ReactableDetector : MonoBehaviour
 {
-    private List<IReactable> _reactableList = new List<IReactable>();
+    private List<ReactableBase> _reactableList = new List<ReactableBase>();
 
-    private IReactable GetReactable()
+    private ReactableBase GetReactable()
     {
         if (_reactableList.Count == 0)
         {
@@ -17,35 +18,21 @@ public class ReactableDetector : MonoBehaviour
         return _reactableList[0];
     }
 
-    /// <returns>反応しているオブジェクトの <see cref="ReactableType"/></returns>
-    public ReactableType TriggerReactable()
+    public void ReactWithReactable(Action<ReactableBase> action = null)
     {
-        IReactable reactable = GetReactable();
-        if(reactable == null)
-        {
-            //print("反応できるオブジェクトがない");
-            return ReactableType.None;
-        }
+        ReactableBase reactable = GetReactable();
+        action?.Invoke(reactable);
 
-        //if(reactable is MonoBehaviour monoBehaviour)
-        //{
-        //    print($"反応しているオブジェクト：{monoBehaviour.name}");
-        //}
-
-        ReactableType returnType = reactable.GetReactableType();
-        bool canReactAgain = reactable.React();
-        if(!canReactAgain)
+        if(reactable != null)
         {
             _reactableList.Remove(reactable);
         }
-
-        return returnType;
     }
 
     #region Trigger
     private void OnTriggerEnter(Collider other)
     {
-        IReactable reactable = other.GetComponent<IReactable>();
+        ReactableBase reactable = other.GetComponent<ReactableBase>();
         if(reactable != null)
         {
             if(!_reactableList.Contains(reactable))
@@ -57,7 +44,7 @@ public class ReactableDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        IReactable reactable = other.GetComponent<IReactable>();
+        ReactableBase reactable = other.GetComponent<ReactableBase>();
         if(reactable != null)
         {
             if(_reactableList.Contains(reactable))

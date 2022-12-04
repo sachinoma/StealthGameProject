@@ -5,6 +5,21 @@ using UnityEngine;
 
 public class PlayerModel : MonoBehaviour
 {
+    #region Animation Parameters
+
+    private const string ResetAnimTrigger = "Reset";
+    private const string MoveAnimFloat = "Move";
+    private const string AttackAnimTrigger = "Attack";
+    private const string IsCrouchedAnimBool = "isCrouched";
+    private const string JumpAnimTrigger = "Jump";
+    private const string IsGroundAnimBool = "isGround";
+    private const string PickUpAnimTrigger = "PickUp";
+    private const string UselessActionAnimTrigger = "UselessAction";
+    private const string TakeDamageAnimTrigger = "TakeDamage";
+    private const string DieAnimTrigger = "Die";
+
+    #endregion
+
     [Header("コンポーネント")]
     [SerializeField] private Animator _animator;
     [SerializeField] private Rigidbody _rb;
@@ -35,19 +50,47 @@ public class PlayerModel : MonoBehaviour
     private float _inputHorizontal;
     private float _inputVertical;
 
-    // TODO : Enum で Mode/State を表す
-    private bool _isNormalMode = true;
+    private Vector3 _initialPos;
+    private Quaternion _initialRot;
+
+    private PlayerState _state = PlayerState.Moving;
+
+    private List<PickUpItem.ItemType> _pickedUpItems = new List<PickUpItem.ItemType>();
+    private HidingPlace _currentHidingPlace = null;
 
     public event Action Died = null;
 
     void Start()
     {
-        _currentLife = _life;
-        _speed = _basicMoveSpeed;
+        ResetStatus();
+
+        _initialPos = transform.position;
+        _initialRot = transform.rotation;
 
         _playerCamera = Instantiate(_playerCameraTemplate);
         _playerCamera.gameObject.name = "PlayerCamera";
         _playerCamera.Init(transform);
+    }
+
+    public void Respawn()
+    {
+        ResetStatus();
+
+        transform.position = _initialPos;
+        transform.rotation = _initialRot;
+
+        _playerCamera.ResetRotation();
+
+        _animator.SetTrigger(ResetAnimTrigger);
+    }
+
+    private void ResetStatus()
+    {
+        _currentLife = _life;
+        _speed = _basicMoveSpeed;
+        _state = PlayerState.Moving;
+        _pickedUpItems.Clear();
+        _currentHidingPlace = null;
     }
 
     void Update()
@@ -57,6 +100,12 @@ public class PlayerModel : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(_state != PlayerState.Moving)
+        {
+            _rb.velocity = Vector3.zero;
+            return;
+        }
+
         // カメラの方向から、X-Z平面の単位ベクトルを取得
         Vector3 cameraForward = Vector3.Scale(_playerCamera.Cam.transform.forward, new Vector3(1, 0, 1)).normalized;
 
@@ -81,25 +130,17 @@ public class PlayerModel : MonoBehaviour
         //移動animatorの表現
         if(isMove)
         {
-            _animator.SetFloat("Move", _speedAnimatorParameter);
+            _animator.SetFloat(MoveAnimFloat, _speedAnimatorParameter);
         }
         else
         {
             _speedAnimatorParameter = Mathf.Max(_speedAnimatorParameter - 0.1f, 0);
-            _animator.SetFloat("Move", _speedAnimatorParameter);
+            _animator.SetFloat(MoveAnimFloat, _speedAnimatorParameter);
         }
     }
 
     public void SetMovement(Vector3 direction)
     {
-        // TODO : _isNormalModeについての制御は一時的なコードだけだ
-        if(!_isNormalMode)
-        {
-            _inputHorizontal = 0;
-            _inputVertical = 0;
-            return;
-        }
-
         _inputHorizontal = direction.x;
         _inputVertical = direction.z;
 
@@ -113,7 +154,7 @@ public class PlayerModel : MonoBehaviour
 
     public void SetCrouched(bool isCrouched)
     {
-        _animator.SetBool("isCrouched", isCrouched);
+        _animator.SetBool(IsCrouchedAnimBool, isCrouched);
         if(isCrouched) { SetSpeed(0.3f); }
         else { SetSpeed(1.0f); }
     }
@@ -127,34 +168,9 @@ public class PlayerModel : MonoBehaviour
     {
         if(CheckAnimatorState("BasicMovement"))
         {
-            _animator.SetTrigger("Attack");
+            _animator.SetTrigger(AttackAnimTrigger);
             SetSpeed(0.0f);
         } 
-    }
-
-    public void DoAction()
-    {
-        ReactableType type = _reactableDetector.TriggerReactable();
-        // TODO
-        switch(type)
-        {
-            case ReactableType.None:
-                print("何もアクションできない");
-                break;
-            case ReactableType.Key:
-                print("鍵を取った！");
-                break;
-            case ReactableType.HidingPlace:
-                _isNormalMode = !_isNormalMode;
-                print(_isNormalMode ? "現れる" : "隠れる");
-                SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-                foreach(SkinnedMeshRenderer renderer in renderers)
-                {
-                    renderer.enabled = _isNormalMode;
-                }
-                
-                break;
-        }
     }
 
     public void Jump()
@@ -165,8 +181,8 @@ public class PlayerModel : MonoBehaviour
             {
                 _isGround = false;//  isGroundをfalseにする
                 _rb.AddForce(new Vector3(0, _upForce, 0)); //上に向かって力を加える
-                _animator.SetTrigger("Jump");
-                _animator.SetBool("isGround", false);
+                _animator.SetTrigger(JumpAnimTrigger);
+                _animator.SetBool(IsGroundAnimBool, false);
             }
         }
     }
@@ -177,7 +193,7 @@ public class PlayerModel : MonoBehaviour
         if(other.gameObject.tag == Tag.Ground) //Groundタグのオブジェクトに触れたとき
         {
             _isGround = true; //isGroundをtrueにする
-            _animator.SetBool("isGround", true);
+            _animator.SetBool(IsGroundAnimBool, true);
         }
     }
 
@@ -207,9 +223,130 @@ public class PlayerModel : MonoBehaviour
         }
     }
 
-    #region 攻撃を受ける
+    #region PlayerState
 
-    public void Damage(float damage)
+    public void SetMovingState()
+    {
+        _state = PlayerState.Moving;
+    }
+
+    #endregion
+
+    #region Action
+
+    private bool CanDoAction()
+    {
+        return _state == PlayerState.Moving || _state == PlayerState.Hiding;
+    }
+
+    public void DoAction()
+    {
+        if(!CanDoAction())
+        {
+            print("今の状態でアクションできない");
+            return;
+        }
+
+        if(_state == PlayerState.Hiding)
+        {
+            Appear();
+            return;
+        }
+
+        Action<ReactableBase> action = (reactable) =>
+        {
+            if(reactable == null)
+            {
+                DoUselessAction();
+                return;
+            }
+
+            //print($"反応しているオブジェクト：{reactable.name}");
+            ReactableType type = reactable.GetReactableType();
+
+            switch(type)
+            {
+                case ReactableType.PickUpItem:
+                    PickUp(reactable);
+                    break;
+                case ReactableType.HidingPlace:
+                    Hide(reactable);
+                    break;
+            }
+        };
+
+        _reactableDetector.ReactWithReactable(action);
+    }
+
+    private void DoUselessAction()
+    {
+        _animator.SetTrigger(UselessActionAnimTrigger);
+        _state = PlayerState.Acting;
+    }
+
+    private void PickUp(ReactableBase reactable)
+    {
+        if(reactable is not PickUpItem item)
+        {
+            Debug.LogWarning("PickUpItem ではない reactable が PickUp 関数へ渡された。");
+            DoUselessAction();
+            return;
+        }
+
+        // TODO : アニメションのタイミングに合わせてアイテムを取る？
+        print($"アイテムを取った：{item.GetItemType()}");
+        _pickedUpItems.Add(item.GetItemType());
+        Destroy(item.gameObject);
+
+        _animator.SetTrigger(PickUpAnimTrigger);
+        _state = PlayerState.Acting;
+    }
+
+    private void Hide(ReactableBase reactable)
+    {
+        if(reactable is not HidingPlace hidingPlace)
+        {
+            Debug.LogWarning("HidingPlace ではない reactable が Hide 関数へ渡された。");
+            DoUselessAction();
+            return;
+        }
+
+        _currentHidingPlace = hidingPlace;
+
+        // TODO : アニメション / 実際のプレイヤー処理
+        print("隠す");
+        SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(SkinnedMeshRenderer renderer in renderers)
+        {
+            renderer.enabled = false;
+        }
+        _state = PlayerState.Hiding;
+    }
+
+    private void Appear()
+    {
+        if(_currentHidingPlace == null)
+        {
+            Debug.LogWarning("_currentHidingPlace == null。直接に PlayerState.Moving に変える。");
+            _state = PlayerState.Moving;
+            return;
+        }
+
+        // TODO : アニメション / 実際のプレイヤー処理
+        print("現す");
+        SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(SkinnedMeshRenderer renderer in renderers)
+        {
+            renderer.enabled = true;
+        }
+        _state = PlayerState.Moving;
+    }
+
+    #endregion
+
+    #region TakeDamage
+
+    public void TakeDamage(float damage)
     {
         if(_currentLife <= 0)
         {
@@ -224,12 +361,18 @@ public class PlayerModel : MonoBehaviour
         {
             Die();
         }
+        else
+        {
+            _animator.SetTrigger(TakeDamageAnimTrigger);
+            _state = PlayerState.TakingDamage;
+        }
     }
 
     private void Die()
     {
-        // TODO
         print("死亡");
+        _animator.SetTrigger(DieAnimTrigger);
+        _state = PlayerState.Died;
         Died?.Invoke();
     }
 

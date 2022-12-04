@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2563277374391463877}
   - component: {fileID: 3770360135432844099}
   - component: {fileID: 3770360135432844105}
-  - component: {fileID: 3770360135432844108}
   - component: {fileID: 3770360135432844109}
+  - component: {fileID: 1832638208542070411}
   m_Layer: 8
   m_Name: ProtoKey
   m_TagString: Untagged
@@ -223,18 +223,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3770360135432844108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076438538697674256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e15e4edc62e2f46948d972e1ad807654, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3770360135432844109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,8 +235,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed5b98edaacd02540b54289f2b620684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
   _startDistance: 7
   _endDistance: 2
   _isTimeChange: 0
   _releaseTime: 3
+--- !u!114 &1832638208542070411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076438538697674256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823df39b47fd44ae4b676f2162cd2a8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemType: 0
