@@ -4,25 +4,25 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-    private Camera _controllingCamera;
+    public Camera Cam { get; private set; }
 
     private void Awake()
     {
         // メインカメラを探すまたは作成
-        _controllingCamera = Camera.main;
+        Cam = Camera.main;
 
-        if(_controllingCamera == null)
+        if(Cam == null)
         {
             GameObject go = new GameObject();
             go.name = "Main Camera";
-            _controllingCamera = go.AddComponent<Camera>();
-            _controllingCamera.tag = Tag.MainCamera;
+            Cam = go.AddComponent<Camera>();
+            Cam.tag = Tag.MainCamera;
             go.AddComponent<AudioListener>();
         }
 
-        _controllingCamera.gameObject.AddComponent<CinemachineBrain>();
+        Cam.gameObject.AddComponent<CinemachineBrain>();
 
-        _controllingCamera.transform.SetParent(transform);  // 用途なし。Unity Editorで見やすいようにのみ。
+        Cam.transform.SetParent(transform);  // 用途なし。Unity Editorで見やすいようにのみ。
     }
 
     public void Init(Transform target)

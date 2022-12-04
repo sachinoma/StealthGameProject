@@ -27,6 +27,7 @@ public class PlayerModel : MonoBehaviour
     private bool isMove = false;
     //回転
     [SerializeField] private bool _isRotate = true; //回転できるかどうかの判定
+    [SerializeField] private float _rotateSpeed = 15.0f;
     //ジャンプ
     [SerializeField] private float _upForce = 200f; //上方向にかける力
     private bool  _isGround; //着地しているかどうかの判定
@@ -37,7 +38,7 @@ public class PlayerModel : MonoBehaviour
     // TODO : Enum で Mode/State を表す
     private bool _isNormalMode = true;
 
-    public static event Action Died = null;
+    public event Action Died = null;
 
     void Start()
     {
@@ -57,15 +58,13 @@ public class PlayerModel : MonoBehaviour
     void FixedUpdate()
     {
         // カメラの方向から、X-Z平面の単位ベクトルを取得
-        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 cameraForward = Vector3.Scale(_playerCamera.Cam.transform.forward, new Vector3(1, 0, 1)).normalized;
 
         // 方向キーの入力値とカメラの向きから、移動方向を決定
-        Vector3 moveForward = cameraForward * _inputVertical + Camera.main.transform.right * _inputHorizontal;
+        Vector3 moveForward = cameraForward * _inputVertical + _playerCamera.Cam.transform.right * _inputHorizontal;
 
         // 移動方向にスピードを掛ける。ジャンプや落下がある場合は、別途Y軸方向の速度ベクトルを足す。
         _rb.velocity = moveForward * _speed + new Vector3(0, _rb.velocity.y, 0);
-
-        
 
         // キャラクターの向きを進行方向に
         if(_isRotate)
@@ -73,7 +72,7 @@ public class PlayerModel : MonoBehaviour
             if(moveForward != Vector3.zero)
             {
                 //回転に補間する
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveForward), Time.deltaTime * 15.0f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveForward), Time.deltaTime * _rotateSpeed);
                 //補間しない
                 //transform.rotation = Quaternion.LookRotation(moveForward);
             }
@@ -91,8 +90,6 @@ public class PlayerModel : MonoBehaviour
         }
     }
 
-
-
     public void SetMovement(Vector3 direction)
     {
         // TODO : _isNormalModeについての制御は一時的なコードだけだ
@@ -103,12 +100,14 @@ public class PlayerModel : MonoBehaviour
             return;
         }
 
-        isMove = direction.magnitude > 0.0f;
         _inputHorizontal = direction.x;
         _inputVertical = direction.z;
+
+        float magnitude = direction.magnitude;
+        isMove = magnitude > 0.0f;
         if(isMove)
         {
-            MovementAnimation(direction.magnitude);
+            MovementAnimation(magnitude);
         }
     }
 
