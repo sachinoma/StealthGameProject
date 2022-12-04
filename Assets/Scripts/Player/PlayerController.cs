@@ -17,36 +17,38 @@ public class PlayerController : MonoBehaviour
     #region SetUp
     void OnEnable()
     {
-        _input.actions["Jump"].started   += OnJump;
-        _input.actions["Dash"].started   += OnDash;
-        _input.actions["Dash"].canceled  += OnDash;
+        //_input.actions["Jump"].started   += OnJump;
+        //_input.actions["Dash"].started   += OnDash;
+        //_input.actions["Dash"].canceled  += OnDash;
         //_input.actions["Attack"].started += OnAttack;
         _input.actions["Action"].started += OnAction;
         var normal = _input.actions.FindActionMap("Normal");
-        var crouched = _input.actions.FindActionMap("Crouched");
-        crouched["Move"].canceled += OnMoveStop;
         normal["Move"].canceled += OnMoveStop;
-        crouched["Move"].performed += OnMove;    
-        normal["Move"].performed += OnMove;      
-        crouched["ModeChange"].started += ToNormalMode;
-        normal["ModeChange"].started += ToCrouchedMode;
+        normal["Move"].performed += OnMove;
+        //normal["ModeChange"].started += ToCrouchedMode;
+
+        //var crouched = _input.actions.FindActionMap("Crouched");
+        //crouched["Move"].canceled += OnMoveStop;
+        //crouched["Move"].performed += OnMove;
+        //crouched["ModeChange"].started += ToNormalMode;
     }
 
     void OnDisable()
     {
-        _input.actions["Jump"].started   -= OnJump;
-        _input.actions["Dash"].started   -= OnDash;
-        _input.actions["Dash"].canceled  -= OnDash;
+        //_input.actions["Jump"].started   -= OnJump;
+        //_input.actions["Dash"].started   -= OnDash;
+        //_input.actions["Dash"].canceled  -= OnDash;
         //_input.actions["Attack"].started -= OnAttack;
         _input.actions["Action"].started -= OnAction;
         var normal = _input.actions.FindActionMap("Normal");
-        var crouched = _input.actions.FindActionMap("Crouched");
-        crouched["Move"].canceled -= OnMoveStop;
         normal["Move"].canceled -= OnMoveStop;
-        crouched["Move"].performed -= OnMove;
-        normal["Move"].performed -= OnMove;     
-        crouched["ModeChange"].started -= ToNormalMode;
-        normal["ModeChange"].started -= ToCrouchedMode;
+        normal["Move"].performed -= OnMove;
+        //normal["ModeChange"].started -= ToCrouchedMode;
+
+        //var crouched = _input.actions.FindActionMap("Crouched");
+        //crouched["Move"].canceled -= OnMoveStop;
+        //crouched["Move"].performed -= OnMove;
+        //crouched["ModeChange"].started -= ToNormalMode;
     }
     #endregion
 
