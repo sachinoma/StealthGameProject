@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class MicRange : MonoBehaviour
 {
+    [SerializeField] private bool isMicMode = true;
+
     //マイク機能
     private readonly int _sampleNum = (2 << 9); // サンプリング数は2のN乗(N=5-12)
     [Header("音量に掛ける倍率")]
@@ -24,7 +26,6 @@ public class MicRange : MonoBehaviour
     [SerializeField, Range(0.5f, 2.0f)] private float _maxRange = 1.0f;
     [Header("Fogの最小範囲(0.5~2.0)")]
     [SerializeField, Range(0.5f, 2.0f)] private float _minRange = 1.0f;
-
 
     //黒いFog
     private float _fogMax = 0.18f;
@@ -46,6 +47,9 @@ public class MicRange : MonoBehaviour
     private Vector3 _circleBlackBasic = new Vector3(1, 1, 1);
     private float _circleBlackValue = 1.0f;
 
+    //ボタン型音量調整
+
+
     void Start()
     {
         MicStart();
@@ -55,7 +59,14 @@ public class MicRange : MonoBehaviour
 
     void Update()
     {
-        MicUpdate();
+        if(isMicMode)
+        {
+            MicUpdate();
+        }
+        else
+        {
+            ButtonUpdate();
+        }   
 
         if(VolumeCheck())
         {
@@ -169,6 +180,13 @@ public class MicRange : MonoBehaviour
             //_circleBlackValue -= 0.025f * _rollBackSpeed;
         }
         _circleBlack.transform.localScale = _circleBlackValue * _circleBlackBasic;
+    }
+    #endregion
+
+    #region ボタン型音量調整
+    public void ButtonUpdate()
+    {
+        _volumeRate = 1.0f;
     }
     #endregion
 }

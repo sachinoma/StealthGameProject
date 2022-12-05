@@ -2287,6 +2287,10 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4444367709125343812, guid: 90fab666181bd9e40b5f754cc931fcf5, type: 3}
+      propertyPath: isMicMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4444367709125343812, guid: 90fab666181bd9e40b5f754cc931fcf5, type: 3}
       propertyPath: _rollBackSpeed
       value: 0.3
       objectReference: {fileID: 0}
