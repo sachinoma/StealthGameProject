@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     {
         TryGetComponent(out _input);
     }
+
     #region SetUp
     void OnEnable()
     {
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
         //_input.actions["Dash"].canceled  += OnDash;
         //_input.actions["Attack"].started += OnAttack;
         _input.actions["Action"].started += OnAction;
+        _input.actions["Shout"].performed += OnShoutBtnDown;
+        _input.actions["Shout"].canceled += OnShoutBtnUp;
         var normal = _input.actions.FindActionMap("Normal");
         normal["Move"].canceled += OnMoveStop;
         normal["Move"].performed += OnMove;
@@ -40,6 +43,8 @@ public class PlayerController : MonoBehaviour
         //_input.actions["Dash"].canceled  -= OnDash;
         //_input.actions["Attack"].started -= OnAttack;
         _input.actions["Action"].started -= OnAction;
+        _input.actions["Shout"].performed -= OnShoutBtnDown;
+        _input.actions["Shout"].canceled -= OnShoutBtnUp;
         var normal = _input.actions.FindActionMap("Normal");
         normal["Move"].canceled -= OnMoveStop;
         normal["Move"].performed -= OnMove;
@@ -126,5 +131,19 @@ public class PlayerController : MonoBehaviour
         //Jumpを押した瞬間
         _playerModel.Jump();
     }
+    #endregion
+
+    #region Shout
+
+    private void OnShoutBtnDown(InputAction.CallbackContext obj)
+    {
+        _playerModel.StartShoutCharge();
+    }
+
+    private void OnShoutBtnUp(InputAction.CallbackContext obj)
+    {
+        _playerModel.Shout();
+    }
+
     #endregion
 }

@@ -154,12 +154,14 @@ MonoBehaviour:
   _animator: {fileID: 3216148253537758215}
   _rb: {fileID: 3216148253537758239}
   _reactableDetector: {fileID: 4958403609414736488}
+  _micRange: {fileID: 4444367709125343812}
   _playerCameraTemplate: {fileID: 8854209127091662917, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
   _life: 10
   _basicMoveSpeed: 10
   _isRotate: 1
   _rotateSpeed: 15
   _upForce: 300
+  _maxShoutChargeTime: 1
 --- !u!114 &3216148253537758238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +482,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e113f8808da9b0546ba068830fb4567a, type: 3}
+--- !u!114 &4444367709125343812 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4865418877102918715, guid: e113f8808da9b0546ba068830fb4567a, type: 3}
+  m_PrefabInstance: {fileID: 9090762493131945599}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0f5da8bd41882438c4cdcec76e16b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4444367709125343814 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4865418877102918713, guid: e113f8808da9b0546ba068830fb4567a, type: 3}

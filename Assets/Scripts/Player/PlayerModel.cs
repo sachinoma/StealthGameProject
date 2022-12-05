@@ -24,6 +24,7 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private ReactableDetector _reactableDetector;
+    [SerializeField] private MicRange _micRange;
 
     [Header("カメラ")]
     [SerializeField] private PlayerCamera _playerCameraTemplate;
@@ -46,6 +47,11 @@ public class PlayerModel : MonoBehaviour
     //ジャンプ
     [SerializeField] private float _upForce = 200f; //上方向にかける力
     private bool  _isGround; //着地しているかどうかの判定
+
+    [Header("音声")]
+    [SerializeField] private float _maxShoutChargeTime = 1.0f;
+    private bool _isShoutCharging;
+    private float _startShoutChargingTime;
 
     private float _inputHorizontal;
     private float _inputVertical;
@@ -91,6 +97,8 @@ public class PlayerModel : MonoBehaviour
         _state = PlayerState.Moving;
         _pickedUpItems.Clear();
         _currentHidingPlace = null;
+
+        ResetShout();
     }
 
     void Update()
@@ -374,6 +382,42 @@ public class PlayerModel : MonoBehaviour
         _animator.SetTrigger(DieAnimTrigger);
         _state = PlayerState.Died;
         Died?.Invoke();
+    }
+
+    #endregion
+
+    #region Shout
+
+    private void ResetShout()
+    {
+        _isShoutCharging = false;
+        _startShoutChargingTime = float.MaxValue;
+    }
+
+    private bool CanShout()
+    {
+        return _micRange != null && !_micRange.IsMicMode;
+    }
+
+    public void StartShoutCharge()
+    {
+        if(CanShout())
+        {
+            _isShoutCharging = true;
+            _startShoutChargingTime = Time.time;
+        }
+    }
+
+    public void Shout()
+    {
+        if(_isShoutCharging && CanShout())
+        {
+            float volumeRate = Mathf.InverseLerp(0, _maxShoutChargeTime, Time.time - _startShoutChargingTime);
+            print($"叫ぶ：volumeRate = {volumeRate}");
+            _micRange?.SetVolumeRate(volumeRate);
+        }
+
+        ResetShout();
     }
 
     #endregion

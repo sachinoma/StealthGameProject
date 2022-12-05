@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class MicRange : MonoBehaviour
 {
-    [SerializeField] private bool isMicMode = true;
+    [SerializeField] private bool _isMicMode = true;
+    public bool IsMicMode => _isMicMode;
 
     //マイク機能
     private readonly int _sampleNum = (2 << 9); // サンプリング数は2のN乗(N=5-12)
@@ -59,7 +60,7 @@ public class MicRange : MonoBehaviour
 
     void Update()
     {
-        if(isMicMode)
+        if(_isMicMode)
         {
             MicUpdate();
         }
@@ -186,7 +187,13 @@ public class MicRange : MonoBehaviour
     #region ボタン型音量調整
     public void ButtonUpdate()
     {
-        _volumeRate = 1.0f;
+        _volumeRate -= 0.05f;
     }
+
+    public void SetVolumeRate(float rate)
+    {
+        _volumeRate = rate;
+    }
+
     #endregion
 }
