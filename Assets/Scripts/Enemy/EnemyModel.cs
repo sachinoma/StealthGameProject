@@ -12,6 +12,8 @@ using System.Diagnostics;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyModel : MonoBehaviour
 {
+    float _speed;
+
     enum State
     {
         Free,
@@ -40,7 +42,7 @@ public class EnemyModel : MonoBehaviour
     public PlayerModel script;
 
     void Start()
-    {
+    {    
         isChase = false;
         isSarch = false;
         isAttack = false;
@@ -50,19 +52,12 @@ public class EnemyModel : MonoBehaviour
         _animator = obj.GetComponent<Animator>();
         leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
         rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
+        _speed = _agent.speed;
     }
 
     void Update()
     {
         _animator.SetFloat("Speed", _agent.speed);
-        if(isAttack)
-        {
-            _agent.speed = 0.0f;
-        }
-        else
-        {
-            _agent.speed = 3.5f;
-        }
         if(isChase)
         {
             _animator.SetBool("isChase",true);
@@ -220,7 +215,7 @@ public class EnemyModel : MonoBehaviour
     void Attack()
     {
         isAttack = true;
-        Invoke("ColliderStart", 0.2f);
+        Invoke("ColliderStart", 0.8f);
         _animator.SetTrigger("Attack Trigger");
         Invoke("ColliderReset", 1.12f);
         Invoke("AttackEnd", 2.15f);
@@ -229,6 +224,7 @@ public class EnemyModel : MonoBehaviour
     private void AttackEnd()
     {
         isAttack = false;
+        _agent.speed = _speed;
     }
 
     private void ColliderStart()
@@ -241,5 +237,6 @@ public class EnemyModel : MonoBehaviour
     {
         rightCollider.enabled = false;
         leftCollider.enabled = false;
+        _agent.speed = 0f;
     }
 }

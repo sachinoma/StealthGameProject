@@ -156,7 +156,7 @@ MonoBehaviour:
   _reactableDetector: {fileID: 4958403609414736488}
   _micRange: {fileID: 4444367709125343812}
   _playerCameraTemplate: {fileID: 8854209127091662917, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
-  _life: 10
+  _life: 1000000
   _basicMoveSpeed: 10
   _isRotate: 1
   _rotateSpeed: 15
