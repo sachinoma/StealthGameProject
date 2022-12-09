@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4339628044032576482
+--- !u!1 &982589475395982708
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7127065907600534814}
-  m_Layer: 0
-  m_Name: Curve_floor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &7127065907600534814
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4339628044032576482}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3077635444849705507}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6248992175747816936
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6235307003121450556}
-  - component: {fileID: 8875540410982107626}
+  - component: {fileID: 977976030287902368}
+  - component: {fileID: 2321177145672565110}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -49,40 +17,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &6235307003121450556
+--- !u!4 &977976030287902368
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6248992175747816936}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 982589475395982708}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6071940134251741076}
+  m_Father: {fileID: 8824146977982128609}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8875540410982107626
+--- !u!65 &2321177145672565110
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6248992175747816936}
+  m_GameObject: {fileID: 982589475395982708}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 7, y: 1, z: 7}
   m_Center: {x: 0, y: -0.5, z: 0}
---- !u!1001 &3260408617300813256
+--- !u!1001 &218771829146483645
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 7127065907600534814}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_RootOrder
@@ -90,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -106,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_LocalRotation.y
@@ -134,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_Name
-      value: Curve_floor
+      value: Curve_floor Variant
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -142,13 +110,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
---- !u!4 &3077635444849705507 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
-  m_PrefabInstance: {fileID: 3260408617300813256}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &6071940134251741076 stripped
+--- !u!4 &8824146977982128609 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8754031468479863388, guid: ef4cb05cb4a2844358f6e6ef06d311e0, type: 3}
-  m_PrefabInstance: {fileID: 3260408617300813256}
+  m_PrefabInstance: {fileID: 218771829146483645}
   m_PrefabAsset: {fileID: 0}
