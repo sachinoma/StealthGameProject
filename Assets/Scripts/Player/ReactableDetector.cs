@@ -18,15 +18,14 @@ public class ReactableDetector : MonoBehaviour
         return _reactableList[0];
     }
 
-    public void ReactWithReactable(Action<ReactableBase> action = null)
+    public ReactableBase PopReactable()
     {
         ReactableBase reactable = GetReactable();
-        action?.Invoke(reactable);
-
         if(reactable != null)
         {
             _reactableList.Remove(reactable);
         }
+        return reactable;
     }
 
     #region Trigger

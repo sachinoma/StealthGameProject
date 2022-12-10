@@ -261,29 +261,25 @@ public class PlayerModel : MonoBehaviour
             return;
         }
 
-        Action<ReactableBase> action = (reactable) =>
+        ReactableBase reactable = _reactableDetector.PopReactable();
+        if(reactable == null)
         {
-            if(reactable == null)
-            {
-                DoUselessAction();
-                return;
-            }
+            DoUselessAction();
+            return;
+        }
 
-            //print($"反応しているオブジェクト：{reactable.name}");
-            ReactableType type = reactable.GetReactableType();
+        //print($"反応しているオブジェクト：{reactable.name}");
+        ReactableType type = reactable.GetReactableType();
 
-            switch(type)
-            {
-                case ReactableType.PickUpItem:
-                    PickUp(reactable);
-                    break;
-                case ReactableType.HidingPlace:
-                    Hide(reactable);
-                    break;
-            }
-        };
-
-        _reactableDetector.ReactWithReactable(action);
+        switch(type)
+        {
+            case ReactableType.PickUpItem:
+                PickUp(reactable);
+                break;
+            case ReactableType.HidingPlace:
+                Hide(reactable);
+                break;
+        }
     }
 
     private void DoUselessAction()
