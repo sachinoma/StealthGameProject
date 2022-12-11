@@ -21,19 +21,13 @@ public class MenuController : MonoBehaviour
 
     void OnEnable()
     {
-        var normal = _input.actions.FindActionMap("Normal");
-        var crouched = _input.actions.FindActionMap("Crouched");
-        normal["OpenMenu"].started += OnOpenMenu;
-        crouched["OpenMenu"].started += OnOpenMenu;
+        _input.actions["OpenMenu"].started += OnOpenMenu;
         _input.actions["CloseMenu"].started += OnCloseMenu;
     }
 
     void OnDisable()
     {
-        var normal = _input.actions.FindActionMap("Normal");
-        var crouched = _input.actions.FindActionMap("Crouched");
-        normal["OpenMenu"].started -= OnOpenMenu;
-        crouched["OpenMenu"].started -= OnOpenMenu;
+        _input.actions["OpenMenu"].started -= OnOpenMenu;
         _input.actions["CloseMenu"].started -= OnCloseMenu;
     }
 

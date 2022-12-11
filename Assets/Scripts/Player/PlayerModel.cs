@@ -9,10 +9,6 @@ public class PlayerModel : MonoBehaviour
 
     private const string ResetAnimTrigger = "Reset";
     private const string MoveAnimFloat = "Move";
-    private const string AttackAnimTrigger = "Attack";
-    private const string IsCrouchedAnimBool = "isCrouched";
-    private const string JumpAnimTrigger = "Jump";
-    private const string IsGroundAnimBool = "isGround";
     private const string PickUpAnimTrigger = "PickUp";
     private const string UselessActionAnimTrigger = "UselessAction";
     private const string TakeDamageAnimTrigger = "TakeDamage";
@@ -43,9 +39,6 @@ public class PlayerModel : MonoBehaviour
     //回転
     [SerializeField] private bool _isRotate = true; //回転できるかどうかの判定
     [SerializeField] private float _rotateSpeed = 15.0f;
-    //ジャンプ
-    [SerializeField] private float _upForce = 200f; //上方向にかける力
-    private bool  _isGround; //着地しているかどうかの判定
 
     [Header("音声")]
     [SerializeField] private float _maxShoutChargeTime = 1.0f;
@@ -152,51 +145,6 @@ public class PlayerModel : MonoBehaviour
         if(isMove)
         {
             MovementAnimation(magnitude);
-        }
-    }
-
-    public void SetCrouched(bool isCrouched)
-    {
-        _animator.SetBool(IsCrouchedAnimBool, isCrouched);
-        if(isCrouched) { SetSpeed(0.3f); }
-        else { SetSpeed(1.0f); }
-    }
-
-    public void SetDash(bool isDash)
-    {
-        
-    }
-
-    public void Attack()
-    {
-        if(CheckAnimatorState("BasicMovement"))
-        {
-            _animator.SetTrigger(AttackAnimTrigger);
-            SetSpeed(0.0f);
-        } 
-    }
-
-    public void Jump()
-    {
-        if(_isGround)
-        {
-            if(CheckAnimatorState("BasicMovement"))
-            {
-                _isGround = false;//  isGroundをfalseにする
-                _rb.AddForce(new Vector3(0, _upForce, 0)); //上に向かって力を加える
-                _animator.SetTrigger(JumpAnimTrigger);
-                _animator.SetBool(IsGroundAnimBool, false);
-            }
-        }
-    }
-
-
-    void OnCollisionEnter(Collision other) //地面に触れた時の処理
-    {
-        if(other.gameObject.tag == Tag.Ground) //Groundタグのオブジェクトに触れたとき
-        {
-            _isGround = true; //isGroundをtrueにする
-            _animator.SetBool(IsGroundAnimBool, true);
         }
     }
 

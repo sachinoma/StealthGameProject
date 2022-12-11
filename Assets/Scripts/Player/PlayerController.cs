@@ -18,65 +18,23 @@ public class PlayerController : MonoBehaviour
     #region SetUp
     void OnEnable()
     {
-        //_input.actions["Jump"].started   += OnJump;
-        //_input.actions["Dash"].started   += OnDash;
-        //_input.actions["Dash"].canceled  += OnDash;
-        //_input.actions["Attack"].started += OnAttack;
         _input.actions["Action"].started += OnAction;
         _input.actions["Shout"].performed += OnShoutBtnDown;
         _input.actions["Shout"].canceled += OnShoutBtnUp;
-        var normal = _input.actions.FindActionMap("Normal");
-        normal["Move"].canceled += OnMoveStop;
-        normal["Move"].performed += OnMove;
-        //normal["ModeChange"].started += ToCrouchedMode;
-
-        //var crouched = _input.actions.FindActionMap("Crouched");
-        //crouched["Move"].canceled += OnMoveStop;
-        //crouched["Move"].performed += OnMove;
-        //crouched["ModeChange"].started += ToNormalMode;
+        _input.actions["Move"].canceled += OnMoveStop;
+        _input.actions["Move"].performed += OnMove;
     }
 
     void OnDisable()
     {
-        //_input.actions["Jump"].started   -= OnJump;
-        //_input.actions["Dash"].started   -= OnDash;
-        //_input.actions["Dash"].canceled  -= OnDash;
-        //_input.actions["Attack"].started -= OnAttack;
         _input.actions["Action"].started -= OnAction;
         _input.actions["Shout"].performed -= OnShoutBtnDown;
         _input.actions["Shout"].canceled -= OnShoutBtnUp;
-        var normal = _input.actions.FindActionMap("Normal");
-        normal["Move"].canceled -= OnMoveStop;
-        normal["Move"].performed -= OnMove;
-        //normal["ModeChange"].started -= ToCrouchedMode;
-
-        //var crouched = _input.actions.FindActionMap("Crouched");
-        //crouched["Move"].canceled -= OnMoveStop;
-        //crouched["Move"].performed -= OnMove;
-        //crouched["ModeChange"].started -= ToNormalMode;
+        _input.actions["Move"].canceled -= OnMoveStop;
+        _input.actions["Move"].performed -= OnMove;
     }
     #endregion
 
-    #region Mode
-    private void ToCrouchedMode(InputAction.CallbackContext obj)
-    {
-        _input.SwitchCurrentActionMap("Crouched");
-        _playerModel.SetCrouched(true);
-    }
-
-    private void ToNormalMode(InputAction.CallbackContext obj)
-    {
-        _input.SwitchCurrentActionMap("Normal");
-        _playerModel.SetCrouched(false);
-    }
-    #endregion
-    #region Attack
-    private void OnAttack(InputAction.CallbackContext obj)
-    {
-        //Attackを押した瞬間
-        _playerModel.Attack();
-    }
-    #endregion
     #region Action
     private void OnAction(InputAction.CallbackContext obj)
     {
@@ -84,21 +42,7 @@ public class PlayerController : MonoBehaviour
         _playerModel.DoAction();
     }
     #endregion
-    #region Dash
-    private void OnDash(InputAction.CallbackContext obj)
-    {
-        //Dashを押した瞬間
-        switch (obj.phase)
-        {
-            case InputActionPhase.Started:
-                _playerModel.SetDash(true);
-                break;
-            case InputActionPhase.Canceled:
-                _playerModel.SetDash(false);
-                break;
-        }
-    }
-    #endregion
+
     #region Move
     private void OnMoveStop(InputAction.CallbackContext obj)
     {
@@ -122,14 +66,6 @@ public class PlayerController : MonoBehaviour
         var direction = new Vector3(value.x, 0, value.y);
         _playerModel.SetMovement(direction);
 
-    }
-    #endregion
-
-    #region Jump
-    private void OnJump(InputAction.CallbackContext obj)
-    {
-        //Jumpを押した瞬間
-        _playerModel.Jump();
     }
     #endregion
 
