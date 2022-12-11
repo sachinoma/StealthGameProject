@@ -152,7 +152,7 @@ public class EnemyModel : MonoBehaviour
 
                 Ray ray = new Ray(transform.position, direction);  // Rayを飛ばす
                 Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayをシーン上に描画
-                if (Physics.Raycast(ray.origin, ray.direction * distance, out hit))
+                if (Physics.Raycast(ray.origin, ray.direction, out hit, distance, Layer.EnemySight))
                 {
                     if (hit.collider.CompareTag(Tag.Player))
                     {
