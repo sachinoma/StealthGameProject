@@ -1,3 +1,4 @@
+using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
+        // Cinemachineのために、このGameObjectをヒエラルキーのトップレベルオブジェクトになる
+        // また、transformをデフォルトになる
+        transform.SetParent(null, false);
+
         // メインカメラを探すまたは作成
         Cam = Camera.main;
 
@@ -29,10 +34,8 @@ public class PlayerCamera : MonoBehaviour
         _pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
     }
 
-    public void Init(Transform target)
+    private void Start()
     {
-        _virtualCamera.Follow = target;
-
         ResetRotation();
     }
 

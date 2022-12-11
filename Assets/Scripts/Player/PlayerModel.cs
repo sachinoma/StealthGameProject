@@ -27,8 +27,7 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private MicRange _micRange;
 
     [Header("カメラ")]
-    [SerializeField] private PlayerCamera _playerCameraTemplate;
-    private PlayerCamera _playerCamera;
+    [SerializeField] private PlayerCamera _playerCamera;
 
     [Header("基本")]
     //HP
@@ -72,10 +71,6 @@ public class PlayerModel : MonoBehaviour
 
         _initialPos = transform.position;
         _initialRot = transform.rotation;
-
-        _playerCamera = Instantiate(_playerCameraTemplate);
-        _playerCamera.gameObject.name = "PlayerCamera";
-        _playerCamera.Init(transform);
     }
 
     public void Respawn()
