@@ -37,13 +37,15 @@ public class PrototypeSceneDirector : MonoBehaviour
     private void PlayerDiedHandler()
     {
         Debug.LogWarning("Game Over!!");
-        StartCoroutine(RestartGame(3.0f));
+
+        PrototypeMessageEvent.Invoke($"やられました！");
+        StartCoroutine(RestartGame(4.0f));
     }
 
     private IEnumerator RestartGame(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
 
-        SceneManager.LoadScene("Prototype");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

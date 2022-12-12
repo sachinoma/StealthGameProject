@@ -28,7 +28,7 @@ public class PlayerModel : MonoBehaviour
     [Header("基本")]
     //HP
     [SerializeField] private float _life = 10.0f;
-    private float _currentLife;
+    public float CurrentLife { get; private set; }
 
     [Header("移動")]
     //スピード
@@ -53,12 +53,16 @@ public class PlayerModel : MonoBehaviour
 
     private PlayerState _state = PlayerState.Moving;
 
-    private List<PickUpItem.ItemType> _pickedUpItems = new List<PickUpItem.ItemType>();
+    private List<PickUpItem.ItemType> _obtainedItems = new List<PickUpItem.ItemType>();
+
     private HidingPlace _currentHidingPlace = null;
 
+    public event Action DamageTaken = null;
     public event Action Died = null;
 
-    void Start()
+    public event Action<PickUpItem.ItemType> PickedUp = null;
+
+    void Awake()
     {
         ResetStatus();
 
@@ -80,10 +84,10 @@ public class PlayerModel : MonoBehaviour
 
     private void ResetStatus()
     {
-        _currentLife = _life;
+        CurrentLife = _life;
         _speed = _basicMoveSpeed;
         _state = PlayerState.Moving;
-        _pickedUpItems.Clear();
+        _obtainedItems.Clear();
         _currentHidingPlace = null;
 
         ResetShout();
@@ -241,9 +245,17 @@ public class PlayerModel : MonoBehaviour
         }
 
         // TODO : アニメションのタイミングに合わせてアイテムを取る？
-        print($"アイテムを取った：{item.GetItemType()}");
-        _pickedUpItems.Add(item.GetItemType());
+        PickUpItem.ItemType itemType = item.GetItemType();
+        print($"アイテムを取った：{itemType}");
+        _obtainedItems.Add(itemType);
         Destroy(item.gameObject);
+        PickedUp?.Invoke(itemType);
+
+        // Prototypeのためのコード
+        if(itemType == PickUpItem.ItemType.Key)
+        {
+            PrototypeMessageEvent.Invoke("鍵を取りました！");
+        }
 
         _animator.SetTrigger(PickUpAnimTrigger);
         _state = PlayerState.Acting;
@@ -264,6 +276,9 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメション / 実際のプレイヤー処理
         print("隠す");
+
+        // Prototypeのためのコード
+        PrototypeMessageEvent.Invoke("隠しました");
 
         _posBeforeHide = transform.position;
         hidingPlace.GetComponent<Collider>().isTrigger = true;
@@ -294,6 +309,8 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメション / 実際のプレイヤー処理
         print("現す");
+        // Prototypeのためのコード
+        PrototypeMessageEvent.Invoke("現しました");
 
         transform.position = _posBeforeHide;
         _currentHidingPlace.GetComponent<Collider>().isTrigger = false;
@@ -316,16 +333,17 @@ public class PlayerModel : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if(_currentLife <= 0)
+        if(CurrentLife <= 0)
         {
             print("すでに死亡した。");
             return;
         }
 
         print($"{damage} ダメージを受ける");
-        _currentLife = Mathf.Max(0, _currentLife - damage);
+        CurrentLife = Mathf.Max(0, CurrentLife - damage);
+        DamageTaken?.Invoke();
 
-        if(_currentLife <= 0)
+        if(CurrentLife <= 0)
         {
             Die();
         }
