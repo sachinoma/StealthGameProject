@@ -7,6 +7,7 @@ public class PrototypeSceneUIManager : MonoBehaviour
 {
     [SerializeField] private Text _lifeText;
     [SerializeField] private Text _keyText;
+    [SerializeField] private Text _inputModeText;
     [SerializeField] private Text _messageText;
 
     private PlayerModel _playerModel;
@@ -27,6 +28,12 @@ public class PrototypeSceneUIManager : MonoBehaviour
         PrototypeMessageEvent.MessageReceived += MessageReceivedHandler;
 
         _messageText.enabled = false;
+
+        MicRange micRange = FindObjectOfType<MicRange>();
+        if (micRange != null)
+        {
+            UpdateInputModeText(micRange.IsMicMode);
+        }
     }
 
     private void OnDestroy()
@@ -72,5 +79,10 @@ public class PrototypeSceneUIManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
 
         _messageText.enabled = false;
+    }
+
+    public void UpdateInputModeText(bool isMicMode)
+    {
+        _inputModeText.text = isMicMode ? "マイク入力" : "キー入力";
     }
 }

@@ -83,6 +83,11 @@ public class MicRange : MonoBehaviour
         
     }
 
+    public void SwitchMicMode()
+    {
+        _isMicMode = !_isMicMode;
+    }
+
     //マイク設定
     public void MicStart()
     {
