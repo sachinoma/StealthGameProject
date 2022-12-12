@@ -249,6 +249,8 @@ public class PlayerModel : MonoBehaviour
         _state = PlayerState.Acting;
     }
 
+    Vector3 _posBeforeHide;    // TODO : 一時的なコード
+
     private void Hide(ReactableBase reactable)
     {
         if(reactable is not HidingPlace hidingPlace)
@@ -262,11 +264,22 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメション / 実際のプレイヤー処理
         print("隠す");
-        SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-        foreach(SkinnedMeshRenderer renderer in renderers)
+
+        _posBeforeHide = transform.position;
+        hidingPlace.GetComponent<Collider>().isTrigger = true;
+        Vector3 hidingPlacePos = hidingPlace.transform.position;
+        transform.position = new Vector3(hidingPlacePos.x, 0, hidingPlacePos.z);
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach(Collider collider in colliders)
         {
-            renderer.enabled = false;
+            if(collider.CompareTag(Tag.Sounds))
+            {
+                collider.enabled = false;
+            }
         }
+
+
         _state = PlayerState.Hiding;
     }
 
@@ -281,11 +294,19 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメション / 実際のプレイヤー処理
         print("現す");
-        SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-        foreach(SkinnedMeshRenderer renderer in renderers)
+
+        transform.position = _posBeforeHide;
+        _currentHidingPlace.GetComponent<Collider>().isTrigger = false;
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach(Collider collider in colliders)
         {
-            renderer.enabled = true;
+            if(collider.CompareTag(Tag.Sounds))
+            {
+                collider.enabled = true;
+            }
         }
+
         _state = PlayerState.Moving;
     }
 

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0f5da8bd41882438c4cdcec76e16b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isMicMode: 1
   m_gain: 1500
   _minRate: 0.2
   _rollBackSpeed: 0.3
@@ -55,7 +56,7 @@ MonoBehaviour:
   _minRange: 1
   _circleBlackMax: 2
   _circleForEnemy: {fileID: 4474790757192386306}
-  _circleForEnemyScale: {x: 4, y: 4, z: 4}
+  _circleForEnemyScaleValue: 5
   _circleBlack: {fileID: 4865418877102918712}
 --- !u!82 &4865418877102918714
 AudioSource:
@@ -238,7 +239,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: adc7f2409d2e20d47b80b49eb000ed0e, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Sounds
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -7511558181221131132, guid: adc7f2409d2e20d47b80b49eb000ed0e, type: 3}
