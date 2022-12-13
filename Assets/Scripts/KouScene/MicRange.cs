@@ -147,14 +147,19 @@ public class MicRange : MonoBehaviour
     {
         const float _fogSpeedSet = 1.5f;
 
-        _circleForEnemy.transform.localScale = new Vector3(0, 0, 0);
+        
 
         if(RenderSettings.fogDensity < max)
         {
             RenderSettings.fogDensity += ((max - min)/ _fogSpeedSet) * _rollBackSpeed * Time.deltaTime;
             _circleForEnemy.transform.localScale = _circleForEnemyScale;
+            _circleForEnemy.SetActive(true);
 
             //RenderSettings.fogDensity += 0.001f * _rollBackSpeed;
+        }
+        else
+        {
+            _circleForEnemy.SetActive(false);
         }
     }
     #endregion
