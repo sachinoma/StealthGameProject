@@ -51,9 +51,11 @@ public class PlayerSc : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.color = new Color(1f, 1f, 0f, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up, transform.forward, 360f, col.radius);
     }
+#endif
 }

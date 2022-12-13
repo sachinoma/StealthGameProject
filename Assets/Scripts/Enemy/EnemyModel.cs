@@ -190,6 +190,7 @@ public class EnemyModel : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if(isChase)
@@ -206,6 +207,7 @@ public class EnemyModel : MonoBehaviour
         }
         Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius);
     }
+#endif
 
     bool RandomBool()
     {
