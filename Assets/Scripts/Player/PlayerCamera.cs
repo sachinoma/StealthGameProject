@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
@@ -42,6 +42,6 @@ public class PlayerCamera : MonoBehaviour
     public void ResetRotation()
     {
         // target の後ろにいる
-        _pov.m_HorizontalAxis.Value = _virtualCamera.Follow.rotation.eulerAngles.y;
+        //_pov.m_HorizontalAxis.Value = _virtualCamera.Follow.rotation.eulerAngles.y;
     }
 }

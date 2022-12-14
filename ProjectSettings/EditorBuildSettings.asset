@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Kou/MicRecognition.unity
     guid: 7b708416f6f1c9d4f92b41449b95ffdf
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Kou/KouScene.unity
     guid: 0befa2bec3968374cbb5924011183e7c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Kou/Menu.unity
     guid: 6416af34714dcaf41842721e196c7373
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/main/Prototype.unity
     guid: bfc23a7cc9fc58f49b5185fd80e8bf12
   - enabled: 1

@@ -162,6 +162,10 @@ public class PlayerModel : MonoBehaviour
         return _animator.GetCurrentAnimatorStateInfo(0).IsName(name);
     }
 
+    private void OnStepOnAnimTrigger()
+    {
+
+    }
     private void SetSpeed(float speed)
     {
         _speed = _basicMoveSpeed * speed;
