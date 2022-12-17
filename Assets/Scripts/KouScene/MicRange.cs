@@ -48,7 +48,9 @@ public class MicRange : MonoBehaviour
     private Vector3 _circleBlackBasic = new Vector3(1, 1, 1);
     private float _circleBlackValue = 1.0f;
 
-    //ボタン型音量調整
+    //ポストエフェクト
+    [SerializeField] private GameObject[] _rangeParticle;
+    [SerializeField] private GameObject _rangeParticlePos;
 
 
     void Start()
@@ -203,6 +205,12 @@ public class MicRange : MonoBehaviour
     public void SetVolumeRate(float rate)
     {
         _volumeRate = rate;
+    }
+
+    public void AnimSetVolumeRate(float rate)
+    {
+        _volumeRate = rate;
+        Instantiate(_rangeParticle[0], _rangeParticlePos.transform.position, transform.rotation);
     }
 
     #endregion

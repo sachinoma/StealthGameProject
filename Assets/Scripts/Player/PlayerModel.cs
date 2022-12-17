@@ -41,6 +41,7 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private float _rotateSpeed = 15.0f;
 
     [Header("音声")]
+    [SerializeField] private float[] _audioRangeVolume;
     [SerializeField] private float _maxShoutChargeTime = 1.0f;
     private bool _isShoutCharging;
     private float _startShoutChargingTime;
@@ -401,6 +402,21 @@ public class PlayerModel : MonoBehaviour
 
         ResetShout();
     }
+
+    #endregion
+
+    #region AnimationEvent
+    private void AnimSoundVolumeSmall()
+    {
+        _micRange.AnimSetVolumeRate(_audioRangeVolume[0]);
+    }
+
+    private void AnimSoundVolumeBig()
+    {
+        _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
+    }
+
+    
 
     #endregion
 }
