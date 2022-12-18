@@ -119,7 +119,7 @@ public class MicRange : MonoBehaviour
         }
         // データ数で割ったものに倍率をかけて音量とする
         _volumeRate = Mathf.Clamp01(sum * m_gain / (float)_currentValues.Length);
-        Debug.Log(_volumeRate);
+        //Debug.Log(_volumeRate);
     }
 
     //音量チェック
