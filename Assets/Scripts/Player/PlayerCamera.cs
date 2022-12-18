@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-    public Camera Cam { get; private set; }
-
-    private CinemachinePOV _pov;
+    [SerializeField] private CinemachineFreeLook _virtualCamera;
+    [SerializeField] private Camera _cam;
+    public Camera Cam => _cam;
 
     private void Awake()
     {
@@ -15,23 +14,18 @@ public class PlayerCamera : MonoBehaviour
         // また、transformをデフォルトになる
         transform.SetParent(null, false);
 
-        // メインカメラを探すまたは作成
-        Cam = Camera.main;
-
-        if(Cam == null)
+        // Sceneの中の全てのメインカメラを探してから破棄する(自分が持っているメインカメラ除外)
+        GameObject[] mainCameras = GameObject.FindGameObjectsWithTag(Tag.MainCamera);
+        if (mainCameras != null)
         {
-            GameObject go = new GameObject();
-            go.name = "Main Camera";
-            Cam = go.AddComponent<Camera>();
-            Cam.tag = Tag.MainCamera;
-            go.AddComponent<AudioListener>();
+            foreach (GameObject mainCam in mainCameras)
+            {
+                if (mainCam != _cam.gameObject)
+                {
+                    Destroy(mainCam);
+                }
+            }
         }
-
-        Cam.gameObject.AddComponent<CinemachineBrain>();
-
-        Cam.transform.SetParent(transform);  // 用途なし。Unity Editorで見やすいようにのみ。
-
-        _pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
     }
 
     private void Start()
@@ -42,6 +36,6 @@ public class PlayerCamera : MonoBehaviour
     public void ResetRotation()
     {
         // target の後ろにいる
-        //_pov.m_HorizontalAxis.Value = _virtualCamera.Follow.rotation.eulerAngles.y;
+        _virtualCamera.m_XAxis.Value = _virtualCamera.Follow.rotation.eulerAngles.y;
     }
 }
