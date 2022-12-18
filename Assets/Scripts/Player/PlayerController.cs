@@ -47,26 +47,15 @@ public class PlayerController : MonoBehaviour
     private void OnMoveStop(InputAction.CallbackContext obj)
     {
         //Moveを押した瞬間
-        _playerModel.SetMovement(Vector3.zero);
+        _playerModel.SetMovement(Vector2.zero);
     }
 
     private void OnMove(InputAction.CallbackContext obj)
     {
         //Moveを押した瞬間
-        var value = obj.ReadValue<Vector2>();
-        var direction = new Vector3(value.x, 0, value.y);
-        _playerModel.SetMovement(direction);
-
+        _playerModel.SetMovement(obj.ReadValue<Vector2>());
     }
 
-    private void OnMoveKeyboard(InputAction.CallbackContext obj)
-    {
-        //Moveを押した瞬間
-        var value = obj.ReadValue<Vector2>();
-        var direction = new Vector3(value.x, 0, value.y);
-        _playerModel.SetMovement(direction);
-
-    }
     #endregion
 
     #region Shout
