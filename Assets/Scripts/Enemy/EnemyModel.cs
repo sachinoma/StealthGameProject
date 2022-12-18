@@ -1,143 +1,175 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.AI;
-using System.Security.Cryptography;
-using System;
 using Debug = UnityEngine.Debug;
-using UniRandom = UnityEngine.Random;
-using System.Diagnostics;
+using random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyModel : MonoBehaviour
 {
-    float _speed;
+    [Header("ステート")]
+    EnemyState currentState;
+    bool stateEnter;
 
-    enum State
-    {
-        Free,
-        PatrolPoint1,
-        PatrolPoint2
-    }
-    State currentState = State.Free;
-    bool stateEnter = true;
-    bool isChase;
-    bool isSarch;
-    bool isAttack;
+    [Header("徘徊場所")]
+    [SerializeField] List<Transform> sarchPosition;
 
-    int chaseTimer;
-
+    [Header("敵のベース")]
+    private NavMeshAgent _agent;
     private Animator _animator;
+    private float _speed;
+    int chaseTimer;
+    int stopTimer;
+    [SerializeField] private SphereCollider playerSounds;
+    [SerializeField] Transform enemySarch;//今どこに向かっているか
+    //視界
+    [SerializeField] float searchAngle = 100f;
+    [SerializeField] private SphereCollider searchArea;
 
+    [Header("攻撃判定")]
     BoxCollider leftCollider;
     BoxCollider rightCollider;
 
-    [SerializeField] Transform point1;
-    [SerializeField] Transform point2;
-    [SerializeField] Transform enemySarch;
-    [SerializeField] float searchAngle = 100f;
-    private NavMeshAgent _agent;
-    [SerializeField] private SphereCollider searchArea;
-    public PlayerModel script;
-
     void Start()
-    {    
-        isChase = false;
-        isSarch = false;
-        isAttack = false;
-        chaseTimer = 0;
-        _agent = GetComponent<NavMeshAgent>();
-        GameObject obj = GameObject.Find("robot_enemy");
-        _animator = obj.GetComponent<Animator>();
+    {
+        AgentSetUp();
+
+        _animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
         leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
         rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
-        _speed = _agent.speed;
     }
 
     void Update()
     {
         _animator.SetFloat("Speed", _agent.speed);
-        if(isChase)
-        {
-            _animator.SetBool("isChase",true);
-            if(_agent.remainingDistance <= 1.5f && !_agent.pathPending && !isAttack)
-            {
-                Attack();
-            }
-            return;
-        }
-        else
-        {
-            if (chaseTimer > 0)
-            {
-                chaseTimer--;
-                return;
-            }
-            _animator.SetBool("isChase", false);
-            if(isSarch)
-            {
-                if(_agent.remainingDistance <= 0.1f && !_agent.pathPending)
-                {
-                    isSarch = false;
-                    currentState = State.Free;
-                }
-                return;
-            }
-        }
+
+        #region 敵のステート
         switch (currentState)
         {
-            case State.Free:
-                #region
-                if (stateEnter)//開始1回の処理
+            case EnemyState.Idle:
+                #region 開始1回の処理
+                if (stateEnter)
                 {
                     stateEnter = false;
+                    _agent.speed = 0f;
                 }
-                bool rnd = RandomBool();
-                currentState =  rnd ? State.PatrolPoint1: State.PatrolPoint2;
-                stateEnter = true;
                 #endregion
+
+                if (stopTimer <= 0)
+                {
+                    currentState = EnemyState.Move;
+                    _agent.speed = _speed;
+                    stateEnter = true;
+                }
+                else
+                {
+                    stopTimer--;
+                }
                 break;
-            case State.PatrolPoint1:
-                #region
-                if (stateEnter)//開始1回の処理
+            case EnemyState.Move:
+                #region 開始1回の処理
+                if (stateEnter)
                 {
                     stateEnter = false;
+                    int rnd = random.Range(0, sarchPosition.Count);
+                    _agent.destination = sarchPosition[rnd].position;
+                    enemySarch.position = sarchPosition[rnd].position;
                 }
-                _agent.destination = point1.position;
-                enemySarch.position = point1.position;
+                #endregion
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
-                    currentState = State.PatrolPoint2;
+                    currentState = EnemyState.Idle;
                     stateEnter = true;
                     return;
                 }
-                #endregion
                 break;
-            case State.PatrolPoint2:
-                #region
-                if (stateEnter)//開始1回の処理
+            case EnemyState.SoundSarch:
+                #region 開始1回の処理
+                if (stateEnter)
                 {
                     stateEnter = false;
                 }
-                _agent.destination = point2.position;
-                enemySarch.position = point2.position;
+                #endregion
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
-                    currentState = State.PatrolPoint1;
+                    currentState = EnemyState.Idle;
+                    stopTimer = 60;
                     stateEnter = true;
                     return;
+                }
+                break;
+            case EnemyState.Chase:
+                #region 開始1回の処理
+                if (stateEnter)
+                {
+                    _animator.SetBool("isChase", true);
+                    stateEnter = false;
+                }
+                #endregion
+                if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+                {
+                    currentState = EnemyState.Attack;
+                    stateEnter = true;
+                }
+                else if(playerSounds.radius < 1f)
+                {
+                    currentState = EnemyState.Idle;
+                    _animator.SetBool("isChase", false);
+                    stopTimer = 30;
+                    stateEnter = true;
+                }
+                else
+                {
+                    if(chaseTimer <= 0)
+                    {
+                        currentState = EnemyState.Idle;
+                        _animator.SetBool("isChase", false);
+                        stopTimer = 30;
+                        stateEnter = true;
+                    }
+                    else
+                    {
+                        chaseTimer--;
+                    }
+                }
+                break;
+            case EnemyState.Attack:
+                #region 開始1回の処理
+                if (stateEnter)
+                {
+                    _animator.SetTrigger("Attack Trigger");
+                    Attack();
+                    stateEnter = false;
                 }
                 #endregion
                 break;
         }
-
+        #endregion
     }
 
-    public void OnDetectObjectStay(Collider collider)
+    private void AgentSetUp()
     {
-        // 検知オブジェクトがPlayerなら追いかける
-        if(collider.CompareTag(Tag.Player))
+        chaseTimer = 0;
+        stopTimer = 0;
+        currentState = EnemyState.Idle;
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.stoppingDistance = 1f;
+        _speed = _agent.speed;
+        stateEnter = true;
+    }
+
+
+    #region 音やプレイヤーの捜索
+    public void PlayerSarch(Collider collider)
+    {
+        if(currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
+        if (playerSounds.radius < 1f) { return; }
+            // 検知オブジェクトがPlayer
+            if (collider.CompareTag(Tag.Player))
         {
             var positionDiff = collider.transform.position - transform.position;  // 自身（敵）とプレイヤーの距離
             var angle = Vector3.Angle(transform.forward, positionDiff);  // 敵から見たプレイヤーの方向
@@ -145,7 +177,7 @@ public class EnemyModel : MonoBehaviour
             {
                 RaycastHit hit;
                 Vector3 direction;   // Rayを飛ばす方向
-                float distance = 10;    // Rayを飛ばす距離
+                float distance = 10f;    // Rayを飛ばす距離
 
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;
@@ -156,77 +188,43 @@ public class EnemyModel : MonoBehaviour
                 {
                     if (hit.collider.CompareTag(Tag.Player))
                     {
-                        isChase = true;
-                        isSarch = false;
+                        stateEnter = currentState != EnemyState.Chase;
+                        currentState = EnemyState.Chase;
                         _agent.destination = collider.transform.position;
                         enemySarch.position = collider.transform.position;
-                    }
-                    else if(isChase)
-                    {
-                        isChase = false;
-                        chaseTimer = 180;
+                        chaseTimer = 60;
                     }
                 }
             }
         }
     }
 
-    public void OnDetectObjectExit(Collider collider)
+    public void SoundSarch(Collider collider)
     {
-        if (collider.CompareTag(Tag.Player))
-        {
-            isChase = false;
-            chaseTimer = 180;
-        }
-    }
-
-    public void OnDetectObjectEnter(Collider collider)
-    {
+        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
-            isSarch = true;
+            currentState = EnemyState.SoundSarch;
             _agent.destination = collider.transform.position;
             enemySarch.position = collider.transform.position;
         }
     }
+    #endregion
 
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if(isChase)
-        {
-            Handles.color = new Color(1f, 0f, 0f, 0.3f);
-        }
-        else if(isSarch)
-        {
-            Handles.color = new Color(0f, 0f, 1f, 0.3f);
-        }
-        else
-        {
-            Handles.color = new Color(0f, 1f, 0f, 0.3f);
-        }
-        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius);
-    }
-#endif
-
-    bool RandomBool()
-    {
-        return UniRandom.Range(0, 2) == 0;
-    }
-
+    #region 攻撃処理
     void Attack()
     {
-        isAttack = true;
-        Invoke("ColliderStart", 0.8f);
-        _animator.SetTrigger("Attack Trigger");
+        Invoke("ColliderStart", 0.12f);
         Invoke("ColliderReset", 1.12f);
         Invoke("AttackEnd", 2.15f);
     }
 
     private void AttackEnd()
     {
-        isAttack = false;
-        _agent.speed = _speed;
+        currentState = EnemyState.Idle;
+        _animator.SetBool("isChase", false);
+        stateEnter = true;
+        stopTimer = 30;
     }
 
     private void ColliderStart()
@@ -239,6 +237,25 @@ public class EnemyModel : MonoBehaviour
     {
         rightCollider.enabled = false;
         leftCollider.enabled = false;
-        _agent.speed = 0f;
     }
+    #endregion
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (currentState == EnemyState.Chase)
+        {
+            Handles.color = new Color(1f, 0f, 0f, 0.3f);
+        }
+        else if (currentState == EnemyState.SoundSarch)
+        {
+            Handles.color = new Color(0f, 0f, 1f, 0.3f);
+        }
+        else
+        {
+            Handles.color = new Color(0f, 1f, 0f, 0.3f);
+        }
+        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius);
+    }
+#endif
 }

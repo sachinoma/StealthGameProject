@@ -17,9 +17,7 @@ public class PlayerSc : MonoBehaviour
     {
         Transform trans = transform;
         transform.position = trans.position;
-
-        col.enabled = false;
-        col.radius = 0f;
+        col.radius = 3f;
         if (Keyboard.current.wKey.IsPressed())
         {
             trans.position += trans.TransformDirection(Vector3.forward) * 1 * 0.1f;
