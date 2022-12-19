@@ -292,7 +292,7 @@ MonoBehaviour:
   _maxSpeed: 3
   _acceleration: 10
   _rotateSpeed: 15
-  _minMovementThreshold: 0.1
+  _minMovementThreshold: 0.25
 --- !u!143 &9202168651605735602
 CharacterController:
   m_ObjectHideFlags: 0
