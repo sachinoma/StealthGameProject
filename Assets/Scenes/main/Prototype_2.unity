@@ -247,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7559990500157691389, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: m_Radius
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7559990500157691390, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: onTriggerStay.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -719,7 +719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4349533346915684443, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
       propertyPath: _maxRange
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4349533346915684443, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
       propertyPath: _minRange

@@ -23,8 +23,8 @@ public class MicRange : MonoBehaviour
     [Header("黒いFogが戻る速さ")]
     [SerializeField, Range(0f, 2.0f)] private float _rollBackSpeed = 0.5f;
 
-    [Header("Fogの最大範囲(0.5~2.0)")]
-    [SerializeField, Range(0.5f, 2.0f)] private float _maxRange = 1.0f;
+    [Header("Fogの最大範囲(0.5~3.0)")]
+    [SerializeField, Range(0.5f, 3.0f)] private float _maxRange = 1.0f;
     [Header("Fogの最小範囲(0.5~2.0)")]
     [SerializeField, Range(0.5f, 2.0f)] private float _minRange = 1.0f;
 
