@@ -111,16 +111,16 @@ public class EnemyModel : MonoBehaviour
                 }
                 #endregion
 
-                if (playerSounds.gameObject.activeInHierarchy == false)
+                if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+                {
+                    currentState = EnemyState.Attack;
+                    stateEnter = true;
+                }
+                else if (playerSounds.gameObject.activeSelf == false)
                 {
                     currentState = EnemyState.Idle;
                     _animator.SetBool("isChase", false);
                     stopTimer = 30;
-                    stateEnter = true;
-                }
-                else if (_agent.remainingDistance <= 1f && !_agent.pathPending)
-                {
-                    currentState = EnemyState.Attack;
                     stateEnter = true;
                 }
                 else
@@ -168,7 +168,7 @@ public class EnemyModel : MonoBehaviour
     public void PlayerSarch(Collider collider)
     {
         if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
-        if (playerSounds.gameObject.activeInHierarchy == false) { return; }
+        if (playerSounds.gameObject.activeSelf == false) { return; }
         // 検知オブジェクトがPlayer
         if (collider.CompareTag(Tag.Player))
         {
@@ -195,6 +195,17 @@ public class EnemyModel : MonoBehaviour
                         enemySarch.position = collider.transform.position;
                         chaseTimer = 60;
                     }
+                    else if(hit.collider.CompareTag(Tag.Sounds))
+                    {
+                        if (hit.collider.gameObject.transform.parent.parent.CompareTag(Tag.Player))
+                        {
+                            stateEnter = currentState != EnemyState.Chase;
+                            currentState = EnemyState.Chase;
+                            _agent.destination = collider.transform.position;
+                            enemySarch.position = collider.transform.position;
+                            chaseTimer = 60;
+                        }
+                    }
                 }
             }
         }
@@ -205,6 +216,7 @@ public class EnemyModel : MonoBehaviour
         if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
+            stateEnter = currentState != EnemyState.SoundSarch;
             currentState = EnemyState.SoundSarch;
             _agent.destination = collider.transform.position;
             enemySarch.position = collider.transform.position;
@@ -256,7 +268,7 @@ public class EnemyModel : MonoBehaviour
         {
             Handles.color = new Color(0f, 1f, 0f, 0.3f);
         }
-        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius);
+        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.5f);
     }
 #endif
 }
