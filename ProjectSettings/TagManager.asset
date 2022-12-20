@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - Ground
   - SoundChecker
+  - Trap
   layers:
   - Default
   - TransparentFX

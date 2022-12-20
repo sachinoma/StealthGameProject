@@ -35,6 +35,9 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private float _maxShoutChargeTime = 1.0f;
     private bool _isShoutCharging;
     private float _startShoutChargingTime;
+    //Trap
+    [Header("罠")]
+    [SerializeField] private bool _isTrap = false;
 
     private Vector3 _initialPos;
     private Quaternion _initialRot;
@@ -49,6 +52,8 @@ public class PlayerModel : MonoBehaviour
     public event Action Died = null;
 
     public event Action<PickUpItem.ItemType> PickedUp = null;
+
+    
 
     void Awake()
     {
@@ -334,17 +339,40 @@ public class PlayerModel : MonoBehaviour
     #endregion
 
     #region AnimationEvent
-    private void AnimSoundVolumeSmall()
+    private void AnimSoundVolume()
     {
-        _micRange.AnimSetVolumeRate(_audioRangeVolume[0]);
+        if(!_isTrap)
+        {
+            _micRange.AnimSetVolumeRate(_audioRangeVolume[0]);
+        }
+        else
+        {
+            _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
+        }     
     }
 
     private void AnimSoundVolumeBig()
     {
         _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
     }
-
-    
-
     #endregion
+
+    #region ColliderTrap
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag(Tag.Trap))
+        {
+            _isTrap = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag(Tag.Trap))
+        {
+            _isTrap = false;
+        }
+    }
+    #endregion
+
 }

@@ -40,7 +40,7 @@ public class MicRange : MonoBehaviour
     //丸コライダー（Enemyから検出用）
     [SerializeField] private GameObject _circleForEnemy;
     [Header("敵から検知できるコライダーの大きさ(3.0~8.0)")]
-    [SerializeField, Range(3.0f, 8.0f)] private float _circleForEnemyScaleValue = 5.0f;
+    [SerializeField, Range(0.5f, 8.0f)] private float _circleForEnemyScaleValue = 5.0f;
     private Vector3 _circleForEnemyScale;
 
 
@@ -207,11 +207,24 @@ public class MicRange : MonoBehaviour
         _volumeRate = rate;
     }
 
+
+
+    #endregion
+
+    #region ボタン型音量調整
+
     public void AnimSetVolumeRate(float rate)
     {
         _volumeRate = rate;
-        Instantiate(_rangeParticle[0], _rangeParticlePos.transform.position, transform.rotation);
+        if(rate >= 1.0f)
+        {
+            Instantiate(_rangeParticle[1], _rangeParticlePos.transform.position, transform.rotation);
+        }
+        else
+        {
+            Instantiate(_rangeParticle[0], _rangeParticlePos.transform.position, transform.rotation);
+        }
+        
     }
-
     #endregion
 }
