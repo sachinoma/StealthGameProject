@@ -39,7 +39,6 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -285,11 +284,7 @@ PrefabInstance:
     - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: playerSounds
       value: 
-<<<<<<< HEAD
-      objectReference: {fileID: 1929271743}
-=======
       objectReference: {fileID: 1868022473}
->>>>>>> 37f0c8e1d64c54f0e24bc8eaaafc0d68530052a8
     - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: sarchPosition.Array.size
       value: 2
@@ -2993,11 +2988,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!135 &1929271743 stripped
-SphereCollider:
-  m_CorrespondingSourceObject: {fileID: 3182443518779528723, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
-  m_PrefabInstance: {fileID: 364347864}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1962253203
 GameObject:
   m_ObjectHideFlags: 0
