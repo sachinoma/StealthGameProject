@@ -110,16 +110,17 @@ public class EnemyModel : MonoBehaviour
                     stateEnter = false;
                 }
                 #endregion
-                if (_agent.remainingDistance <= 1f && !_agent.pathPending)
-                {
-                    currentState = EnemyState.Attack;
-                    stateEnter = true;
-                }
-                else if(playerSounds.radius < 1f)
+
+                if (playerSounds.gameObject.activeInHierarchy == false)
                 {
                     currentState = EnemyState.Idle;
                     _animator.SetBool("isChase", false);
                     stopTimer = 30;
+                    stateEnter = true;
+                }
+                else if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+                {
+                    currentState = EnemyState.Attack;
                     stateEnter = true;
                 }
                 else
@@ -166,10 +167,10 @@ public class EnemyModel : MonoBehaviour
     #region 音やプレイヤーの捜索
     public void PlayerSarch(Collider collider)
     {
-        if(currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
-        if (playerSounds.radius < 1f) { return; }
-            // 検知オブジェクトがPlayer
-            if (collider.CompareTag(Tag.Player))
+        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
+        if (playerSounds.gameObject.activeInHierarchy == false) { return; }
+        // 検知オブジェクトがPlayer
+        if (collider.CompareTag(Tag.Player))
         {
             var positionDiff = collider.transform.position - transform.position;  // 自身（敵）とプレイヤーの距離
             var angle = Vector3.Angle(transform.forward, positionDiff);  // 敵から見たプレイヤーの方向

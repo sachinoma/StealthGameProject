@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -249,6 +249,14 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7559990500157691390, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: onTriggerStay.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayerSarch
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559990500157691390, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: onTriggerStay.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SoundSarch
+      objectReference: {fileID: 0}
     - target: {fileID: 7559990500748918988, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: m_Speed
       value: 5
@@ -273,6 +281,22 @@ PrefabInstance:
       propertyPath: enemySarch
       value: 
       objectReference: {fileID: 1122233009}
+    - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: playerSounds
+      value: 
+      objectReference: {fileID: 1929271743}
+    - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: sarchPosition.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: sarchPosition.Array.data[0]
+      value: 
+      objectReference: {fileID: 18835212}
+    - target: {fileID: 7559990500748918989, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
+      propertyPath: sarchPosition.Array.data[1]
+      value: 
+      objectReference: {fileID: 1363937373}
     - target: {fileID: 7559990500748918990, guid: fda6a3b7b1a7b45448ece3785c2c38a0, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -2822,6 +2846,11 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!135 &1929271743 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 3182443518779528723, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+  m_PrefabInstance: {fileID: 364347864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1962253203
 GameObject:
   m_ObjectHideFlags: 0
