@@ -161,6 +161,7 @@ public class MicRange : MonoBehaviour
         }
         else
         {
+            RenderSettings.fogDensity = max;
             _circleForEnemy.SetActive(false);
         }
     }
@@ -191,6 +192,10 @@ public class MicRange : MonoBehaviour
         {
             _circleBlackValue -= ((max - min) / _circleBlackSpeedSet) * _rollBackSpeed * Time.deltaTime;
             //_circleBlackValue -= 0.025f * _rollBackSpeed;
+        }
+        else
+        {
+            _circleBlackValue = min;
         }
         _circleBlack.transform.localScale = _circleBlackValue * _circleBlackBasic;
     }
