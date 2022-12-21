@@ -26,7 +26,6 @@ public class DummyContoroller : MonoBehaviour
     {
         _throwController = gameObject.GetComponent<ThrowController>();
 
-        _input.actions["Jump"].started += OnAttack;
         InputActionMap normal = _input.actions.FindActionMap("Normal");
         normal["Move"].performed += OnMove;
         normal["Move"].canceled += OnMoveStop;
@@ -35,7 +34,6 @@ public class DummyContoroller : MonoBehaviour
 
     private void OnDestroy()
     {
-        _input.actions["Jump"].started -= OnAttack;
         InputActionMap normal = _input.actions.FindActionMap("Normal");
         normal["Move"].performed -= OnMove;
         normal["Move"].canceled -= OnMoveStop;
