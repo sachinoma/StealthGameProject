@@ -7,6 +7,9 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider))]
 public class EnemyAI : MonoBehaviour
 {
+    // New comment
+        // New comment
+        // New comment
     [SerializeField] private TriggerEvent onTriggerStay = new TriggerEvent();
     [SerializeField] private TriggerEvent onTriggerExit = new TriggerEvent();
     [SerializeField] private TriggerEvent onTriggerEnter = new TriggerEvent();
