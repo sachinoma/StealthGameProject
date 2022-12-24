@@ -39,6 +39,11 @@ public class MicRange : MonoBehaviour
 
     //丸コライダー（Enemyから検出用）
     [SerializeField] private GameObject _circleForEnemy;
+    /*
+     * Rangeの数値をHeaderに書くのは必要がないと思う
+     * 今Rangeが変更すれば、Headerも変更しなければならない
+     * Headerの変更を忘れた場合は、逆に紛らわしなる
+     */
     [Header("敵から検知できるコライダーの大きさ(3.0~8.0)")]
     [SerializeField, Range(0.5f, 8.0f)] private float _circleForEnemyScaleValue = 5.0f;
     private Vector3 _circleForEnemyScale;
@@ -52,6 +57,9 @@ public class MicRange : MonoBehaviour
     [SerializeField] private GameObject[] _rangeParticle;
     [SerializeField] private GameObject _rangeParticlePos;
 
+    /*
+     * 今このクラスのフィールドは多くて複雑すぎると思う。多分簡素化できるかなと思う。
+     */
 
     void Start()
     {
@@ -71,6 +79,13 @@ public class MicRange : MonoBehaviour
             ButtonUpdate();
         }   
 
+        /*
+         * _fogMax / _minRange
+         * _fogMin / _maxRange
+         * _circleBlackMax * _maxRange
+         * _circleBlackMin * _minRange
+         * 全て定数だから、Startで計算しておいた方がいいと思う
+         */
         if(VolumeCheck())
         {
             FogSetting(_fogMax / _minRange, _fogMin / _maxRange);
@@ -104,6 +119,9 @@ public class MicRange : MonoBehaviour
             m_source.loop = true; // ループにする
             m_source.clip = Microphone.Start(devName, true, ms, minFreq); // clipをマイクに設定
             while(!(Microphone.GetPosition(devName) > 0)) { } // きちんと値をとるために待つ
+            /*
+             * Microphone.GetPosition(null)の役は？？？
+             */
             Microphone.GetPosition(null);
             m_source.Play();
         }
@@ -129,15 +147,39 @@ public class MicRange : MonoBehaviour
     }
 
     #region 黒いFog  
+    /*
+     * private をすべきだ
+     * FogSettingという名前はちょっと意味が分からないと思う。UpdateFogとか、SetFogとかの方がいいと思う
+     * あまり確定しないけど、一般的に引数の順番はmin, maxかなと思う
+     */
     public void FogSetting(float max, float min)
     {
         RenderSettings.fogDensity = FogValue(_volumeRate, max, min);
     }
 
+    /*
+     * 名前：CalcFogValueとか、CalculateFogValueとかの方がいいと思う
+     * FogValueにRenderSettings.fogDensityに関連するので、FogSetting関数とFogValue関数と結合した方がいいかもしれない
+     * 例えば、
+     * private void UpdateFog(float min, float max, float value)
+     * {
+     *     float tmp = Mathf.Lerp(min, max, value);
+     *     if(RenderSettings.fogDensity > tmp)
+     *     {
+     *         RenderSettings.fogDensity = tmp;
+     *     }
+     * }
+     */
     // 黒いFogの増減、maxは一番黒い,minは一番遠い
     float FogValue(float num , float max , float min)
     {
+        /*
+         * このプロジェクトの命名規則
+         * tmpValue
+         * float tmpValue = Mathf.Lerp(min, max, num);
+         */
         float _tmpValue = max + (num * -(max - min));
+
         if(RenderSettings.fogDensity > _tmpValue)
         {
             return _tmpValue;
@@ -154,6 +196,11 @@ public class MicRange : MonoBehaviour
         if(RenderSettings.fogDensity < max)
         {
             RenderSettings.fogDensity += ((max - min)/ _fogSpeedSet) * _rollBackSpeed * Time.deltaTime;
+            /*
+             * これは僕のミスだ。
+             * 今多分_circleForEnemyScaleと_circleForEnemyScaleValueの必要がない。
+             * _circleForEnemy.SetActive()だけで濟む (_circleForEnemy.transform.localScaleはUnity Editorで直接に変える)
+             */
             _circleForEnemy.transform.localScale = _circleForEnemyScale;
             _circleForEnemy.SetActive(true);
 
@@ -167,6 +214,9 @@ public class MicRange : MonoBehaviour
     }
     #endregion
 
+    /*
+     * 「黒いFog」regionのコメントと似ている
+     */
     #region 黒い丸コライダーとメッシュ
     public void CircleBlackSetting(float max, float min)
     {

@@ -376,3 +376,56 @@ public class PlayerModel : MonoBehaviour
     #endregion
 
 }
+
+
+/*
+ * 以下は前のコードだ。
+ * FixedUpdateは今のfpsに関係なく、必ず一定の時間に繰り返す。
+ * FixedUpdate()の中に、Time.deltaTimeを呼び出しても、実はTime.fixedDeltaTimeを呼び出す
+ * 参考：https://docs.unity3d.com/ScriptReference/Time-deltaTime.html
+ * 一般的に物理に関することはFixedUpdateを使う。
+ * でも、これは絶対ってわけではない。
+ * 参考：https://shibuya24.info/entry/unity-rigidbody-addforce
+ * 参考：https://gamedevbeginner.com/how-to-use-fixed-update-in-unity
+ * こっちの場合は、RigidBody.AddForce()を使わず、直接にvelocityを変更すれば、UpdateでもFixedUpdateでも使える。
+void FixedUpdate()
+{
+    if(_state != PlayerState.Moving)
+    {
+        _rb.velocity = Vector3.zero;
+        return;
+    }
+
+    // カメラの方向から、X-Z平面の単位ベクトルを取得
+    Vector3 cameraForward = Vector3.Scale(_playerCamera.Cam.transform.forward, new Vector3(1, 0, 1)).normalized;
+
+    // 方向キーの入力値とカメラの向きから、移動方向を決定
+    Vector3 moveForward = cameraForward * _inputVertical + _playerCamera.Cam.transform.right * _inputHorizontal;
+
+    // 移動方向にスピードを掛ける。ジャンプや落下がある場合は、別途Y軸方向の速度ベクトルを足す。
+    _rb.velocity = moveForward * _speed + new Vector3(0, _rb.velocity.y, 0);
+
+    // キャラクターの向きを進行方向に
+    if(_isRotate)
+    {
+        if(moveForward != Vector3.zero)
+        {
+            //回転に補間する
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveForward), Time.deltaTime * _rotateSpeed);
+            //補間しない
+            //transform.rotation = Quaternion.LookRotation(moveForward);
+        }
+    }
+
+    //移動animatorの表現
+    if(isMove)
+    {
+        _animator.SetFloat(MoveAnimFloat, _speedAnimatorParameter);
+    }
+    else
+    {
+        _speedAnimatorParameter = Mathf.Max(_speedAnimatorParameter - 0.1f, 0);
+        _animator.SetFloat(MoveAnimFloat, _speedAnimatorParameter);
+    }
+}
+*/

@@ -11,11 +11,24 @@ using UnityEditor;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyModel : MonoBehaviour
 {
+    /*
+     * このプロジェクトの命名規則
+     * EnemyState _currentState;
+     */
+
+    /*
+     * privateを付けるかどうかがあまり構わないと思うけど、一致するともっと見やすいかなと思う
+     */
     [Header("ステート")]
     EnemyState currentState;
     bool stateEnter;
 
     [Header("徘徊場所")]
+    /*
+     * ArrayとかListとかの場合、s / Array / List とかを付けた方がいいと思う。
+     * 例えば、searchPositions / searchPosList
+     * ちらみに、"search"は正確な綴り方だ
+     */
     [SerializeField] List<Transform> sarchPosition;
 
     [Header("敵のベース")]
@@ -38,11 +51,37 @@ public class EnemyModel : MonoBehaviour
     {
         AgentSetUp();
 
+        /*
+         * バグ：
+         * EnemyAttackのコメントを参考にする
+         */
+
+        /*
+         * 攻撃のことをEnemyAttackに任せたから、ここはleftColliderとrightColliderをいじるべきではない
+         * 例えば、
+         * private EnemyAttack[] enemyAttacks;
+         * 
+         * private void Awake()
+         * {
+         *     enemyAttacks = GetComponentsInChildren<EnemyAttack>();
+         * }
+         * 
+         * 攻撃をする時：
+         * foreach(EnemyAttack enemyAttack in enemyAttacks)
+         * {
+         *     enemyAttack.Attack();
+         * }
+         */
         _animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
         leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
         rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
     }
 
+    /*
+     * Update()のロジックは、ほどんとEnemyAIの役割だと思う
+     * どう行動しればいいのかはEnemyAIの役割で、EnemyModelはただ行動を行う
+     * 多分下野さんのBehaviour Treeを導入する際に、ここのコードをBehaviour Treeに移行するかなと思う
+     */
     void Update()
     {
         _animator.SetFloat("Speed", _agent.speed);
@@ -80,10 +119,40 @@ public class EnemyModel : MonoBehaviour
                     enemySarch.position = sarchPosition[rnd].position;
                 }
                 #endregion
+                /*
+                 * このif文の条件をよく使うから、関数になった方がいい
+                 */
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
                     stateEnter = true;
+                    /*
+                     * 多分　stopTimer = 60;　とかを忘れた
+                     * 実は関数を用意した方がいいと思う
+                     * 例えば、
+                     * void SetIdleState(int idleTime)
+                     * {
+                     *     currentState = EnemyState.Idle;
+                     *     stateEnter = true;
+                     *     stopTimer = idleTime;
+                     * }
+                     * 
+                     * さらに、stateを変更する時、stateEnter = true も必要なので、以下のようになった方がいいかもしれない。
+                     * private EnemyState _currentState;
+                     * private EnemyState CurrentState
+                     * {
+                     *     get { return _currentState; }
+                     *     set
+                     *     {
+                     *         if(_currentState != value)
+                     *         {
+                     *             _currentState = value;
+                     *             stateEnter = true;
+                     *         }
+                     *     }
+                     * }
+                     * 
+                     */
                     return;
                 }
                 break;
@@ -165,6 +234,9 @@ public class EnemyModel : MonoBehaviour
 
 
     #region 音やプレイヤーの捜索
+    /*
+     * EnemyAIの役割だと思う
+     */
     public void PlayerSarch(Collider collider)
     {
         if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
@@ -180,6 +252,9 @@ public class EnemyModel : MonoBehaviour
                 Vector3 direction;   // Rayを飛ばす方向
                 float distance = 10f;    // Rayを飛ばす距離
 
+                /*
+                 * すでにpositionDiffを求めた
+                 */
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;
 
@@ -197,6 +272,12 @@ public class EnemyModel : MonoBehaviour
                     }
                     else if(hit.collider.CompareTag(Tag.Sounds))
                     {
+                        /*
+                         * このような仕組みはあまりよくないと思う。
+                         * というのは、hierarchyの親子関係を強く繋げるからだ。
+                         * 
+                         * そういえば、なぜSounds tagもRaycastのターゲットになったか？
+                         */
                         if (hit.collider.gameObject.transform.parent.parent.CompareTag(Tag.Player))
                         {
                             stateEnter = currentState != EnemyState.Chase;
@@ -211,6 +292,9 @@ public class EnemyModel : MonoBehaviour
         }
     }
 
+    /*
+     * EnemyAIの役割だと思う
+     */
     public void SoundSarch(Collider collider)
     {
         if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
@@ -227,6 +311,41 @@ public class EnemyModel : MonoBehaviour
     #region 攻撃処理
     void Attack()
     {
+        /*
+         * 個人的にInvokeの使用があまりおすすめしない。
+         * Invokeは関数のstringによって関数に紐つくので、Visual Studioで参照が探せない。
+         * 
+         * StartCoroutineがおすすめだ。
+         * https://docs.unity3d.com/ScriptReference/MonoBehaviour.StartCoroutine.html
+         * 一見複雑だけど、これは便利だと思う。(実は、StartCoroutineはUnity一番便利かつ強力なことだと思う。)
+         * 
+         * こっちの場合は、
+         * 
+         * void Attack()
+         * {
+         *     StartCoroutine(AttackCoroutine());
+         * }
+         * 
+         * IEnumerator AttackCoroutine()
+         * {
+         *     yield return new WaitForSeconds(0.12f);
+         *     ColliderStart();
+         *     
+         *     yield return new WaitForSeconds(1.0f);  // 1.12 - 0.12
+         *     ColliderReset();
+         *     
+         *     yield return new WaitForSeconds(1.03f);  // 2.15 - 1.0 - 0.12
+         *     AttackEnd();
+         * }
+         * 
+         * 当然ですが、時間より良い制御方法がある。
+         * WaitForSecondsの他に、色々なYieldInstructionもある。
+         * https://docs.unity3d.com/ScriptReference/WaitForSeconds.html <-- 下の"See Also"を参考にする
+         * 他には、
+         * yield return null; <-- 次のフレームまで待っている
+         * yield break; <-- returnのよう
+         * yield AnotherCoroutine(); <-- AnotherCoroutineを完了まで待っている
+         */
         Invoke("ColliderStart", 0.12f);
         Invoke("ColliderReset", 1.12f);
         Invoke("AttackEnd", 2.15f);
