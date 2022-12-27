@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Menu : MonoBehaviour
 {
-	//@Å‰‚ÉƒtƒH[ƒJƒX‚·‚éƒQ[ƒ€ƒIƒuƒWƒFƒNƒg
+	//ã€€æœ€åˆã«ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã™ã‚‹ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	[SerializeField]
 	private GameObject firstSelect;
 

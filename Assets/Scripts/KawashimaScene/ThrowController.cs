@@ -1,47 +1,47 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ThrowController : MonoBehaviour
 {
-    // ’e‚ÌPrefab
-    [SerializeField, Tooltip("’e‚ÌPrefab")]
+    // å¼¾ã®Prefab
+    [SerializeField, Tooltip("å¼¾ã®Prefab")]
     private GameObject _bulletPrefab;
 
-    // –Cg‚ÌƒIƒuƒWƒFƒNƒg
-    [SerializeField, Tooltip("–Cg‚É‚·‚éƒIƒuƒWƒFƒNƒg")]
+    // ç ²èº«ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    [SerializeField, Tooltip("ç ²èº«ã«ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     private GameObject _barrelObject;
 
-    // ’e‚ğ¶¬‚·‚éˆÊ’uî•ñ
+    // å¼¾ã‚’ç”Ÿæˆã™ã‚‹ä½ç½®æƒ…å ±
     private Vector3 _instantiatePosition;
 
-    // ’e‚Ì¶¬À•W(“Ç‚İæ‚ç‚¹‚éê—p)
+    // å¼¾ã®ç”Ÿæˆåº§æ¨™(èª­ã¿å–ã‚‰ã›ã‚‹å°‚ç”¨)
     public Vector3 copyInstantiatePosition
     { get { return _instantiatePosition; } }
 
-    // ’e‚ğ”­Ë‚·‚é‘¬“x
-    [SerializeField, Range(1.0F, 20.0F), Tooltip("’e‚ğ”­Ë‚·‚é‘¬“x")]
+    // å¼¾ã‚’ç™ºå°„ã™ã‚‹é€Ÿåº¦
+    [SerializeField, Range(1.0F, 20.0F), Tooltip("å¼¾ã‚’ç™ºå°„ã™ã‚‹é€Ÿåº¦")]
     private float _throwItemSpeed = 10f;
 
-    // ’e‚Ì‰‘¬“x
+    // å¼¾ã®åˆé€Ÿåº¦
     private Vector3 _shootVelocity;
 
-    // ’e‚Ì‰‘¬“x(“Ç‚İæ‚ç‚¹‚éê—p)
+    // å¼¾ã®åˆé€Ÿåº¦(èª­ã¿å–ã‚‰ã›ã‚‹å°‚ç”¨)
     public Vector3 copyShootVelocity
     { get { return _shootVelocity; } }
 
     void Update()
     {
-        //‚±‚ÌUpdateState‚ğÁ‚·‚Æ“Š‚°‚½uŠÔ‚É‹O“¹ü‚ª•\¦‚³‚ê‚é
-        //PublicŠÖ”‚É‚µ‚Ä‰EƒNƒŠƒbƒN‚ğ’·‰Ÿ‚µ‚µ‚Ä‚¢‚éŠÔ‚¾‚¯•\¦‚³‚ê‚é‚æ‚¤‚É‚µ‚½•û‚ª—Ç‚¢H‚©‚à
+        //ã“ã®UpdateStateã‚’æ¶ˆã™ã¨æŠ•ã’ãŸç¬é–“ã«è»Œé“ç·šãŒè¡¨ç¤ºã•ã‚Œã‚‹
+        //Publicé–¢æ•°ã«ã—ã¦å³ã‚¯ãƒªãƒƒã‚¯ã‚’é•·æŠ¼ã—ã—ã¦ã„ã‚‹é–“ã ã‘è¡¨ç¤ºã•ã‚Œã‚‹ã‚ˆã†ã«ã—ãŸæ–¹ãŒè‰¯ã„ï¼Ÿã‹ã‚‚
         UpdateState();
     }
 
     private void UpdateState()
     {
-        // ’e‚Ì‰‘¬“x‚ğXV
+        // å¼¾ã®åˆé€Ÿåº¦ã‚’æ›´æ–°
         _shootVelocity = _barrelObject.transform.up * _throwItemSpeed;
-        // ’e‚Ì¶¬À•W‚ğXV
+        // å¼¾ã®ç”Ÿæˆåº§æ¨™ã‚’æ›´æ–°
         _instantiatePosition = _barrelObject.transform.position;
     }
 
@@ -49,12 +49,12 @@ public class ThrowController : MonoBehaviour
     {
         UpdateState();
 
-        // ’e‚ğ¶¬‚µ‚Ä”ò‚Î‚·
+        // å¼¾ã‚’ç”Ÿæˆã—ã¦é£›ã°ã™
         GameObject obj = Instantiate(_bulletPrefab, _instantiatePosition, Quaternion.identity);
         Rigidbody rid = obj.GetComponent<Rigidbody>();
         rid.AddForce(_shootVelocity * rid.mass, ForceMode.Impulse);
 
-        // 5•bŒã‚ÉÁ‚¦‚é
+        // 5ç§’å¾Œã«æ¶ˆãˆã‚‹
         Destroy(obj, 5.0F);
     }
 }

@@ -1,165 +1,378 @@
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.InputSystem;
 
 public class PlayerModel : MonoBehaviour
 {
-    //Animator
-    [SerializeField]
-    private Animator _animator;
+    #region Animation Parameters
 
-    //ƒXƒs[ƒh
-    [SerializeField]
-    private float _basicMoveSpeed = 10.0f;
-    private float _speed;
-    private float _speedAnimatorParameter = 0.0f;
-    private bool isMove = false;
-    //‰ñ“]
-    [SerializeField]
-    private bool _isRotate = true; //‰ñ“]‚Å‚«‚é‚©‚Ç‚¤‚©‚Ì”»’è
+    private const string ResetAnimTrigger = "Reset";
+    private const string MoveAnimFloat = "Move";
+    private const string PickUpAnimTrigger = "PickUp";
+    private const string UselessActionAnimTrigger = "UselessAction";
+    private const string TakeDamageAnimTrigger = "TakeDamage";
+    private const string DieAnimTrigger = "Die";
+
+    #endregion
+
+    [Header("ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ")]
+    [SerializeField] private Animator _animator;
+    [SerializeField] private ReactableDetector _reactableDetector;
+    [SerializeField] private MicRange _micRange;
+    [SerializeField] private PlayerMovement _movement;
+
+    [Header("ã‚«ãƒ¡ãƒ©")]
+    [SerializeField] private PlayerCamera _playerCamera;
+
+    [Header("åŸºæœ¬")]
     //HP
-    [SerializeField]
-    private float _life = 10.0f;
-    //ƒWƒƒƒ“ƒv
-    [SerializeField]
-    private float _upForce = 200f; //ã•ûŒü‚É‚©‚¯‚é—Í
-    private bool  _isGround; //’…’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ì”»’è
+    [SerializeField] private float _life = 10.0f;
+    public float CurrentLife { get; private set; }
 
-    private float _inputHorizontal;
-    private float _inputVertical;
-    private Rigidbody _rb;
+    [Header("éŸ³å£°")]
+    [SerializeField] private float[] _audioRangeVolume;
+    [SerializeField] private float _maxShoutChargeTime = 1.0f;
+    private bool _isShoutCharging;
+    private float _startShoutChargingTime;
+    //Trap
+    [Header("ç½ ")]
+    [SerializeField] private bool _isTrap = false;
 
+    private Vector3 _initialPos;
+    private Quaternion _initialRot;
 
-    void Start()
+    private PlayerState _state = PlayerState.Moving;
+
+    private List<PickUpItem.ItemType> _obtainedItems = new List<PickUpItem.ItemType>();
+
+    private HidingPlace _currentHidingPlace = null;
+
+    public event Action DamageTaken = null;
+    public event Action Died = null;
+
+    public event Action<PickUpItem.ItemType> PickedUp = null;
+
+    
+
+    void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
-        _speed = _basicMoveSpeed;
+        ResetStatus();
+
+        _initialPos = transform.position;
+        _initialRot = transform.rotation;
+    }
+
+    public void Respawn()
+    {
+        ResetStatus();
+
+        transform.position = _initialPos;
+        transform.rotation = _initialRot;
+
+        _playerCamera.ResetRotation();
+
+        _animator.SetTrigger(ResetAnimTrigger);
+    }
+
+    private void ResetStatus()
+    {
+        CurrentLife = _life;
+        SetState(PlayerState.Moving);
+        _obtainedItems.Clear();
+        _currentHidingPlace = null;
+
+        ResetShout();
     }
 
     void Update()
     {
-
+        _animator.SetFloat(MoveAnimFloat, _movement.GetNormalized01InputSpeed());
     }
 
-    void FixedUpdate()
+    public void SetMovement(Vector2 movement)
     {
-        // ƒJƒƒ‰‚Ì•ûŒü‚©‚çAX-Z•½–Ê‚Ì’PˆÊƒxƒNƒgƒ‹‚ğæ“¾
-        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        _movement.SetTargetMovement(movement);
+    }
 
-        // •ûŒüƒL[‚Ì“ü—Í’l‚ÆƒJƒƒ‰‚ÌŒü‚«‚©‚çAˆÚ“®•ûŒü‚ğŒˆ’è
-        Vector3 moveForward = cameraForward * _inputVertical + Camera.main.transform.right * _inputHorizontal;
+    #region PlayerState
 
-        // ˆÚ“®•ûŒü‚ÉƒXƒs[ƒh‚ğŠ|‚¯‚éBƒWƒƒƒ“ƒv‚â—‰º‚ª‚ ‚éê‡‚ÍA•Ê“rY²•ûŒü‚Ì‘¬“xƒxƒNƒgƒ‹‚ğ‘«‚·B
-        _rb.velocity = moveForward * _speed + new Vector3(0, _rb.velocity.y, 0);
-
-        
-
-        // ƒLƒƒƒ‰ƒNƒ^[‚ÌŒü‚«‚ğis•ûŒü‚É
-        if(_isRotate)
+    private void SetState(PlayerState newState)
+    {
+        if(_state == newState)
         {
-            if(moveForward != Vector3.zero)
+            return;
+        }
+
+        if(_state == PlayerState.Moving)
+        {
+            _movement.SetMovementActive(false);
+            _animator.SetFloat(MoveAnimFloat, 0);
+        }
+        else if(newState == PlayerState.Moving)
+        {
+            _movement.SetMovementActive(true);
+        }
+
+
+        _state = newState;
+    }
+
+    public void SetMovingState()
+    {
+        SetState(PlayerState.Moving);
+    }
+
+    #endregion
+
+    #region Action
+
+    private bool CanDoAction()
+    {
+        return _state == PlayerState.Moving || _state == PlayerState.Hiding;
+    }
+
+    public void DoAction()
+    {
+        if(!CanDoAction())
+        {
+            print("ä»Šã®çŠ¶æ…‹ã§ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã§ããªã„");
+            return;
+        }
+
+        if(_state == PlayerState.Hiding)
+        {
+            Appear();
+            return;
+        }
+
+        ReactableBase reactable = _reactableDetector.PopReactable();
+        if(reactable == null)
+        {
+            DoUselessAction();
+            return;
+        }
+
+        //print($"åå¿œã—ã¦ã„ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼š{reactable.name}");
+        ReactableType type = reactable.GetReactableType();
+
+        switch(type)
+        {
+            case ReactableType.PickUpItem:
+                PickUp(reactable);
+                break;
+            case ReactableType.HidingPlace:
+                Hide(reactable);
+                break;
+        }
+    }
+
+    private void DoUselessAction()
+    {
+        _animator.SetTrigger(UselessActionAnimTrigger);
+        SetState(PlayerState.Acting);
+    }
+
+    private void PickUp(ReactableBase reactable)
+    {
+        if(reactable is not PickUpItem item)
+        {
+            Debug.LogWarning("PickUpItem ã§ã¯ãªã„ reactable ãŒ PickUp é–¢æ•°ã¸æ¸¡ã•ã‚ŒãŸã€‚");
+            DoUselessAction();
+            return;
+        }
+
+        // TODO : ã‚¢ãƒ‹ãƒ¡ã‚·ãƒ§ãƒ³ã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã«åˆã‚ã›ã¦ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã‚‹ï¼Ÿ
+        PickUpItem.ItemType itemType = item.GetItemType();
+        print($"ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã£ãŸï¼š{itemType}");
+        _obtainedItems.Add(itemType);
+        Destroy(item.gameObject);
+        PickedUp?.Invoke(itemType);
+
+        // Prototypeã®ãŸã‚ã®ã‚³ãƒ¼ãƒ‰
+        if(itemType == PickUpItem.ItemType.Key)
+        {
+            PrototypeMessageEvent.Invoke("éµã‚’å–ã‚Šã¾ã—ãŸï¼");
+        }
+
+        _animator.SetTrigger(PickUpAnimTrigger);
+        SetState(PlayerState.Acting);
+    }
+
+    Vector3 _posBeforeHide;    // TODO : ä¸€æ™‚çš„ãªã‚³ãƒ¼ãƒ‰
+
+    private void Hide(ReactableBase reactable)
+    {
+        if(reactable is not HidingPlace hidingPlace)
+        {
+            Debug.LogWarning("HidingPlace ã§ã¯ãªã„ reactable ãŒ Hide é–¢æ•°ã¸æ¸¡ã•ã‚ŒãŸã€‚");
+            DoUselessAction();
+            return;
+        }
+
+        _currentHidingPlace = hidingPlace;
+
+        // TODO : ã‚¢ãƒ‹ãƒ¡ã‚·ãƒ§ãƒ³ / å®Ÿéš›ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å‡¦ç†
+        print("éš ã™");
+
+        // Prototypeã®ãŸã‚ã®ã‚³ãƒ¼ãƒ‰
+        PrototypeMessageEvent.Invoke("éš ã—ã¾ã—ãŸ");
+
+        _posBeforeHide = transform.position;
+        hidingPlace.GetComponent<Collider>().isTrigger = true;
+        Vector3 hidingPlacePos = hidingPlace.transform.position;
+        transform.position = new Vector3(hidingPlacePos.x, 0, hidingPlacePos.z);
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach(Collider collider in colliders)
+        {
+            if(collider.CompareTag(Tag.Sounds))
             {
-                //‰ñ“]‚É•âŠÔ‚·‚é
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveForward), Time.deltaTime * 15.0f);
-                //•âŠÔ‚µ‚È‚¢
-                //transform.rotation = Quaternion.LookRotation(moveForward);
+                collider.enabled = false;
             }
         }
 
-        //ˆÚ“®animator‚Ì•\Œ»
-        if(isMove)
+
+        SetState(PlayerState.Hiding);
+    }
+
+    private void Appear()
+    {
+        if(_currentHidingPlace == null)
         {
-            _animator.SetFloat("Move", _speedAnimatorParameter);
+            Debug.LogWarning("_currentHidingPlace == nullã€‚ç›´æ¥ã« PlayerState.Moving ã«å¤‰ãˆã‚‹ã€‚");
+            SetState(PlayerState.Moving);
+            return;
         }
-        else
+
+        // TODO : ã‚¢ãƒ‹ãƒ¡ã‚·ãƒ§ãƒ³ / å®Ÿéš›ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å‡¦ç†
+        print("ç¾ã™");
+        // Prototypeã®ãŸã‚ã®ã‚³ãƒ¼ãƒ‰
+        PrototypeMessageEvent.Invoke("ç¾ã—ã¾ã—ãŸ");
+
+        transform.position = _posBeforeHide;
+        _currentHidingPlace.GetComponent<Collider>().isTrigger = false;
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach(Collider collider in colliders)
         {
-            _speedAnimatorParameter = Mathf.Max(_speedAnimatorParameter - 0.1f, 0);
-            _animator.SetFloat("Move", _speedAnimatorParameter);
-        }
-    }
-
-
-
-    public void SetMovement(Vector3 direction)
-    {
-        isMove = direction.magnitude > 0.0f;
-        _inputHorizontal = direction.x;
-        _inputVertical = direction.z;
-        if(isMove)
-        {
-            MovementAnimation(direction.magnitude);
-        }
-    }
-
-    public void SetCrouched(bool isCrouched)
-    {
-        _animator.SetBool("isCrouched", isCrouched);
-        if(isCrouched) { SetSpeed(0.3f); }
-        else { SetSpeed(1.0f); }
-    }
-
-    public void SetDash(bool isDash)
-    {
-        
-    }
-
-    public void Attack()
-    {
-        if(CheckAnimatorState("BasicMovement"))
-        {
-            _animator.SetTrigger("Attack");
-            SetSpeed(0.0f);
-        } 
-    }
-
-    public void Jump()
-    {
-        if(_isGround)
-        {
-            if(CheckAnimatorState("BasicMovement"))
+            if(collider.CompareTag(Tag.Sounds))
             {
-                _isGround = false;//  isGround‚ğfalse‚É‚·‚é
-                _rb.AddForce(new Vector3(0, _upForce, 0)); //ã‚ÉŒü‚©‚Á‚Ä—Í‚ğ‰Á‚¦‚é
-                _animator.SetTrigger("Jump");
-                _animator.SetBool("isGround", false);
+                collider.enabled = true;
             }
         }
+
+        SetState(PlayerState.Moving);
     }
 
+    #endregion
 
-    void OnCollisionEnter(Collision other) //’n–Ê‚ÉG‚ê‚½‚Ìˆ—
+    #region TakeDamage
+
+    public void TakeDamage(float damage)
     {
-        if(other.gameObject.tag == "Ground") //Groundƒ^ƒO‚ÌƒIƒuƒWƒFƒNƒg‚ÉG‚ê‚½‚Æ‚«
+        if(CurrentLife <= 0)
         {
-            _isGround = true; //isGround‚ğtrue‚É‚·‚é
-            _animator.SetBool("isGround", true);
+            print("ã™ã§ã«æ­»äº¡ã—ãŸã€‚");
+            return;
         }
-    }
 
-    private void MovementAnimation(float num)
-    {
-        _speedAnimatorParameter = num;     
-    }
+        print($"{damage} ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã‚‹");
+        CurrentLife = Mathf.Max(0, CurrentLife - damage);
+        DamageTaken?.Invoke();
 
-    private bool CheckAnimatorState(string name)
-    {
-        return _animator.GetCurrentAnimatorStateInfo(0).IsName(name);
-    }
-
-    private void SetSpeed(float speed)
-    {
-        _speed = _basicMoveSpeed * speed;
-    }
-    private void SetRotate(int isRotate)
-    {
-        if(isRotate == 0)
+        if(CurrentLife <= 0)
         {
-            _isRotate = true;
+            Die();
         }
         else
         {
-            _isRotate = false;
+            _animator.SetTrigger(TakeDamageAnimTrigger);
+            SetState(PlayerState.TakingDamage);
         }
     }
+
+    private void Die()
+    {
+        print("æ­»äº¡");
+        _animator.SetTrigger(DieAnimTrigger);
+        SetState(PlayerState.Died);
+        Died?.Invoke();
+    }
+
+    #endregion
+
+    #region Shout
+
+    private void ResetShout()
+    {
+        _isShoutCharging = false;
+        _startShoutChargingTime = float.MaxValue;
+    }
+
+    private bool CanShout()
+    {
+        return _micRange != null && !_micRange.IsMicMode;
+    }
+
+    public void StartShoutCharge()
+    {
+        if(CanShout())
+        {
+            _isShoutCharging = true;
+            _startShoutChargingTime = Time.time;
+        }
+    }
+
+    public void Shout()
+    {
+        if(_isShoutCharging && CanShout())
+        {
+            float volumeRate = Mathf.InverseLerp(0, _maxShoutChargeTime, Time.time - _startShoutChargingTime);
+            print($"å«ã¶ï¼švolumeRate = {volumeRate}");
+            _micRange?.SetVolumeRate(volumeRate);
+        }
+
+        ResetShout();
+    }
+
+    #endregion
+
+    #region AnimationEvent
+    private void AnimSoundVolume()
+    {
+        if(!_isTrap)
+        {
+            _micRange.AnimSetVolumeRate(_audioRangeVolume[0]);
+        }
+        else
+        {
+            _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
+        }     
+    }
+
+    private void AnimSoundVolumeBig()
+    {
+        _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
+    }
+    #endregion
+
+    #region ColliderTrap
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag(Tag.Trap))
+        {
+            _isTrap = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag(Tag.Trap))
+        {
+            _isTrap = false;
+        }
+    }
+    #endregion
+
 }

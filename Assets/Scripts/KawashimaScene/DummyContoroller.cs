@@ -1,36 +1,49 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
+public class DummyContoroller : MonoBehaviour
 {
-    //Dummy‚ÌˆÚ“®‘¬“x
-    [SerializeField, Range(1.0f, 10.0f), Tooltip("Dummy‚ÌˆÚ“®‘¬“x")]
+    //Dummyã®ç§»å‹•é€Ÿåº¦
+    [SerializeField, Range(1.0f, 10.0f), Tooltip("Dummyã®ç§»å‹•é€Ÿåº¦")]
     private float _moveSpeed = 5f;
 
-    //…•½ˆÚ“®‚Ì“ü—Í
+    //æ°´å¹³ç§»å‹•ã®å…¥åŠ›
     private Vector2 _moveInput = Vector2.zero;
 
-    //ƒAƒCƒeƒ€‚ğ“Š‚°‚éŠÖ”‚ğ‚ÂƒRƒ“ƒ|[ƒlƒ“ƒg
+    //ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŠ•ã’ã‚‹é–¢æ•°ã‚’æŒã¤ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
     private ThrowController _throwController;
+
+    private PlayerInput _input;
+
+    void Awake()
+    {
+        TryGetComponent(out _input);
+    }
 
     private void Start()
     {
-        PlayerInputAction userinput = new PlayerInputAction();
-        userinput.Player.SetCallbacks(this);
-        userinput.Player.Enable();
-
         _throwController = gameObject.GetComponent<ThrowController>();
+
+        _input.actions["Jump"].started += OnAttack;
+        InputActionMap normal = _input.actions.FindActionMap("Normal");
+        normal["Move"].performed += OnMove;
+        normal["Move"].canceled += OnMoveStop;
+        normal["Look"].performed += OnLook;
+    }
+
+    private void OnDestroy()
+    {
+        _input.actions["Jump"].started -= OnAttack;
+        InputActionMap normal = _input.actions.FindActionMap("Normal");
+        normal["Move"].performed -= OnMove;
+        normal["Move"].canceled -= OnMoveStop;
+        normal["Look"].performed -= OnLook;
     }
 
     private void Update()
     {
-        var keybard = Keyboard.current;
-
-        if(keybard.spaceKey.wasPressedThisFrame)
-            _throwController.ShootItem();
-
         Move();
     }
 
@@ -43,30 +56,32 @@ public class DummyContoroller : MonoBehaviour, PlayerInputAction.IPlayerActions
         transform.position += moveVector;
     }
 
-    #region PlayerInputAction.IPlayerActions
+    #region User Input
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    private void OnMoveStop(InputAction.CallbackContext context)
     {
-        //ƒJƒƒ‰‚ÌŒü‚«‚©‚çY²‚ÌŒü‚«‚ğæ“¾
+        _moveInput = Vector2.zero;
+    }
+
+    private void OnLook(InputAction.CallbackContext context)
+    {
+        //ã‚«ãƒ¡ãƒ©ã®å‘ãã‹ã‚‰Yè»¸ã®å‘ãã‚’å–å¾—
         var horizontalRotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-        //ƒJƒƒ‰‚ÌŒü‚­³–Ê•ûŒü‚Ö‚Ì²‚ğì¬
+        //ã‚«ãƒ¡ãƒ©ã®å‘ãæ­£é¢æ–¹å‘ã¸ã®è»¸ã‚’ä½œæˆ
         var lookFront = horizontalRotation * new Vector3(0, 0, 1);
 
-        //³–Ê‚ÖŒü‚©‚¹‚é
+        //æ­£é¢ã¸å‘ã‹ã›ã‚‹
         transform.rotation = Quaternion.LookRotation(lookFront, Vector3.up);
     }
 
-    public void OnFire(InputAction.CallbackContext context)
+    private void OnAttack(InputAction.CallbackContext context)
     {
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
+        _throwController.ShootItem();
     }
 
     #endregion

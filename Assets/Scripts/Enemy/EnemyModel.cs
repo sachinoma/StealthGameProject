@@ -1,177 +1,266 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.AI;
-using System.Security.Cryptography;
-using System;
 using Debug = UnityEngine.Debug;
-using UniRandom = UnityEngine.Random;
-using System.Diagnostics;
+using random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyModel : MonoBehaviour
 {
-    enum State
-    {
-        Free,
-        PatrolPoint1,
-        PatrolPoint2
-    }
-    State currentState = State.Free;
-    bool stateEnter = true;
-    bool isChase;
-    bool isSarch;
+    [Header("ã‚¹ãƒ†ãƒ¼ãƒˆ")]
+    EnemyState currentState;
+    bool stateEnter;
 
-    int chaseTimer;
+    [Header("å¾˜å¾Šå ´æ‰€")]
+    [SerializeField] List<Transform> sarchPosition;
 
-    [SerializeField] Transform point1;
-    [SerializeField] Transform point2;
-    [SerializeField] Transform enemySarch;
-    [SerializeField] float searchAngle = 100f;
+    [Header("æ•µã®ãƒ™ãƒ¼ã‚¹")]
     private NavMeshAgent _agent;
+    private Animator _animator;
+    private float _speed;
+    int chaseTimer;
+    int stopTimer;
+    [SerializeField] private SphereCollider playerSounds;
+    [SerializeField] Transform enemySarch;//ä»Šã©ã“ã«å‘ã‹ã£ã¦ã„ã‚‹ã‹
+    //è¦–ç•Œ
+    [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
+
+    [Header("æ”»æ’ƒåˆ¤å®š")]
+    BoxCollider leftCollider;
+    BoxCollider rightCollider;
 
     void Start()
     {
-        isChase = false;
-        isSarch = false;
-        chaseTimer = 0;
-        _agent = GetComponent<NavMeshAgent>();
+        AgentSetUp();
+
+        _animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
+        leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
+        rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
     }
 
     void Update()
     {
-        if(isChase)
-        {
-            return;
-        }
-        else
-        {
-            if(chaseTimer > 0)
-            {
-                chaseTimer--;
-                return;
-            }
-            if(isSarch)
-            {
-                if(_agent.remainingDistance <= 0.1f && !_agent.pathPending)
-                {
-                    isSarch = false;
-                    currentState = State.Free;
-                }
-                return;
-            }
-        }
+        _animator.SetFloat("Speed", _agent.speed);
+
+        #region æ•µã®ã‚¹ãƒ†ãƒ¼ãƒˆ
         switch (currentState)
         {
-            case State.Free:
-                #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
+            case EnemyState.Idle:
+                #region é–‹å§‹1å›ã®å‡¦ç†
+                if (stateEnter)
                 {
                     stateEnter = false;
-                }
-                bool rnd = RandomBool();
-                currentState =  rnd ? State.PatrolPoint1: State.PatrolPoint2;
-                #endregion
-                break;
-            case State.PatrolPoint1:
-                #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
-                {
-                    stateEnter = false;
-                }
-                _agent.destination = point1.position;
-                enemySarch.position = point1.position;
-                if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
-                {
-                    currentState = State.PatrolPoint2;
-                    return;
+                    _agent.speed = 0f;
                 }
                 #endregion
+
+                if (stopTimer <= 0)
+                {
+                    currentState = EnemyState.Move;
+                    _agent.speed = _speed;
+                    stateEnter = true;
+                }
+                else
+                {
+                    stopTimer--;
+                }
                 break;
-            case State.PatrolPoint2:
-                #region
-                if (stateEnter)//ŠJn1‰ñ‚Ìˆ—
+            case EnemyState.Move:
+                #region é–‹å§‹1å›ã®å‡¦ç†
+                if (stateEnter)
+                {
+                    stateEnter = false;
+                    int rnd = random.Range(0, sarchPosition.Count);
+                    _agent.destination = sarchPosition[rnd].position;
+                    enemySarch.position = sarchPosition[rnd].position;
+                }
+                #endregion
+                if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
+                {
+                    currentState = EnemyState.Idle;
+                    stateEnter = true;
+                    return;
+                }
+                break;
+            case EnemyState.SoundSarch:
+                #region é–‹å§‹1å›ã®å‡¦ç†
+                if (stateEnter)
                 {
                     stateEnter = false;
                 }
-                _agent.destination = point2.position;
-                enemySarch.position = point2.position;
+                #endregion
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
-                    currentState = State.PatrolPoint1;
+                    currentState = EnemyState.Idle;
+                    stopTimer = 60;
+                    stateEnter = true;
                     return;
+                }
+                break;
+            case EnemyState.Chase:
+                #region é–‹å§‹1å›ã®å‡¦ç†
+                if (stateEnter)
+                {
+                    _animator.SetBool("isChase", true);
+                    stateEnter = false;
+                }
+                #endregion
+
+                if (_agent.remainingDistance <= 1f && !_agent.pathPending)
+                {
+                    currentState = EnemyState.Attack;
+                    stateEnter = true;
+                }
+                else if (playerSounds.gameObject.activeSelf == false)
+                {
+                    currentState = EnemyState.Idle;
+                    _animator.SetBool("isChase", false);
+                    stopTimer = 30;
+                    stateEnter = true;
+                }
+                else
+                {
+                    if(chaseTimer <= 0)
+                    {
+                        currentState = EnemyState.Idle;
+                        _animator.SetBool("isChase", false);
+                        stopTimer = 30;
+                        stateEnter = true;
+                    }
+                    else
+                    {
+                        chaseTimer--;
+                    }
+                }
+                break;
+            case EnemyState.Attack:
+                #region é–‹å§‹1å›ã®å‡¦ç†
+                if (stateEnter)
+                {
+                    _animator.SetTrigger("Attack Trigger");
+                    Attack();
+                    stateEnter = false;
                 }
                 #endregion
                 break;
         }
-
+        #endregion
     }
 
-    public void OnDetectObjectStay(Collider collider)
+    private void AgentSetUp()
     {
-        // ŒŸ’mƒIƒuƒWƒFƒNƒg‚ªPlayer‚È‚ç’Ç‚¢‚©‚¯‚é
-        if(collider.CompareTag("Player"))
+        chaseTimer = 0;
+        stopTimer = 0;
+        currentState = EnemyState.Idle;
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.stoppingDistance = 1f;
+        _speed = _agent.speed;
+        stateEnter = true;
+    }
+
+
+    #region éŸ³ã‚„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœç´¢
+    public void PlayerSarch(Collider collider)
+    {
+        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
+        if (playerSounds.gameObject.activeSelf == false) { return; }
+        // æ¤œçŸ¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒPlayer
+        if (collider.CompareTag(Tag.Player))
         {
-            var positionDiff = collider.transform.position - transform.position;  // ©gi“Gj‚ÆƒvƒŒƒCƒ„[‚Ì‹——£
-            var angle = Vector3.Angle(transform.forward, positionDiff);  // “G‚©‚çŒ©‚½ƒvƒŒƒCƒ„[‚Ì•ûŒü
-            if (angle <= searchAngle)//‹ŠE‚Ì’†‚É‚¢‚½‚ç
+            var positionDiff = collider.transform.position - transform.position;  // è‡ªèº«ï¼ˆæ•µï¼‰ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è·é›¢
+            var angle = Vector3.Angle(transform.forward, positionDiff);  // æ•µã‹ã‚‰è¦‹ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘
+            if (angle <= searchAngle)//è¦–ç•Œã®ä¸­ã«ã„ãŸã‚‰
             {
                 RaycastHit hit;
-                Vector3 direction;   // Ray‚ğ”ò‚Î‚·•ûŒü
-                float distance = 10;    // Ray‚ğ”ò‚Î‚·‹——£
+                Vector3 direction;   // Rayã‚’é£›ã°ã™æ–¹å‘
+                float distance = 10f;    // Rayã‚’é£›ã°ã™è·é›¢
 
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;
 
-                Ray ray = new Ray(transform.position, direction);  // Ray‚ğ”ò‚Î‚·
-                Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Ray‚ğƒV[ƒ“ã‚É•`‰æ
-                if (Physics.Raycast(ray.origin, ray.direction * distance, out hit))
+                Ray ray = new Ray(transform.position, direction);  // Rayã‚’é£›ã°ã™
+                Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayã‚’ã‚·ãƒ¼ãƒ³ä¸Šã«æç”»
+                if (Physics.Raycast(ray.origin, ray.direction, out hit, distance, Layer.EnemySight))
                 {
-                    if (hit.collider.CompareTag("Player"))
+                    if (hit.collider.CompareTag(Tag.Player))
                     {
-                        isChase = true;
-                        isSarch = false;
+                        stateEnter = currentState != EnemyState.Chase;
+                        currentState = EnemyState.Chase;
                         _agent.destination = collider.transform.position;
                         enemySarch.position = collider.transform.position;
+                        chaseTimer = 60;
                     }
-                    else if(isChase)
+                    else if(hit.collider.CompareTag(Tag.Sounds))
                     {
-                        isChase = false;
-                        chaseTimer = 180;
+                        if (hit.collider.gameObject.transform.parent.parent.CompareTag(Tag.Player))
+                        {
+                            stateEnter = currentState != EnemyState.Chase;
+                            currentState = EnemyState.Chase;
+                            _agent.destination = collider.transform.position;
+                            enemySarch.position = collider.transform.position;
+                            chaseTimer = 60;
+                        }
                     }
                 }
             }
         }
     }
 
-    public void OnDetectObjectExit(Collider collider)
+    public void SoundSarch(Collider collider)
     {
-        if (collider.CompareTag("Player"))
+        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
+        if (collider.CompareTag(Tag.Sounds))
         {
-            isChase = false;
-            chaseTimer = 180;
-        }
-    }
-
-    public void OnDetectObjectEnter(Collider collider)
-    {
-        if (collider.CompareTag("Sounds"))
-        {
-            isSarch = true;
+            stateEnter = currentState != EnemyState.SoundSarch;
+            currentState = EnemyState.SoundSarch;
             _agent.destination = collider.transform.position;
             enemySarch.position = collider.transform.position;
         }
     }
+    #endregion
 
+    #region æ”»æ’ƒå‡¦ç†
+    void Attack()
+    {
+        Invoke("ColliderStart", 0.12f);
+        Invoke("ColliderReset", 1.12f);
+        Invoke("AttackEnd", 2.15f);
+    }
+
+    private void AttackEnd()
+    {
+        currentState = EnemyState.Idle;
+        _animator.SetBool("isChase", false);
+        stateEnter = true;
+        stopTimer = 30;
+    }
+
+    private void ColliderStart()
+    {
+        rightCollider.enabled = true;
+        leftCollider.enabled = true;
+    }
+
+    private void ColliderReset()
+    {
+        rightCollider.enabled = false;
+        leftCollider.enabled = false;
+    }
+    #endregion
+
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if(isChase)
+        if (currentState == EnemyState.Chase)
         {
             Handles.color = new Color(1f, 0f, 0f, 0.3f);
         }
-        else if(isSarch)
+        else if (currentState == EnemyState.SoundSarch)
         {
             Handles.color = new Color(0f, 0f, 1f, 0.3f);
         }
@@ -179,11 +268,7 @@ public class EnemyModel : MonoBehaviour
         {
             Handles.color = new Color(0f, 1f, 0f, 0.3f);
         }
-        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius);
+        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.5f);
     }
-
-    bool RandomBool()
-    {
-        return UniRandom.Range(0, 2) == 0;
-    }
+#endif
 }
