@@ -9,7 +9,6 @@
     public const string Enemy = "Enemy";
     public const string Sounds = "Sounds";
     public const string Wall = "Wall";
-    public const string Ground = "Ground";      // TODO : 今使っていない。削除した方がいいかもしれません。
     public const string SoundChecker = "SoundChecker";
     public const string Trap = "Trap";
 }

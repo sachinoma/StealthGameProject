@@ -7,7 +7,6 @@ TagManager:
   - Enemy
   - Sounds
   - Wall
-  - Ground
   - SoundChecker
   - Trap
   layers:
@@ -18,7 +17,7 @@ TagManager:
   - Water
   - UI
   - MiniMap
-  - Level
+  - 
   - Reactable
   - ReactableDetector
   - 
