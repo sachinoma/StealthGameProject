@@ -12,40 +12,34 @@ using UnityEditor;
 public class EnemyModel : MonoBehaviour
 {
     [Header("ステート")]
-    EnemyState currentState;
-    bool stateEnter;
+    [HideInInspector] public EnemyState currentState;
+    [HideInInspector] public bool stateEnter;
 
     [Header("徘徊場所")]
     [SerializeField] List<Transform> sarchPosition;
 
     [Header("敵のベース")]
     private NavMeshAgent _agent;
-    private Animator _animator;
+    [HideInInspector] public Animator animator;
     private float _speed;
     int chaseTimer;
-    int stopTimer;
+    [HideInInspector] public int stopTimer;
     [SerializeField] private SphereCollider playerSounds;
     [SerializeField] Transform enemySarch;//今どこに向かっているか
     //視界
     [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
 
-    [Header("攻撃判定")]
-    BoxCollider leftCollider;
-    BoxCollider rightCollider;
-
     void Start()
     {
         AgentSetUp();
 
-        _animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
-        leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
-        rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
+        animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
     }
 
     void Update()
     {
-        _animator.SetFloat("Speed", _agent.speed);
+        animator.SetFloat("Speed", _agent.speed);
 
         #region 敵のステート
         switch (currentState)
@@ -106,7 +100,7 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    _animator.SetBool("isChase", true);
+                    animator.SetBool("isChase", true);
                     stateEnter = false;
                 }
                 #endregion
@@ -119,7 +113,7 @@ public class EnemyModel : MonoBehaviour
                 else if (playerSounds.gameObject.activeSelf == false)
                 {
                     currentState = EnemyState.Idle;
-                    _animator.SetBool("isChase", false);
+                    animator.SetBool("isChase", false);
                     stopTimer = 30;
                     stateEnter = true;
                 }
@@ -128,7 +122,7 @@ public class EnemyModel : MonoBehaviour
                     if(chaseTimer <= 0)
                     {
                         currentState = EnemyState.Idle;
-                        _animator.SetBool("isChase", false);
+                        animator.SetBool("isChase", false);
                         stopTimer = 30;
                         stateEnter = true;
                     }
@@ -142,8 +136,7 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    _animator.SetTrigger("Attack Trigger");
-                    Attack();
+                    animator.SetTrigger("Attack Trigger");
                     stateEnter = false;
                 }
                 #endregion
@@ -221,35 +214,6 @@ public class EnemyModel : MonoBehaviour
             _agent.destination = collider.transform.position;
             enemySarch.position = collider.transform.position;
         }
-    }
-    #endregion
-
-    #region 攻撃処理
-    void Attack()
-    {
-        Invoke("ColliderStart", 0.12f);
-        Invoke("ColliderReset", 1.12f);
-        Invoke("AttackEnd", 2.15f);
-    }
-
-    private void AttackEnd()
-    {
-        currentState = EnemyState.Idle;
-        _animator.SetBool("isChase", false);
-        stateEnter = true;
-        stopTimer = 30;
-    }
-
-    private void ColliderStart()
-    {
-        rightCollider.enabled = true;
-        leftCollider.enabled = true;
-    }
-
-    private void ColliderReset()
-    {
-        rightCollider.enabled = false;
-        leftCollider.enabled = false;
     }
     #endregion
 
