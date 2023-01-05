@@ -16,7 +16,7 @@ public class MicRange : MonoBehaviour
     [SerializeField, Range(0f, 3000f)] float m_gain = 1500f; // 倍率
     AudioSource m_source;
     float[] _currentValues;
-    float _volumeRate;
+    [SerializeField] private float _volumeRate;
 
     [Header("音量チェックできる最小値")]
     [SerializeField, Range(0f, 1.0f)] private float _minRate = 0.2f;
@@ -50,8 +50,8 @@ public class MicRange : MonoBehaviour
 
     //ポストエフェクト
     [SerializeField] private GameObject[] _rangeParticle;
-    [SerializeField] private GameObject _rangeParticlePos;
-
+    [SerializeField] private GameObject _frontRangeParticlePos;
+    [SerializeField] private GameObject _centerRangeParticlePos;
 
     void Start()
     {
@@ -147,9 +147,7 @@ public class MicRange : MonoBehaviour
 
     public void FogRollBack(float max, float min)
     {
-        const float _fogSpeedSet = 1.5f;
-
-        
+        const float _fogSpeedSet = 1.5f;  
 
         if(RenderSettings.fogDensity < max)
         {
@@ -223,11 +221,15 @@ public class MicRange : MonoBehaviour
         _volumeRate = rate;
         if(rate >= 1.0f)
         {
-            Instantiate(_rangeParticle[1], _rangeParticlePos.transform.position, transform.rotation);
+            Instantiate(_rangeParticle[1], _frontRangeParticlePos.transform.position, transform.rotation);
+        }
+        else if(rate >= 0.7f)
+        {
+            Instantiate(_rangeParticle[0], _frontRangeParticlePos.transform.position, transform.rotation);
         }
         else
         {
-            Instantiate(_rangeParticle[0], _rangeParticlePos.transform.position, transform.rotation);
+            Instantiate(_rangeParticle[2], _centerRangeParticlePos.transform.position, transform.rotation);
         }
         
     }

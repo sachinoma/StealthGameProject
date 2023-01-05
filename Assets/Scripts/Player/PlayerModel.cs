@@ -38,6 +38,7 @@ public class PlayerModel : MonoBehaviour
     //Trap
     [Header("罠")]
     [SerializeField] private bool _isTrap = false;
+    private bool _isTrapIdleWaiting = false;
 
     private Vector3 _initialPos;
     private Quaternion _initialRot;
@@ -88,6 +89,8 @@ public class PlayerModel : MonoBehaviour
     void Update()
     {
         _animator.SetFloat(MoveAnimFloat, _movement.GetNormalized01InputSpeed());
+
+        TrapIdleCheck();
     }
 
     public void SetMovement(Vector2 movement)
@@ -350,10 +353,29 @@ public class PlayerModel : MonoBehaviour
             _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
         }     
     }
-
-    private void AnimSoundVolumeBig()
+    #endregion
+    #region TrapIdleSound
+    private void TrapIdleCheck()
     {
-        _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
+        if(_isTrap)
+        {
+            if(!_isTrapIdleWaiting)
+            {
+                _isTrapIdleWaiting = true;
+                SoundVolumeTrapIdle();
+                Invoke("TrapIdleWaitingFalse", 0.3f);
+            }
+        }
+    }
+
+    private void SoundVolumeTrapIdle()
+    {
+        _micRange.AnimSetVolumeRate(_audioRangeVolume[2]);
+    }
+
+    private void TrapIdleWaitingFalse()
+    {
+        _isTrapIdleWaiting = false;
     }
     #endregion
 
