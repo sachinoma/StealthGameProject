@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 targetVelocity = targetMovement_WorldSpace * _maxSpeed;
         _inputVelocity = Vector3.RotateTowards(_inputVelocity, targetVelocity, _rotateSpeed * Time.deltaTime, _acceleration * Time.deltaTime);
-        _characterController.Move(_inputVelocity * Time.deltaTime);
+        _characterController.SimpleMove(_inputVelocity);
     }
 
     private void Rotate(Vector3 forward)
