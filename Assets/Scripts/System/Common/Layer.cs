@@ -13,7 +13,7 @@ public static class Layer
 
     public const int Reactable              = 1 << 8;
     public const int ReactableDetector      = 1 << 9;
-    public const int Player                 = 1 << 10;
+    public const int IgnoreDecal            = 1 << 10;
 
 
     public const int EnemySight             = Physics.DefaultRaycastLayers & ~ReactableDetector;
