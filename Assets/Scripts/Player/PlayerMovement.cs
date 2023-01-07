@@ -65,13 +65,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move(Vector3 targetMovement_WorldSpace)
     {
-        if(targetMovement_WorldSpace == Vector3.zero && _inputVelocity == Vector3.zero)
+        if(targetMovement_WorldSpace != Vector3.zero || _inputVelocity != Vector3.zero)
         {
-            return;
+            Vector3 targetVelocity = targetMovement_WorldSpace * _maxSpeed;
+            _inputVelocity = Vector3.RotateTowards(_inputVelocity, targetVelocity, _rotateSpeed * Time.deltaTime, _acceleration * Time.deltaTime);
         }
 
-        Vector3 targetVelocity = targetMovement_WorldSpace * _maxSpeed;
-        _inputVelocity = Vector3.RotateTowards(_inputVelocity, targetVelocity, _rotateSpeed * Time.deltaTime, _acceleration * Time.deltaTime);
+        // 重力を模擬するために、たとえ _inputVelocity = Vector3.zero でも SimpleMove を呼び出す必要がある
         _characterController.SimpleMove(_inputVelocity);
     }
 
