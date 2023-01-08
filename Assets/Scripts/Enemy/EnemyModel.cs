@@ -12,7 +12,7 @@ using UnityEditor;
 public class EnemyModel : MonoBehaviour
 {
     [Header("ステート")]
-    [HideInInspector] public EnemyState currentState;
+     public EnemyState currentState;
     [HideInInspector] public bool stateEnter;
 
     [Header("徘徊場所")]
