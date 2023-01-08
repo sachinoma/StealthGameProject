@@ -53,7 +53,7 @@ public class PrototypeSceneDirector : MonoBehaviour
         Debug.LogWarning("Game Over!!");
 
         PrototypeMessageEvent.Invoke($"やられました！");
-        StartCoroutine(RestartGame(4.0f));
+        StartCoroutine(RestartGame(7.0f));
     }
 
     private IEnumerator RestartGame(float waitTime)
