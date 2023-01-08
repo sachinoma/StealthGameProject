@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovingSMB : StateMachineBehaviour
 {
@@ -10,7 +10,7 @@ public class PlayerMovingSMB : StateMachineBehaviour
 
         if(_playerModel == null)
         {
-            _playerModel = animator.GetComponent<PlayerModel>();
+            _playerModel = animator.GetComponentInParent<PlayerModel>();
         }
 
         _playerModel.SetMovingState();

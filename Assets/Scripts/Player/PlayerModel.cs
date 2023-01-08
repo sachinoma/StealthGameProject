@@ -35,6 +35,10 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private float _maxShoutChargeTime = 1.0f;
     private bool _isShoutCharging;
     private float _startShoutChargingTime;
+
+    [Header("コライダー")]
+    [SerializeField] private GameObject playerCollider;
+
     //Trap
     [Header("罠")]
     [SerializeField] private bool _isTrap = false;
@@ -271,7 +275,6 @@ public class PlayerModel : MonoBehaviour
     #endregion
 
     #region TakeDamage
-
     public void TakeDamage(float damage)
     {
         if(CurrentLife <= 0)
@@ -295,9 +298,10 @@ public class PlayerModel : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         print("死亡");
+        playerCollider.SetActive(false);
         _animator.SetTrigger(DieAnimTrigger);
         SetState(PlayerState.Died);
         Died?.Invoke();
@@ -342,7 +346,7 @@ public class PlayerModel : MonoBehaviour
     #endregion
 
     #region AnimationEvent
-    private void AnimSoundVolume()
+    public void AnimSoundVolume()
     {
         if(!_isTrap)
         {
