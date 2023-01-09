@@ -1,4 +1,4 @@
-public static class LocalizatedText
+public static class LocalizedText
 {
     #region メインメニュー
 

@@ -115,9 +115,9 @@ public class MainMenu : MonoBehaviour
 
     private void InitMainMenu()
     {
-        _gameStartText.text = LocalizatedText.GameStart;
-        _creditText.text = LocalizatedText.Credit;
-        _quitText.text = LocalizatedText.Quit;
+        _gameStartText.text = LocalizedText.GameStart;
+        _creditText.text = LocalizedText.Credit;
+        _quitText.text = LocalizedText.Quit;
     }
 
     private void SetMainMenuActive(bool isActive)
@@ -135,9 +135,9 @@ public class MainMenu : MonoBehaviour
 
     private void InitCrerditPanel()
     {
-        _exitCreditText.text = LocalizatedText.ExitCredit;
+        _exitCreditText.text = LocalizedText.ExitCredit;
 
-        string[] titleNameArray = LocalizatedText.CreditDetails.Split('\n');
+        string[] titleNameArray = LocalizedText.CreditDetails.Split('\n');
         if (titleNameArray == null || titleNameArray.Length == 0) {
             Debug.LogWarning(@"titleNameArrayは何もない。");
             return;
