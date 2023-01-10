@@ -46,6 +46,14 @@ public class PrototypeSceneDirector : MonoBehaviour
                 FindObjectOfType<PrototypeSceneUIManager>()?.UpdateInputModeText(micRange.IsMicMode);
             }
         }
+        else if(Gamepad.current.bButton.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else if(Gamepad.current.aButton.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
 
     private void PlayerDiedHandler()
