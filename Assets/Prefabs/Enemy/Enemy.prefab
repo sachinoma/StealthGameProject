@@ -326,7 +326,7 @@ MonoBehaviour:
   currentState: 0
   stateEnter: 0
   sarchPosition: []
-  animator: {fileID: 0}
+  animator: {fileID: 8602735039307219623}
   stopTimer: 0
   playerSounds: {fileID: 0}
   enemySarch: {fileID: 0}

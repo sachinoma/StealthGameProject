@@ -20,7 +20,7 @@ public class EnemyModel : MonoBehaviour
 
     [Header("敵のベース")]
     private NavMeshAgent _agent;
-    [HideInInspector] public Animator animator;
+    public Animator animator;
     private float _speed;
     int chaseTimer;
     [HideInInspector] public int stopTimer;
@@ -33,8 +33,6 @@ public class EnemyModel : MonoBehaviour
     void Start()
     {
         AgentSetUp();
-
-        animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
     }
 
     void Update()
