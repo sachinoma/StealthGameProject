@@ -33,7 +33,8 @@ public class TitleSceneDirector : MonoBehaviour
     private void SetVideoActive(VideoPlayer video, bool isActive)
     {
         video.renderMode = isActive ? VideoRenderMode.CameraFarPlane : VideoRenderMode.APIOnly;
-        if (isActive) {
+        if(isActive)
+        {
             video.targetCamera = _cameraForVideo;
         }
         video.SetDirectAudioMute(0, !isActive);

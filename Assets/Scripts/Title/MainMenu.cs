@@ -99,7 +99,8 @@ public class MainMenu : MonoBehaviour
 
     private void ChangeView(View viewToChange)
     {
-        if (_currentView == viewToChange) {
+        if(_currentView == viewToChange)
+        {
             return;
         }
 
@@ -124,7 +125,8 @@ public class MainMenu : MonoBehaviour
     {
         _mainMenu.SetActive(isActive);
 
-        if (isActive) {
+        if(isActive)
+        {
             EventSystem.current.SetSelectedGameObject(_gameStartButton.gameObject);
         }
     }
@@ -138,14 +140,17 @@ public class MainMenu : MonoBehaviour
         _exitCreditText.text = LocalizedText.ExitCredit;
 
         string[] titleNameArray = LocalizedText.CreditDetails.Split('\n');
-        if (titleNameArray == null || titleNameArray.Length == 0) {
+        if(titleNameArray == null || titleNameArray.Length == 0)
+        {
             Debug.LogWarning(@"titleNameArrayは何もない。");
             return;
         }
 
-        foreach (string titleName in titleNameArray) {
+        foreach(string titleName in titleNameArray)
+        {
             string[] split = titleName.Split('|');
-            if(split == null || split.Length != 2) {
+            if(split == null || split.Length != 2)
+            {
                 Debug.LogWarning(@"titleNameの仕組みは合っていない。");
                 return;
             }
@@ -159,7 +164,8 @@ public class MainMenu : MonoBehaviour
     {
         _creditPanel.SetActive(isActive);
 
-        if (isActive) {
+        if(isActive)
+        {
             EventSystem.current.SetSelectedGameObject(_exitCreditButton.gameObject);
         }
     }
