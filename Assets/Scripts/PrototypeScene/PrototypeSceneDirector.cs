@@ -52,7 +52,7 @@ public class PrototypeSceneDirector : MonoBehaviour
     {
         Debug.LogWarning("Game Over!!");
 
-        PrototypeMessageEvent.Invoke($"やられました！");
+        //PrototypeMessageEvent.Invoke($"やられました！");
         StartCoroutine(RestartGame(7.0f));
     }
 

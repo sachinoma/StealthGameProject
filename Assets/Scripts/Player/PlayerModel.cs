@@ -199,7 +199,7 @@ public class PlayerModel : MonoBehaviour
         // Prototypeのためのコード
         if(itemType == PickUpItem.ItemType.Key)
         {
-            PrototypeMessageEvent.Invoke("鍵を取りました！");
+            PrototypeMessageEvent.Invoke("アイテム取得：鍵");
         }
 
         _animator.SetTrigger(PickUpAnimTrigger);
@@ -223,7 +223,7 @@ public class PlayerModel : MonoBehaviour
         print("隠す");
 
         // Prototypeのためのコード
-        PrototypeMessageEvent.Invoke("隠しました");
+        //PrototypeMessageEvent.Invoke("隠しました");
 
         _posBeforeHide = transform.position;
         hidingPlace.GetComponent<Collider>().isTrigger = true;
@@ -255,7 +255,7 @@ public class PlayerModel : MonoBehaviour
         // TODO : アニメション / 実際のプレイヤー処理
         print("現す");
         // Prototypeのためのコード
-        PrototypeMessageEvent.Invoke("現しました");
+        //PrototypeMessageEvent.Invoke("現しました");
 
         transform.position = _posBeforeHide;
         _currentHidingPlace.GetComponent<Collider>().isTrigger = false;
