@@ -53,12 +53,7 @@ public class PlayerModel : MonoBehaviour
 
     private HidingPlace _currentHidingPlace = null;
 
-    public event Action DamageTaken = null;
-    public event Action Died = null;
-
     public event Action<PickUpItem.ItemType> PickedUp = null;
-
-    
 
     void Awake()
     {
@@ -222,9 +217,6 @@ public class PlayerModel : MonoBehaviour
         // TODO : アニメション / 実際のプレイヤー処理
         print("隠す");
 
-        // Prototypeのためのコード
-        //PrototypeMessageEvent.Invoke("隠しました");
-
         _posBeforeHide = transform.position;
         hidingPlace.GetComponent<Collider>().isTrigger = true;
         Vector3 hidingPlacePos = hidingPlace.transform.position;
@@ -254,8 +246,6 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメション / 実際のプレイヤー処理
         print("現す");
-        // Prototypeのためのコード
-        //PrototypeMessageEvent.Invoke("現しました");
 
         transform.position = _posBeforeHide;
         _currentHidingPlace.GetComponent<Collider>().isTrigger = false;
@@ -285,7 +275,6 @@ public class PlayerModel : MonoBehaviour
 
         print($"{damage} ダメージを受ける");
         CurrentLife = Mathf.Max(0, CurrentLife - damage);
-        DamageTaken?.Invoke();
 
         if(CurrentLife <= 0)
         {
@@ -304,7 +293,7 @@ public class PlayerModel : MonoBehaviour
         playerCollider.SetActive(false);
         _animator.SetTrigger(DieAnimTrigger);
         SetState(PlayerState.Died);
-        Died?.Invoke();
+        MainSceneEventManager.PlayerDied.Invoke(this, null);
     }
 
     #endregion

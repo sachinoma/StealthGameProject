@@ -27,7 +27,7 @@ sound|©ondoku3.com";
 
     #region アナウンス
 
-    public const string Announcement = "被験体CS00が檻を解除して脱走。警備は直ちに確<cspace=-0.1em>保してください。</cspace>";
+    public const string BreakOutAnnouncement = "被験体CS00が檻を解除して脱走。警備は直ちに確<cspace=-0.1em>保してください。</cspace>";
 
     #endregion
 }

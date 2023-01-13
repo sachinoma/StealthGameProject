@@ -21,7 +21,7 @@ public class PrototypeSceneUIManager : MonoBehaviour
             UpdateLifeDisplay();
             UpdateKeyDisplay(false);
 
-            _playerModel.DamageTaken += UpdateLifeDisplay;
+            //_playerModel.DamageTaken += UpdateLifeDisplay;
             _playerModel.PickedUp += UpdateKeyDisplay;
         }
 
@@ -40,7 +40,7 @@ public class PrototypeSceneUIManager : MonoBehaviour
     {
         if(_playerModel != null)
         {
-            _playerModel.DamageTaken -= UpdateLifeDisplay;
+            //_playerModel.DamageTaken -= UpdateLifeDisplay;
             _playerModel.PickedUp -= UpdateKeyDisplay;
         }
 
