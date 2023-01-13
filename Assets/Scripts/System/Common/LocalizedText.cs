@@ -20,7 +20,7 @@ public static class LocalizedText
 programmer|Kawashima
 |Shimono
 |Kou
-|Lin
+|Rin
 sound|©ondoku3.com";
 
     #endregion
