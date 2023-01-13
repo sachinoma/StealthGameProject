@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,22 +13,14 @@ public class MainSceneDirector : MonoBehaviour
 {
     [SerializeField] private MainSceneUIManager _uiManager;
     [SerializeField] private AnnouncementManager _announcementManagerTemplate;
+    [SerializeField] private GameOver _gameOverTemplate;
 
     [Header("カーソルの表示")]
     [SerializeField] private bool _isCursorInvisible = true;
 
-    private AnnouncementManager _announcementManagerInstance = null;
-    private AnnouncementManager _announcementManager
-    {
-        get
-        {
-            if(_announcementManagerInstance == null)
-            {
-                _announcementManagerInstance = Instantiate(_announcementManagerTemplate);
-            }
-            return _announcementManagerInstance;
-        }
-    }
+    private AnnouncementManager _announcementManager = null;
+
+    private bool _isGameOver = false;
 
     private void Start()
     {
@@ -52,15 +43,15 @@ public class MainSceneDirector : MonoBehaviour
 #if BACKDOOR_ENABLED
     private void Update()
     {
-        if(Gamepad.current != null)
+        if(!_isGameOver && Gamepad.current != null)
         {
             if(Gamepad.current.bButton.wasPressedThisFrame)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                Retry();
             }
             else if(Gamepad.current.aButton.wasPressedThisFrame)
             {
-                SceneManager.LoadScene("Title");
+                BackToTitle();
             }
         }
     }
@@ -68,19 +59,40 @@ public class MainSceneDirector : MonoBehaviour
 
     private void OnPlayerBrokeOut(object sender, EventArgs e)
     {
+        if(_announcementManager == null)
+        {
+            _announcementManager = Instantiate(_announcementManagerTemplate);
+        }
+
         _announcementManager.PlayBreakOutAnnouncement();
     }
 
     private void OnPlayerDied(object sender, EventArgs e)
     {
         Debug.LogWarning("Game Over!!");
-        StartCoroutine(RestartGame(7.0f));
+        _isGameOver = true;
+
+        StartCoroutine(WaitAndGameOver(7.0f));
     }
 
-    private IEnumerator RestartGame(float waitTime)
+    private IEnumerator WaitAndGameOver(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _announcementManager?.ClearText();
+        GameOver gameOver = Instantiate(_gameOverTemplate);
+        gameOver.Show(Retry, BackToTitle);
+    }
+
+    private void Retry()
+    {
+        // TODO : トランジション
+        SceneManager.LoadScene("Main");
+    }
+
+    private void BackToTitle()
+    {
+        // TODO : トランジション
+        SceneManager.LoadScene("Title");
     }
 }

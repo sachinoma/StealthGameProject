@@ -5348,6 +5348,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiManager: {fileID: 532589678}
   _announcementManagerTemplate: {fileID: 8340377546390049666, guid: e829e1fa93ce04495aed21fd454de637, type: 3}
+  _gameOverTemplate: {fileID: 216532776443145605, guid: fe120fca1c169477e9ff2ca305c01d0f, type: 3}
   _isCursorInvisible: 1
 --- !u!1 &577273946 stripped
 GameObject:

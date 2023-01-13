@@ -35,7 +35,7 @@ public class AnnouncementManager : MonoBehaviour
         ClearText();
     }
 
-    private void ClearText()
+    public void ClearText()
     {
         _announcementText.text = "";
     }

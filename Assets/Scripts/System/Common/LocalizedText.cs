@@ -25,6 +25,14 @@ sound|©ondoku3.com";
 
     #endregion
 
+    #region ゲームオーバー
+
+    public const string GameOver = "Game Over";
+    public const string Retry = "retry";
+    public const string Home = "home";
+
+    #endregion
+
     #region アナウンス
 
     public const string BreakOutAnnouncement = "被験体CS00が檻を解除して脱走。警備は直ちに確<cspace=-0.1em>保してください。</cspace>";
