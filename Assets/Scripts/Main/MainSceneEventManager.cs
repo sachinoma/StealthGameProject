@@ -11,6 +11,7 @@ public class MainSceneEventManager
     public static MainSceneEvent PlayerDied     { get; } = new MainSceneEvent(2);
     public static MainSceneEvent GotKey         { get; } = new MainSceneEvent(3);
     public static MainSceneEvent GotCard        { get; } = new MainSceneEvent(4);
+    public static MainSceneEvent GameClear      { get; } = new MainSceneEvent(5);
 
     private static MainSceneEvent[] RegisteredEvents =
     {
@@ -18,6 +19,7 @@ public class MainSceneEventManager
         PlayerDied,
         GotKey,
         GotCard,
+        GameClear,
     };
 
     #endregion

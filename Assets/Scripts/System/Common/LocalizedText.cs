@@ -25,9 +25,10 @@ sound|©ondoku3.com";
 
     #endregion
 
-    #region ゲームオーバー
+    #region ゲームオーバー / ゲームクリア
 
     public const string GameOver = "Game Over";
+    public const string GameClear = "You Have Escaped";
     public const string Retry = "retry";
     public const string Home = "home";
 
