@@ -6,7 +6,10 @@ public class PickUpItem : ReactableBase
 {
     public enum ItemType
     {
-        Key,
+        Card_White,
+        Card_Red,
+        Card_Blue,
+        Card_Yellow,
     }
 
     [SerializeField] private ItemType _itemType;

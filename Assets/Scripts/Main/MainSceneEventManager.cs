@@ -7,24 +7,22 @@ public class MainSceneEventManager
 {
     #region イベント
 
-    public static MainSceneEvent PlayerBrokeOut { get; } = new MainSceneEvent(1);
-    public static MainSceneEvent PlayerDied     { get; } = new MainSceneEvent(2);
-    public static MainSceneEvent GotKey         { get; } = new MainSceneEvent(3);
-    public static MainSceneEvent GotCard        { get; } = new MainSceneEvent(4);
-    public static MainSceneEvent GameClear      { get; } = new MainSceneEvent(5);
+    public static MainSceneEvent PlayerBrokeOut { get; } = new MainSceneEvent("PlayerBrokeOut");
+    public static MainSceneEvent PlayerDied     { get; } = new MainSceneEvent("PlayerDied");
+    public static MainSceneEvent ItemGot        { get; } = new MainSceneEvent("ItemGot");
+    public static MainSceneEvent GameClear      { get; } = new MainSceneEvent("GameClear");
 
     private static MainSceneEvent[] RegisteredEvents =
     {
         PlayerBrokeOut,
         PlayerDied,
-        GotKey,
-        GotCard,
+        ItemGot,
         GameClear,
     };
 
     #endregion
 
-    private static MainSceneEvent GetEvent(int eventId)
+    private static MainSceneEvent GetEvent(string eventId)
     {
         foreach(MainSceneEvent registeredEvent in RegisteredEvents)
         {
@@ -40,7 +38,7 @@ public class MainSceneEventManager
 
     #region TriggerEvent
 
-    public static void TriggerEvent(int eventId, object sender, EventArgs e)
+    public static void TriggerEvent(string eventId, object sender, EventArgs e)
     {
         GetEvent(eventId)?.Invoke(sender, e);
     }

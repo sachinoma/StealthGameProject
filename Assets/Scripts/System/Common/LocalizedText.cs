@@ -39,4 +39,10 @@ sound|©ondoku3.com";
     public const string BreakOutAnnouncement = "被験体CS00が檻を解除して脱走。警備は直ちに確<cspace=-0.1em>保してください。</cspace>";
 
     #endregion
+
+    #region メッセージ
+
+    public const string ItemGot = "カードキーをみつけた";
+
+    #endregion
 }

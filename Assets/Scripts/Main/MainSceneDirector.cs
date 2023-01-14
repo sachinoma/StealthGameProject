@@ -22,6 +22,16 @@ public class MainSceneDirector : MonoBehaviour
 
     private void Start()
     {
+        PlayerModel player = FindObjectOfType<PlayerModel>();
+        if(player == null)
+        {
+            Debug.LogError("PlayerModelが探せない");
+        }
+        else
+        {
+            _uiManager.AddObtainedItems(player.obtainedItems);
+        }
+
         if(_isCursorInvisible)
         {
             Cursor.visible = false;
@@ -30,6 +40,7 @@ public class MainSceneDirector : MonoBehaviour
 
         MainSceneEventManager.PlayerBrokeOut.Handler += OnPlayerBrokeOut;
         MainSceneEventManager.PlayerDied.Handler += OnPlayerDied;
+        MainSceneEventManager.ItemGot.Handler += OnItemGot;
         MainSceneEventManager.GameClear.Handler += OnGameClear;
     }
 
@@ -37,6 +48,7 @@ public class MainSceneDirector : MonoBehaviour
     {
         MainSceneEventManager.PlayerBrokeOut.Handler -= OnPlayerBrokeOut;
         MainSceneEventManager.PlayerDied.Handler -= OnPlayerDied;
+        MainSceneEventManager.ItemGot.Handler -= OnItemGot;
         MainSceneEventManager.GameClear.Handler -= OnGameClear;
     }
 
@@ -69,15 +81,29 @@ public class MainSceneDirector : MonoBehaviour
 
     private void OnPlayerDied(object sender, EventArgs e)
     {
-        Debug.LogWarning("Game Over!!");
+        Debug.Log("ゲームオーバー");
         _isGameOver = true;
 
         StartCoroutine(WaitAndGameOver(5.0f));
     }
 
+    private void OnItemGot(object sender, EventArgs e)
+    {
+        if(e is not PickUpEventArgs pickUpEventArgs)
+        {
+            Debug.LogWarning($"取得したアイテムはPickUpInfoを持っていない");
+            return;
+        }
+
+        Debug.Log($"アイテムを取得した：{pickUpEventArgs.Type}");
+
+        _uiManager.ShowItemGotMessage();
+        _uiManager.AddObtainedItem(pickUpEventArgs.Type);
+    }
+
     private void OnGameClear(object sender, EventArgs e)
     {
-        Debug.LogWarning("Game Clear!!");
+        Debug.Log("ゲームクリア");
         _isGameOver = true;
 
         SceneControl.LoadUI(SceneControl.GameClearUISceneName);

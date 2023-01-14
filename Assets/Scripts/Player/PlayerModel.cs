@@ -37,7 +37,7 @@ public class PlayerModel : MonoBehaviour
     private float _startShoutChargingTime;
 
     [Header("コライダー")]
-    [SerializeField] private GameObject playerCollider;
+    [SerializeField] private GameObject _playerCollider;
 
     //Trap
     [Header("罠")]
@@ -49,11 +49,9 @@ public class PlayerModel : MonoBehaviour
 
     private PlayerState _state = PlayerState.Moving;
 
-    private List<PickUpItem.ItemType> _obtainedItems = new List<PickUpItem.ItemType>();
+    public List<PickUpItem.ItemType> obtainedItems { get; private set; } = new List<PickUpItem.ItemType>();
 
     private HidingPlace _currentHidingPlace = null;
-
-    public event Action<PickUpItem.ItemType> PickedUp = null;
 
     void Awake()
     {
@@ -63,6 +61,7 @@ public class PlayerModel : MonoBehaviour
         _initialRot = transform.rotation;
     }
 
+    // TODO : 今Respawnが使わない。もし使いたいなら、PlayerRespawnedとかのeventが必要があると思う。
     public void Respawn()
     {
         ResetStatus();
@@ -79,7 +78,10 @@ public class PlayerModel : MonoBehaviour
     {
         CurrentLife = _life;
         SetState(PlayerState.Moving);
-        _obtainedItems.Clear();
+
+        obtainedItems.Clear();
+        obtainedItems.Add(PickUpItem.ItemType.Card_White);
+
         _currentHidingPlace = null;
 
         ResetShout();
@@ -184,21 +186,17 @@ public class PlayerModel : MonoBehaviour
             return;
         }
 
-        // TODO : アニメションのタイミングに合わせてアイテムを取る？
         PickUpItem.ItemType itemType = item.GetItemType();
         print($"アイテムを取った：{itemType}");
-        _obtainedItems.Add(itemType);
-        Destroy(item.gameObject);
-        PickedUp?.Invoke(itemType);
-
-        // Prototypeのためのコード
-        if(itemType == PickUpItem.ItemType.Key)
-        {
-            PrototypeMessageEvent.Invoke("アイテム取得：鍵");
-        }
+        obtainedItems.Add(itemType);
 
         _animator.SetTrigger(PickUpAnimTrigger);
         SetState(PlayerState.Acting);
+
+        // TODO : アニメションのタイミングに合わせてアイテムを取る？
+        Destroy(item.gameObject);
+        PickUpEventArgs eventArgs = new PickUpEventArgs(itemType);
+        MainSceneEventManager.TriggerEvent(MainSceneEventManager.ItemGot.EventId, this, eventArgs);
     }
 
     Vector3 _posBeforeHide;    // TODO : 一時的なコード
@@ -290,7 +288,7 @@ public class PlayerModel : MonoBehaviour
     public void Die()
     {
         print("死亡");
-        playerCollider.SetActive(false);
+        _playerCollider.SetActive(false);
         _animator.SetTrigger(DieAnimTrigger);
         SetState(PlayerState.Died);
         MainSceneEventManager.PlayerDied.Invoke(this, null);

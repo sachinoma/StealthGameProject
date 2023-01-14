@@ -2,10 +2,10 @@ using System;
 
 public class MainSceneEvent
 {
-    public int EventId { get; private set; }
+    public string EventId { get; private set; }
     public event EventHandler Handler;
 
-    public MainSceneEvent(int eventId)
+    public MainSceneEvent(string eventId)
     {
         EventId = eventId;
         Handler = null;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainSceneEventTrigger : MonoBehaviour
 {
-    [SerializeField] private int _eventId;
+    [SerializeField] private string _eventId;
 
     public void Trigger()
     {

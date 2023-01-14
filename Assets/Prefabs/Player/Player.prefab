@@ -183,13 +183,13 @@ MonoBehaviour:
   _micRange: {fileID: 4349533346915684443}
   _movement: {fileID: 7790477210690105428}
   _playerCamera: {fileID: 956713797534482250}
-  _life: 20
+  _life: 5
   _audioRangeVolume:
   - 0.7
   - 1
   - 0.28
   _maxShoutChargeTime: 1
-  playerCollider: {fileID: 0}
+  _playerCollider: {fileID: 3266016420168292139}
   _isTrap: 0
 --- !u!114 &3266016420745283073
 MonoBehaviour:
@@ -1879,31 +1879,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.370711
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.9100001
+      value: 0.91
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -25.785006
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9997802
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000017667343
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.020968627
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1682720823, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 3.7054146e-10
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 850109531989763988, guid: 5e722c5918388475ca5f4f644f6e381a, type: 3}
       propertyPath: m_Name

@@ -36,6 +36,7 @@ public class ReactableDetector : MonoBehaviour
         {
             if(!_reactableList.Contains(reactable))
             {
+                print($"Reactableを検出した：{reactable.gameObject.name}");
                 _reactableList.Add(reactable);
             }
         }
@@ -48,6 +49,7 @@ public class ReactableDetector : MonoBehaviour
         {
             if(_reactableList.Contains(reactable))
             {
+                print($"Reactableから離した：{reactable.gameObject.name}");
                 _reactableList.Remove(reactable);
             }
         }
