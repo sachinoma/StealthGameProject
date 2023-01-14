@@ -13,6 +13,7 @@ public class PlayerModel : MonoBehaviour
     private const string UselessActionAnimTrigger = "UselessAction";
     private const string TakeDamageAnimTrigger = "TakeDamage";
     private const string DieAnimTrigger = "Die";
+    private const string OperateAnimTrigger = "Operate";
 
     #endregion
 
@@ -44,12 +45,26 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private bool _isTrap = false;
     private bool _isTrapIdleWaiting = false;
 
+    [Header("カードキー")]
+    [SerializeField] private MeshRenderer _cardMeshForAnim;
+    #region Class For _cardMeshForAnim
+    [Serializable]
+    private class CardMeshMaterial
+    {
+        public CardType type;
+        public Material material;
+    }
+    #endregion
+    [SerializeField] private CardMeshMaterial[] _cardMeshMaterials;
+    private CardType _cardTypeToOperate;
+    private Transform _operateRefTransform;
+
     private Vector3 _initialPos;
     private Quaternion _initialRot;
 
     private PlayerState _state = PlayerState.Moving;
 
-    public List<PickUpItem.ItemType> obtainedItems { get; private set; } = new List<PickUpItem.ItemType>();
+    public List<CardType> obtainedItems { get; private set; } = new List<CardType>();
 
     private HidingPlace _currentHidingPlace = null;
 
@@ -80,7 +95,7 @@ public class PlayerModel : MonoBehaviour
         SetState(PlayerState.Moving);
 
         obtainedItems.Clear();
-        obtainedItems.Add(PickUpItem.ItemType.Card_White);
+        obtainedItems.Add(CardType.White);
 
         _currentHidingPlace = null;
 
@@ -150,7 +165,7 @@ public class PlayerModel : MonoBehaviour
             return;
         }
 
-        ReactableBase reactable = _reactableDetector.PopReactable();
+        ReactableBase reactable = _reactableDetector.GetReactable();
         if(reactable == null)
         {
             DoUselessAction();
@@ -163,10 +178,15 @@ public class PlayerModel : MonoBehaviour
         switch(type)
         {
             case ReactableType.PickUpItem:
+                _reactableDetector.PopReactable();
                 PickUp(reactable);
                 break;
             case ReactableType.HidingPlace:
+                _reactableDetector.PopReactable();
                 Hide(reactable);
+                break;
+            case ReactableType.OperationTerminal:
+                OperateTerminal(reactable);
                 break;
         }
     }
@@ -186,16 +206,16 @@ public class PlayerModel : MonoBehaviour
             return;
         }
 
-        PickUpItem.ItemType itemType = item.GetItemType();
-        print($"アイテムを取った：{itemType}");
-        obtainedItems.Add(itemType);
+        CardType cardType = item.GetCardType();
+        print($"アイテムを取った：{cardType}");
+        obtainedItems.Add(cardType);
 
         _animator.SetTrigger(PickUpAnimTrigger);
         SetState(PlayerState.Acting);
 
         // TODO : アニメションのタイミングに合わせてアイテムを取る？
         Destroy(item.gameObject);
-        PickUpEventArgs eventArgs = new PickUpEventArgs(itemType);
+        PickUpEventArgs eventArgs = new PickUpEventArgs(cardType);
         MainSceneEventManager.TriggerEvent(MainSceneEventManager.ItemGot.EventId, this, eventArgs);
     }
 
@@ -231,6 +251,37 @@ public class PlayerModel : MonoBehaviour
 
 
         SetState(PlayerState.Hiding);
+    }
+
+    private void OperateTerminal(ReactableBase reactable)
+    {
+        if(reactable is not OperationTerminal terminal)
+        {
+            Debug.LogWarning("OperationTerminal ではない reactable が OperateTerminal 関数へ渡された。");
+            DoUselessAction();
+            return;
+        }
+
+        if(terminal.CheckCanOperate(obtainedItems, transform.forward))
+        {
+            _cardTypeToOperate = terminal.GetCardType();
+            _operateRefTransform = terminal.GetOperateRef();
+            terminal.Operate();
+
+            _animator.SetTrigger(OperateAnimTrigger);
+            SetState(PlayerState.Operating);
+        }
+        else
+        {
+            Debug.Log("操作できない。");
+            DoUselessAction();
+            return;
+        }
+    }
+
+    public Transform GetOperateRefTransform()
+    {
+        return _operateRefTransform;
     }
 
     private void Appear()
@@ -344,6 +395,33 @@ public class PlayerModel : MonoBehaviour
             _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
         }     
     }
+
+    public void AnimCardAppear()
+    {
+        Material materialToUse = null;
+        foreach(CardMeshMaterial cardMeshMaterial in _cardMeshMaterials)
+        {
+            if(cardMeshMaterial.type == _cardTypeToOperate)
+            {
+                materialToUse = cardMeshMaterial.material;
+                break;
+            }
+        }
+        if (materialToUse == null)
+        {
+            Debug.LogError($"materialToUseが探せない。_cardTypeToOperate：{_cardTypeToOperate}");
+            return;
+        }
+
+        _cardMeshForAnim.material = materialToUse;
+        _cardMeshForAnim.gameObject.SetActive(true);
+    }
+
+    public void AnimCardDisappear()
+    {
+        _cardMeshForAnim.gameObject.SetActive(false);
+    }
+
     #endregion
     #region TrapIdleSound
     private void TrapIdleCheck()

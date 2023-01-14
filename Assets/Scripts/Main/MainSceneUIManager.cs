@@ -27,17 +27,17 @@ public class MainSceneUIManager : MonoBehaviour
         _showMessageCoroutine = StartCoroutine(ShowMessage(LocalizedText.ItemGot));
     }
 
-    public void AddObtainedItem(PickUpItem.ItemType type)
+    public void AddObtainedItem(CardType type)
     {
         Color cardColor = Color.white;
         switch(type)
         {
-            case PickUpItem.ItemType.Card_White:    cardColor = Color.white;    break;
-            case PickUpItem.ItemType.Card_Red:      cardColor = Color.red;      break;
-            case PickUpItem.ItemType.Card_Blue:     cardColor = Color.blue;     break;
-            case PickUpItem.ItemType.Card_Yellow:   cardColor = Color.yellow;   break;
+            case CardType.White:    cardColor = Color.white;    break;
+            case CardType.Red:      cardColor = Color.red;      break;
+            case CardType.Blue:     cardColor = Color.blue;     break;
+            case CardType.Yellow:   cardColor = Color.yellow;   break;
             default:
-                Debug.LogError($"まだ実装していない。PickUpItem.ItemType：{type}");
+                Debug.LogError($"まだ実装していない。CardType：{type}");
                 return;
         }
 
@@ -49,14 +49,14 @@ public class MainSceneUIManager : MonoBehaviour
         }
     }
 
-    public void AddObtainedItems(List<PickUpItem.ItemType> types)
+    public void AddObtainedItems(List<CardType> types)
     {
         if(types == null)
         {
             return;
         }
 
-        foreach(PickUpItem.ItemType type in types)
+        foreach(CardType type in types)
         {
             AddObtainedItem(type);
         }

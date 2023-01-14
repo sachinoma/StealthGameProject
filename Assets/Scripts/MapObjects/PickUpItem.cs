@@ -4,19 +4,11 @@ using UnityEngine;
 
 public class PickUpItem : ReactableBase
 {
-    public enum ItemType
-    {
-        Card_White,
-        Card_Red,
-        Card_Blue,
-        Card_Yellow,
-    }
+    [SerializeField] private CardType _cardType;
 
-    [SerializeField] private ItemType _itemType;
-
-    public ItemType GetItemType()
+    public CardType GetCardType()
     {
-        return _itemType;
+        return _cardType;
     }
 
     #region ReactableBase

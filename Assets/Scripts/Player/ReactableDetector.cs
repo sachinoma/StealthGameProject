@@ -8,7 +8,7 @@ public class ReactableDetector : MonoBehaviour
 {
     private List<ReactableBase> _reactableList = new List<ReactableBase>();
 
-    private ReactableBase GetReactable()
+    public ReactableBase GetReactable()
     {
         if (_reactableList.Count == 0)
         {
@@ -18,14 +18,13 @@ public class ReactableDetector : MonoBehaviour
         return _reactableList[0];
     }
 
-    public ReactableBase PopReactable()
+    public void PopReactable()
     {
         ReactableBase reactable = GetReactable();
         if(reactable != null)
         {
             _reactableList.Remove(reactable);
         }
-        return reactable;
     }
 
     #region Trigger

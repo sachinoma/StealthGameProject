@@ -5,4 +5,5 @@ public enum PlayerState
     Hiding,
     TakingDamage,
     Died,
+    Operating,
 }

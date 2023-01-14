@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 730146280759019353, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: _cardType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 730146280759019353, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
       propertyPath: _itemType
       value: 1
       objectReference: {fileID: 0}

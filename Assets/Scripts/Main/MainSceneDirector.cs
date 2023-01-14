@@ -19,17 +19,18 @@ public class MainSceneDirector : MonoBehaviour
     private AnnouncementManager _announcementManager = null;
 
     private bool _isGameOver = false;
+    private PlayerModel _player;
 
     private void Start()
     {
-        PlayerModel player = FindObjectOfType<PlayerModel>();
-        if(player == null)
+        _player = FindObjectOfType<PlayerModel>();
+        if(_player == null)
         {
             Debug.LogError("PlayerModelが探せない");
         }
         else
         {
-            _uiManager.AddObtainedItems(player.obtainedItems);
+            _uiManager.AddObtainedItems(_player.obtainedItems);
         }
 
         if(_isCursorInvisible)
@@ -64,6 +65,30 @@ public class MainSceneDirector : MonoBehaviour
             else if(Gamepad.current.aButton.wasPressedThisFrame)
             {
                 SceneControl.ChangeScene(SceneControl.TitleSceneName);
+            }
+            else if(Gamepad.current.rightShoulder.wasPressedThisFrame)
+            {
+                // 終点の辺り
+                _player.transform.position = new Vector3(-6, 0, 0);
+                _player.transform.eulerAngles = new Vector3(0, 90, 0);
+            }
+            else if(Gamepad.current.leftShoulder.wasPressedThisFrame)
+            {
+                // Card_Blueの辺り
+                _player.transform.position = new Vector3(-12.8f, 0, -39.1f);
+                _player.transform.eulerAngles = new Vector3(0, 135, 0);
+            }
+            else if(Gamepad.current.rightTrigger.wasPressedThisFrame)
+            {
+                // Card_Redの辺り
+                _player.transform.position = new Vector3(28.6f, 0, 23.3f);
+                _player.transform.eulerAngles = new Vector3(0, 135, 0);
+            }
+            else if(Gamepad.current.leftTrigger.wasPressedThisFrame)
+            {
+                // Card_Yellowの辺り
+                _player.transform.position = new Vector3(-24.45f, 0, 0f);
+                _player.transform.eulerAngles = new Vector3(0, 270, 0);
             }
         }
     }

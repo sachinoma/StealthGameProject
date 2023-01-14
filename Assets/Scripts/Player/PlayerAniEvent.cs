@@ -21,4 +21,14 @@ public class PlayerAniEvent : MonoBehaviour
     {
         _playerModel.AnimSoundVolume();
     }
+
+    private void CardAppearEvent()
+    {
+        _playerModel.AnimCardAppear();
+    }
+
+    private void CardDisappearEvent()
+    {
+        _playerModel.AnimCardDisappear();
+    }
 }
