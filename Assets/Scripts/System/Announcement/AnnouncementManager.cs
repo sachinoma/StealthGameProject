@@ -10,11 +10,11 @@ public class AnnouncementManager : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _breakOutAudioClip;
-    [SerializeField] private TextMeshProUGUI _announcementText;
+    [SerializeField] private TextMeshProUGUI _captionText;
 
     private void Awake()
     {
-        ClearText();
+        ClearCaption();
     }
 
     public void PlayBreakOutAnnouncement()
@@ -22,7 +22,7 @@ public class AnnouncementManager : MonoBehaviour
         _audioSource.clip = _breakOutAudioClip;
         _audioSource.Play();
 
-        _announcementText.text = LocalizedText.BreakOutAnnouncement;
+        _captionText.text = LocalizedText.BreakOutAnnouncement;
 
         StopAllCoroutines();
         StartCoroutine(HideTextCoroutine());
@@ -32,11 +32,11 @@ public class AnnouncementManager : MonoBehaviour
     {
         yield return new WaitWhile(() => { return _audioSource.isPlaying; });
 
-        ClearText();
+        ClearCaption();
     }
 
-    public void ClearText()
+    public void ClearCaption()
     {
-        _announcementText.text = "";
+        _captionText.text = "";
     }
 }

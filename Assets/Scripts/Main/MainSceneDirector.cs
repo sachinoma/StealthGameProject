@@ -79,7 +79,7 @@ public class MainSceneDirector : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
 
-        _announcementManager?.ClearText();
+        _announcementManager?.ClearCaption();
         GameOver gameOver = Instantiate(_gameOverTemplate);
         gameOver.Show(Retry, BackToTitle);
     }

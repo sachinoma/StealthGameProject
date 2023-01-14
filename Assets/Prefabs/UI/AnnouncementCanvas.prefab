@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8340377545840719948}
   - component: {fileID: 8340377545840719949}
   m_Layer: 5
-  m_Name: AnnouncementText
+  m_Name: CaptionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioSource: {fileID: 8340377546390049667}
   _breakOutAudioClip: {fileID: 8300000, guid: ea8ca7803fc854502a5801c48ec416c1, type: 3}
-  _announcementText: {fileID: 8340377545840719949}
+  _captionText: {fileID: 8340377545840719949}
 --- !u!82 &8340377546390049667
 AudioSource:
   m_ObjectHideFlags: 0
