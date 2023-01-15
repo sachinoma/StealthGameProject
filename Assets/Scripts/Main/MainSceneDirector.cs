@@ -56,35 +56,41 @@ public class MainSceneDirector : MonoBehaviour
 #if BACKDOOR_ENABLED
     private void Update()
     {
-        if(!_isGameOver && Gamepad.current != null)
+        if(!_isGameOver)
         {
-            if(Gamepad.current.bButton.wasPressedThisFrame)
+            if((Gamepad.current != null && Gamepad.current.bButton.wasPressedThisFrame) ||
+               (Keyboard.current != null && Keyboard.current.digit9Key.wasPressedThisFrame))
             {
                 SceneControl.ChangeScene(SceneControl.MainSceneName);
             }
-            else if(Gamepad.current.aButton.wasPressedThisFrame)
+            else if((Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame) ||
+                    (Keyboard.current != null && Keyboard.current.digit0Key.wasPressedThisFrame))
             {
                 SceneControl.ChangeScene(SceneControl.TitleSceneName);
             }
-            else if(Gamepad.current.rightShoulder.wasPressedThisFrame)
+            else if((Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame) ||
+                    (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame))
             {
                 // 終点の辺り
                 _player.transform.position = new Vector3(-6, 0, 0);
                 _player.transform.eulerAngles = new Vector3(0, 90, 0);
             }
-            else if(Gamepad.current.leftShoulder.wasPressedThisFrame)
+            else if((Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame) ||
+                    (Keyboard.current != null && Keyboard.current.digit2Key.wasPressedThisFrame))
             {
                 // Card_Blueの辺り
                 _player.transform.position = new Vector3(-12.8f, 0, -39.1f);
                 _player.transform.eulerAngles = new Vector3(0, 135, 0);
             }
-            else if(Gamepad.current.rightTrigger.wasPressedThisFrame)
+            else if((Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame) ||
+                    (Keyboard.current != null && Keyboard.current.digit3Key.wasPressedThisFrame))
             {
                 // Card_Redの辺り
                 _player.transform.position = new Vector3(28.6f, 0, 23.3f);
                 _player.transform.eulerAngles = new Vector3(0, 135, 0);
             }
-            else if(Gamepad.current.leftTrigger.wasPressedThisFrame)
+            else if((Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
+                    (Keyboard.current != null && Keyboard.current.digit4Key.wasPressedThisFrame))
             {
                 // Card_Yellowの辺り
                 _player.transform.position = new Vector3(-24.45f, 0, 0f);
