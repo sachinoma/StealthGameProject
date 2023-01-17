@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 #if BACKDOOR_ENABLED
@@ -13,6 +14,11 @@ public class MainSceneDirector : MonoBehaviour
     [SerializeField] private MainSceneUIManager _uiManager;
     [SerializeField] private AnnouncementManager _announcementManagerTemplate;
 
+    [Header("扉と関連すること")]
+    [SerializeField] private Door _tutorialDoor;
+    [SerializeField] private Door _endpointDoor;
+    [SerializeField] private AudioSource _endpointAudio;
+
     [Header("カーソルの表示")]
     [SerializeField] private bool _isCursorInvisible = true;
 
@@ -20,6 +26,8 @@ public class MainSceneDirector : MonoBehaviour
 
     private bool _isGameOver = false;
     private PlayerModel _player;
+
+    private List<CardType> _operatedCardTypes = new List<CardType>();
 
     private void Start()
     {
@@ -43,6 +51,7 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.PlayerDied.Handler += OnPlayerDied;
         MainSceneEventManager.ItemGot.Handler += OnItemGot;
         MainSceneEventManager.GameClear.Handler += OnGameClear;
+        MainSceneEventManager.TerminalOperated.Handler += OnTerminalOperated;
     }
 
     private void OnDestroy()
@@ -51,10 +60,11 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.PlayerDied.Handler -= OnPlayerDied;
         MainSceneEventManager.ItemGot.Handler -= OnItemGot;
         MainSceneEventManager.GameClear.Handler -= OnGameClear;
+        MainSceneEventManager.TerminalOperated.Handler -= OnTerminalOperated;
     }
 
 #if BACKDOOR_ENABLED
-    private void Update()
+    private void LateUpdate()
     {
         if(!_isGameOver)
         {
@@ -118,33 +128,76 @@ public class MainSceneDirector : MonoBehaviour
         StartCoroutine(WaitAndGameOver(5.0f));
     }
 
-    private void OnItemGot(object sender, EventArgs e)
-    {
-        if(e is not PickUpEventArgs pickUpEventArgs)
-        {
-            Debug.LogWarning($"取得したアイテムはPickUpInfoを持っていない");
-            return;
-        }
-
-        Debug.Log($"アイテムを取得した：{pickUpEventArgs.Type}");
-
-        _uiManager.ShowItemGotMessage();
-        _uiManager.AddObtainedItem(pickUpEventArgs.Type);
-    }
-
-    private void OnGameClear(object sender, EventArgs e)
-    {
-        Debug.Log("ゲームクリア");
-        _isGameOver = true;
-
-        SceneControl.LoadUI(SceneControl.GameClearUISceneName);
-    }
-    
     private IEnumerator WaitAndGameOver(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
 
         _announcementManager?.ClearCaption();
         SceneControl.LoadUI(SceneControl.GameOverUISceneName);
+    }
+
+    private void OnItemGot(object sender, EventArgs e)
+    {
+        if(e is not ItemGotEventArgs itemGotEventArgs)
+        {
+            Debug.LogWarning($"取得したアイテムは正しいEventArgsを持っていない");
+            return;
+        }
+
+        Debug.Log($"アイテムを取得した：{itemGotEventArgs.Type}");
+
+        _uiManager.ShowItemGotMessage();
+        _uiManager.AddObtainedItem(itemGotEventArgs.Type);
+    }
+
+    private void OnGameClear(object sender, EventArgs e)
+    {
+        Debug.Log("ゲームクリア");
+        _isGameOver = true;
+        _endpointAudio.Stop();
+
+        SceneControl.LoadUI(SceneControl.GameClearUISceneName);
+    }
+
+    private void OnTerminalOperated(object sender, EventArgs e)
+    {
+        if(e is not TerminalOperatedEventArgs terminalOperatedEventArgs)
+        {
+            Debug.LogWarning($"EventArgsが合っていない");
+            return;
+        }
+
+        switch(terminalOperatedEventArgs.Type)
+        {
+            case CardType.White:
+                _tutorialDoor.Open();
+                return;
+            case CardType.Red:
+            case CardType.Blue:
+            case CardType.Yellow:
+                _operatedCardTypes.Add(terminalOperatedEventArgs.Type);
+                CheckAndActivateEndpoint();
+                return;
+        }
+    }
+
+    private void CheckAndActivateEndpoint()
+    {
+        CardType[] cardTypeNeeded = { CardType.Red, CardType.Blue, CardType.Yellow };
+        foreach(CardType cardType in cardTypeNeeded)
+        {
+            if(!_operatedCardTypes.Contains(cardType))
+            {
+                return;
+            }
+        }
+
+        ActivateEndpoint();
+    }
+
+    private void ActivateEndpoint()
+    {
+        _endpointDoor.Open();
+        _endpointAudio.Play();
     }
 }

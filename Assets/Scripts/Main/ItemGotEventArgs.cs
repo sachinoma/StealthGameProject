@@ -1,10 +1,10 @@
 using System;
 
-public class PickUpEventArgs : EventArgs
+public class ItemGotEventArgs : EventArgs
 {
     public CardType Type { get; private set; }
 
-    public PickUpEventArgs(CardType type)
+    public ItemGotEventArgs(CardType type)
     {
         Type = type;
     }

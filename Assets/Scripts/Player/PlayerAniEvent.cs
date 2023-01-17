@@ -27,6 +27,11 @@ public class PlayerAniEvent : MonoBehaviour
         _playerModel.AnimCardAppear();
     }
 
+    private void CardOperateEvent()
+    {
+        _playerModel.AnimCardOperate();
+    }
+
     private void CardDisappearEvent()
     {
         _playerModel.AnimCardDisappear();

@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8177193454408049430}
   - component: {fileID: 8935803013349022232}
-  - component: {fileID: 8575208712761807934}
-  - component: {fileID: 8658313072190645506}
+  - component: {fileID: 6421795000374487816}
   m_Layer: 0
-  m_Name: AutoDoor2
+  m_Name: OperationDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,20 +54,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &8575208712761807934
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6726936757546524365}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5, y: 3, z: 5}
-  m_Center: {x: 0, y: 1.5, z: 0}
---- !u!114 &8658313072190645506
+--- !u!114 &6421795000374487816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,9 +63,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6726936757546524365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce280b3b200b4af418071f4db49c8208, type: 3}
+  m_Script: {fileID: 11500000, guid: cb7726b7afc2541f492df615a5262d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animator: {fileID: 8935803013349022232}
 --- !u!1001 &3128256250703064282
 PrefabInstance:
   m_ObjectHideFlags: 0

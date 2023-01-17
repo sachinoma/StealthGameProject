@@ -57,7 +57,9 @@ public class PlayerModel : MonoBehaviour
     #endregion
     [SerializeField] private CardMeshMaterial[] _cardMeshMaterials;
     private CardType _cardTypeToOperate;
-    private Transform _operateRefTransform;
+    private OperationTerminal _operatingTerminal = null;
+    private Transform _operatingRefTransform = null;
+
 
     private Vector3 _initialPos;
     private Quaternion _initialRot;
@@ -215,7 +217,7 @@ public class PlayerModel : MonoBehaviour
 
         // TODO : アニメションのタイミングに合わせてアイテムを取る？
         Destroy(item.gameObject);
-        PickUpEventArgs eventArgs = new PickUpEventArgs(cardType);
+        ItemGotEventArgs eventArgs = new ItemGotEventArgs(cardType);
         MainSceneEventManager.TriggerEvent(MainSceneEventManager.ItemGot.EventId, this, eventArgs);
     }
 
@@ -265,8 +267,8 @@ public class PlayerModel : MonoBehaviour
         if(terminal.CheckCanOperate(obtainedItems, transform.forward))
         {
             _cardTypeToOperate = terminal.GetCardType();
-            _operateRefTransform = terminal.GetOperateRef();
-            terminal.Operate();
+            _operatingRefTransform = terminal.GetOperateRefTransform();
+            _operatingTerminal = terminal;
 
             _animator.SetTrigger(OperateAnimTrigger);
             SetState(PlayerState.Operating);
@@ -281,7 +283,7 @@ public class PlayerModel : MonoBehaviour
 
     public Transform GetOperateRefTransform()
     {
-        return _operateRefTransform;
+        return _operatingRefTransform;
     }
 
     private void Appear()
@@ -417,6 +419,11 @@ public class PlayerModel : MonoBehaviour
         _cardMeshForAnim.gameObject.SetActive(true);
     }
 
+    public void AnimCardOperate()
+    {
+        _operatingTerminal?.Operate();
+        _operatingTerminal = null;
+    }
     public void AnimCardDisappear()
     {
         _cardMeshForAnim.gameObject.SetActive(false);

@@ -7,10 +7,11 @@ public class MainSceneEventManager
 {
     #region イベント
 
-    public static MainSceneEvent PlayerBrokeOut { get; } = new MainSceneEvent("PlayerBrokeOut");
-    public static MainSceneEvent PlayerDied     { get; } = new MainSceneEvent("PlayerDied");
-    public static MainSceneEvent ItemGot        { get; } = new MainSceneEvent("ItemGot");
-    public static MainSceneEvent GameClear      { get; } = new MainSceneEvent("GameClear");
+    public static MainSceneEvent PlayerBrokeOut     { get; } = new MainSceneEvent("PlayerBrokeOut");
+    public static MainSceneEvent PlayerDied         { get; } = new MainSceneEvent("PlayerDied");
+    public static MainSceneEvent ItemGot            { get; } = new MainSceneEvent("ItemGot");
+    public static MainSceneEvent GameClear          { get; } = new MainSceneEvent("GameClear");
+    public static MainSceneEvent TerminalOperated   { get; } = new MainSceneEvent("TerminalOperated");
 
     private static MainSceneEvent[] RegisteredEvents =
     {
@@ -18,6 +19,7 @@ public class MainSceneEventManager
         PlayerDied,
         ItemGot,
         GameClear,
+        TerminalOperated,
     };
 
     #endregion

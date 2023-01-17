@@ -5,7 +5,7 @@ using UnityEngine;
 public class OperationTerminal : ReactableBase
 {
     [SerializeField] private CardType _cardType;
-    [SerializeField] private Transform _operateRef;
+    [SerializeField] private Transform _operateRefTransform;
     private bool _isActivated = false;
 
     public CardType GetCardType()
@@ -13,9 +13,9 @@ public class OperationTerminal : ReactableBase
         return _cardType;
     }
 
-    public Transform GetOperateRef()
+    public Transform GetOperateRefTransform()
     {
-        return _operateRef;
+        return _operateRefTransform;
     }
 
     public bool CheckCanOperate(List<CardType> obtainedItems, Vector3 operatorForwardDir)
@@ -47,13 +47,15 @@ public class OperationTerminal : ReactableBase
     private bool CheckForwardDirection(Vector3 operatorForwardDir)
     {
         // 角度の差 < 90度
-        print(Vector3.Dot(_operateRef.forward, operatorForwardDir));
-        return Vector3.Dot(_operateRef.forward, operatorForwardDir) > 0;
+        return Vector3.Dot(_operateRefTransform.forward, operatorForwardDir) > 0;
     }
 
     public void Operate()
     {
         _isActivated = true;
+
+        TerminalOperatedEventArgs eventArgs = new TerminalOperatedEventArgs(_cardType);
+        MainSceneEventManager.TerminalOperated.Invoke(this, eventArgs);
     }
 
     #region ReactableBase
