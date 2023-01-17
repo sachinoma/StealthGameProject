@@ -13,15 +13,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7911866581224fc4835be3beddc419c, type: 3}
       propertyPath: m_LocalScale.x
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7911866581224fc4835be3beddc419c, type: 3}
       propertyPath: m_LocalScale.y
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7911866581224fc4835be3beddc419c, type: 3}
       propertyPath: m_LocalScale.z
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7911866581224fc4835be3beddc419c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823df39b47fd44ae4b676f2162cd2a8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemType: 0
+  _cardType: 0
 --- !u!114 &2387754839996077448
 MonoBehaviour:
   m_ObjectHideFlags: 0
