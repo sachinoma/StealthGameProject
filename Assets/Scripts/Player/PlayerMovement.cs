@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _targetMovement;        // 希望な移動。カメラ空間座標(2Dのみ)。magnitudeの範囲 : [0, 1]
     private Vector3 _inputVelocity;         // _targetMovementによって計算後の入力速度。実際の速度ではない(壁をぶつけるとか、実際の速度が変わる場合もある)
 
+    private float _speedMultiplier = 1.0f;
     private bool _isMovementActive = true;
 
     private void Awake()
@@ -67,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(targetMovement_WorldSpace != Vector3.zero || _inputVelocity != Vector3.zero)
         {
-            Vector3 targetVelocity = targetMovement_WorldSpace * _maxSpeed;
+            Vector3 targetVelocity = targetMovement_WorldSpace * GetCurrentMaxSpeed();
             _inputVelocity = Vector3.RotateTowards(_inputVelocity, targetVelocity, _rotateSpeed * Time.deltaTime, _acceleration * Time.deltaTime);
         }
 
@@ -93,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(_isMovementActive)
         {
-            return _inputVelocity.magnitude / _maxSpeed;
+            return _inputVelocity.magnitude / GetCurrentMaxSpeed();
         }
         else
         {
@@ -110,4 +111,18 @@ public class PlayerMovement : MonoBehaviour
             _inputVelocity = Vector3.zero;
         }
     }
+
+    #region MaxSpeed
+
+    public void SetSpeedMultiplier(float value)
+    {
+        _speedMultiplier = value;
+    }
+
+    private float GetCurrentMaxSpeed()
+    {
+        return _maxSpeed * _speedMultiplier;
+    }
+    #endregion
+
 }

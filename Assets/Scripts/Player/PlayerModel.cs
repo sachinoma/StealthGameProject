@@ -456,20 +456,11 @@ public class PlayerModel : MonoBehaviour
     #endregion
 
     #region ColliderTrap
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag(Tag.Trap))
-        {
-            _isTrap = true;
-        }
-    }
 
-    private void OnTriggerExit(Collider other)
+    public void SetInTrap(bool isInTrap, float speedMultiplier)
     {
-        if(other.CompareTag(Tag.Trap))
-        {
-            _isTrap = false;
-        }
+        _isTrap = isInTrap;
+        _movement.SetSpeedMultiplier(speedMultiplier);
     }
     #endregion
 

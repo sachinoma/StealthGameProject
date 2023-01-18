@@ -9,6 +9,10 @@ public class Trap : MonoBehaviour
     [SerializeField]
     private ParticleSystem trapFX;
 
+    [Header("追加機能 - 緩める")]
+    [SerializeField] private bool _isShowDown = false;
+    [SerializeField] private float _showDownMultiplier = 0.5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +31,8 @@ public class Trap : MonoBehaviour
         {
             animator.SetBool("isOn", true);
             trapFX.Play();
+
+            SetPlayer(other, true);
         }
     }
 
@@ -36,6 +42,21 @@ public class Trap : MonoBehaviour
         {
             animator.SetBool("isOn", false);
             trapFX.Stop();
+
+            SetPlayer(other, false);
         }
+    }
+
+    private void SetPlayer(Collider other, bool isTriggerEnter)
+    {
+        PlayerModel player = other.GetComponentInParent<PlayerModel>();
+        if(player == null)
+        {
+            Debug.LogWarning("PlayerModelが探せない。");
+            return;
+        }
+
+        float speedMultiplier = (_isShowDown && isTriggerEnter) ? _showDownMultiplier : 1;
+        player.SetInTrap(isTriggerEnter, speedMultiplier);
     }
 }
