@@ -17,11 +17,13 @@ public class EnemyModel : MonoBehaviour
 
     [Header("徘徊場所")]
     [SerializeField] List<Transform> sarchPosition;
+    private int movePosition = 0;
 
     [Header("敵のベース")]
     private NavMeshAgent _agent;
     public Animator animator;
     private float _speed;
+    private float _acceleration;
     int chaseTimer;
     [HideInInspector] public int stopTimer;
     [SerializeField] private SphereCollider playerSounds;
@@ -29,6 +31,32 @@ public class EnemyModel : MonoBehaviour
     //視界
     [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
+
+
+    [Header("敵の色変え")]
+    [ColorUsage(false, true)] public Color color1;
+    [ColorUsage(false, true)] public Color color2;
+    private Color lerpedColor = Color.white;
+    private bool isChase = false;
+    [SerializeField] private float colorLerp = 0;
+
+    [SerializeField, Header("メッシュレンダラー")]
+    private SkinnedMeshRenderer[] meshRenderer;
+
+    private MaterialPropertyBlock m_mpb;
+    public MaterialPropertyBlock mpb
+    {
+        get { return m_mpb ?? (m_mpb = new MaterialPropertyBlock()); }
+    }
+
+    [Header("サウンド")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] audioClips;
+    private enum EnemyAudioName
+    {
+        audioNormal,
+        audioChase,
+    }
 
     void Start()
     {
@@ -39,6 +67,9 @@ public class EnemyModel : MonoBehaviour
     {
         animator.SetFloat("Speed", _agent.speed);
 
+        SetColorLerp();
+        SetEnemyEmission();
+
         #region 敵のステート
         switch (currentState)
         {
@@ -46,6 +77,10 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトを元に戻す
+                    SetChase(false);
+                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
+
                     stateEnter = false;
                     _agent.speed = 0f;
                 }
@@ -55,6 +90,7 @@ public class EnemyModel : MonoBehaviour
                 {
                     currentState = EnemyState.Move;
                     _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
                     stateEnter = true;
                 }
                 else
@@ -66,15 +102,18 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトを元に戻す
                     stateEnter = false;
-                    int rnd = random.Range(0, sarchPosition.Count);
-                    _agent.destination = sarchPosition[rnd].position;
-                    enemySarch.position = sarchPosition[rnd].position;
+                    //int rnd = random.Range(0, sarchPosition.Count);
+                    _agent.destination = sarchPosition[movePosition].position;
+                    enemySarch.position = sarchPosition[movePosition].position;
                 }
                 #endregion
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
+                    movePosition++;
+                    if(movePosition >= sarchPosition.Count) {  movePosition = 0; }
                     stateEnter = true;
                     return;
                 }
@@ -83,6 +122,7 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトを元に戻す
                     stateEnter = false;
                 }
                 #endregion
@@ -98,10 +138,28 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
+                    _agent.speed = 0f;
+                    _agent.acceleration = 0f;
+                    stopTimer = 60;
+
                     animator.SetBool("isChase", true);
                     stateEnter = false;
                 }
                 #endregion
+
+                if(stopTimer > 0)
+                {
+                    stopTimer--;
+                }
+                else
+                {
+                    _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
+                }
 
                 if (_agent.remainingDistance <= 1f && !_agent.pathPending)
                 {
@@ -151,9 +209,49 @@ public class EnemyModel : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _agent.stoppingDistance = 1f;
         _speed = _agent.speed;
+        _acceleration = _agent.acceleration;
         stateEnter = true;
     }
 
+    private void SetChase(bool flag)
+    {
+        isChase = flag;
+    }
+
+    private void SetColorLerp()
+    {
+        lerpedColor = Color.Lerp(color1, color2, colorLerp);
+        if(isChase)
+        {
+            if(colorLerp < 1)
+            {
+                colorLerp += 0.3f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            if(colorLerp > 0)
+            {
+                colorLerp -= 0.7f * Time.deltaTime;
+            }
+        }
+    }
+
+    private void SetEnemyEmission()
+    {
+        mpb.SetColor(Shader.PropertyToID("_EmissionColor"), lerpedColor);
+        for(int i = 0; i < meshRenderer.Length; i++)
+        {
+            meshRenderer[i].material.EnableKeyword("_EMISSION");
+            meshRenderer[i].SetPropertyBlock(m_mpb);
+        }
+    }
+
+    private void SetEnemyAudio(int clipNum)
+    {
+        audioSource.clip = audioClips[clipNum];
+        audioSource.Play();
+    }
 
     #region 音やプレイヤーの捜索
     public void PlayerSarch(Collider collider)
@@ -169,7 +267,7 @@ public class EnemyModel : MonoBehaviour
             {
                 RaycastHit hit;
                 Vector3 direction;   // Rayを飛ばす方向
-                float distance = 10f;    // Rayを飛ばす距離
+                float distance = 20f;    // Rayを飛ばす距離
 
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;

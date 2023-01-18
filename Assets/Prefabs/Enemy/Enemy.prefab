@@ -131,7 +131,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b68a6745c850ffc46ba7768074394bf8, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -159,7 +159,7 @@ AudioSource:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.059094027
+      time: 0.026363924
       value: 0.625863
       inSlope: -7.0463376
       outSlope: -7.0463376
@@ -168,7 +168,7 @@ AudioSource:
       inWeight: 0.33333334
       outWeight: 0.11853824
     - serializedVersion: 3
-      time: 0.10127771
+      time: 0.06854761
       value: 0.4211713
       inSlope: -2.8441148
       outSlope: -2.8441148
@@ -177,7 +177,7 @@ AudioSource:
       inWeight: 0.33333334
       outWeight: 0.36263913
     - serializedVersion: 3
-      time: 0.2334829
+      time: 0.2007528
       value: 0.19740081
       inSlope: -0.726099
       outSlope: -0.726099
@@ -186,7 +186,7 @@ AudioSource:
       inWeight: 0.5839912
       outWeight: 0.3612633
     - serializedVersion: 3
-      time: 0.5014725
+      time: 0.46874237
       value: 0.099853516
       inSlope: -0.12211062
       outSlope: -0.12211062
@@ -299,7 +299,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.5
-  m_Speed: 6.3
+  m_Speed: 5.5
   m_Acceleration: 6.5
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -332,6 +332,24 @@ MonoBehaviour:
   enemySarch: {fileID: 0}
   searchAngle: 70
   searchArea: {fileID: 7559990500157691389}
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  color2: {r: 47.686275, g: 47.686275, b: 47.686275, a: 0}
+  colorLerp: 0
+  meshRenderer:
+  - {fileID: 7939128516194785408}
+  - {fileID: 747411081295757181}
+  - {fileID: 3987795971281896856}
+  - {fileID: 1070358153001299869}
+  - {fileID: 59868085202161582}
+  - {fileID: 2763420683697037516}
+  - {fileID: 6722361719297880806}
+  - {fileID: 4337812021707286329}
+  - {fileID: 2016631451581293698}
+  - {fileID: 6636131650862831628}
+  audioSource: {fileID: 4050291730089281447}
+  audioClips:
+  - {fileID: 8300000, guid: b68a6745c850ffc46ba7768074394bf8, type: 3}
+  - {fileID: 8300000, guid: 791bd785040bf0544acdaf82e2f4575d, type: 3}
 --- !u!1 &7591042859397780896
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,6 +478,51 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 6f65b8a75e779724e956fb4ffa2b655e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+--- !u!137 &59868085202161582 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7328146053352755884, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &747411081295757181 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1208888993487461761, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1070358153001299869 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1460060563944246625, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2016631451581293698 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -100490791692256896, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2763420683697037516 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4845833405426089422, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3987795971281896856 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5922516051922507930, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &4337812021707286329 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6437190587171355195, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6636131650862831628 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4142811538572035342, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6722361719297880806 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5175515669970472988, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7128290888977185513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
@@ -672,6 +735,11 @@ MonoBehaviour:
   _enemyAudio: {fileID: 5558809588969464423}
   _attackClip: {fileID: 8300000, guid: 7d50ff55e99f5114a8712eb0807bac12, type: 3}
   _gameoverClip: {fileID: 8300000, guid: 53d19338d0c0a8e4aa6b7579b2c08ada, type: 3}
+--- !u!137 &7939128516194785408 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 813758334592664962, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
+  m_PrefabInstance: {fileID: 7306667867995249922}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8190649198105967964 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7724386144729718690, guid: 1e51af5ee5aa53c45ac21b85ee86ae53, type: 3}
