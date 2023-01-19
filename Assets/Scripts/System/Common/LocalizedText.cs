@@ -45,4 +45,13 @@ sound|©ondoku3.com";
     public const string ItemGot = "カードキーをみつけた";
 
     #endregion
+
+    #region ヒント
+
+    public const string TrapHint = "「うるさいからあんまり近づきたくない」";
+    public const string OperationTerminalHint = "「カギがかかってるみたい」";
+    public const string CardHint = "「なんだろう、だっしゅつに使えるかな」";
+    public const string EnemyHint = "「ロボットは音を出さなければ気づかないみたい」";
+
+    #endregion
 }
