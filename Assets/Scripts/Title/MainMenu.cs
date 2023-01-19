@@ -66,7 +66,8 @@ public class MainMenu : MonoBehaviour
 
     private void OnGameStartBtnClicked()
     {
-        SceneManager.LoadScene("Main");
+        GameProgress.Reset();
+        SceneControl.ChangeScene(SceneControl.MainSceneName);
     }
 
     private void OnCreditBtnClicked()

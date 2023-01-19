@@ -14,6 +14,9 @@ public class MainSceneDirector : MonoBehaviour
     [SerializeField] private MainSceneUIManager _uiManager;
     [SerializeField] private AnnouncementManager _announcementManagerTemplate;
 
+    [Header("カード")]
+    [SerializeField] private Transform _cardsBaseTrasnform;
+
     [Header("扉と関連すること")]
     [SerializeField] private Door _tutorialDoor;
     [SerializeField] private Door _endpointDoor;
@@ -25,21 +28,12 @@ public class MainSceneDirector : MonoBehaviour
     private AnnouncementManager _announcementManager = null;
 
     private bool _isGameOver = false;
-    private PlayerModel _player;
 
     private List<CardType> _operatedCardTypes = new List<CardType>();
 
     private void Start()
     {
-        _player = FindObjectOfType<PlayerModel>();
-        if(_player == null)
-        {
-            Debug.LogError("PlayerModelが探せない");
-        }
-        else
-        {
-            _uiManager.AddObtainedItems(_player.obtainedItems);
-        }
+        LoadGameProgress();
 
         if(_isCursorInvisible)
         {
@@ -63,6 +57,40 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.TerminalOperated.Handler -= OnTerminalOperated;
     }
 
+    private void LoadGameProgress()
+    {
+        List<CardType> obtainedItems = GameProgress.ObtainedItems;
+        _uiManager.AddObtainedItems(obtainedItems);
+
+        SetCardsActive(obtainedItems);
+    }
+
+    private void SetCardsActive(List<CardType> obtainedItems)
+    {
+        if(obtainedItems == null)
+        {
+            return;
+        }
+
+        PickUpItem[] cardsInMap = _cardsBaseTrasnform.GetComponentsInChildren<PickUpItem>();
+        if(cardsInMap == null)
+        {
+            return;
+        }
+
+        foreach(CardType obtainedItem in obtainedItems)
+        {
+            foreach(PickUpItem cardInMap in cardsInMap)
+            {
+                if(cardInMap.GetCardType() == obtainedItem)
+                {
+                    Destroy(cardInMap.gameObject);
+                    break;
+                }
+            }
+        }
+    }
+
 #if BACKDOOR_ENABLED
     private void LateUpdate()
     {
@@ -82,29 +110,33 @@ public class MainSceneDirector : MonoBehaviour
                     (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame))
             {
                 // 終点の辺り
-                _player.transform.position = new Vector3(-6, 0, 0);
-                _player.transform.eulerAngles = new Vector3(0, 90, 0);
+                PlayerModel player = FindObjectOfType<PlayerModel>();
+                player.transform.position = new Vector3(-6, 0, 0);
+                player.transform.eulerAngles = new Vector3(0, 90, 0);
             }
             else if((Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame) ||
                     (Keyboard.current != null && Keyboard.current.digit2Key.wasPressedThisFrame))
             {
                 // Card_Blueの辺り
-                _player.transform.position = new Vector3(-12.8f, 0, -39.1f);
-                _player.transform.eulerAngles = new Vector3(0, 135, 0);
+                PlayerModel player = FindObjectOfType<PlayerModel>();
+                player.transform.position = new Vector3(-12.8f, 0, -39.1f);
+                player.transform.eulerAngles = new Vector3(0, 135, 0);
             }
             else if((Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame) ||
                     (Keyboard.current != null && Keyboard.current.digit3Key.wasPressedThisFrame))
             {
                 // Card_Redの辺り
-                _player.transform.position = new Vector3(28.6f, 0, 23.3f);
-                _player.transform.eulerAngles = new Vector3(0, 135, 0);
+                PlayerModel player = FindObjectOfType<PlayerModel>();
+                player.transform.position = new Vector3(28.6f, 0, 23.3f);
+                player.transform.eulerAngles = new Vector3(0, 135, 0);
             }
             else if((Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
                     (Keyboard.current != null && Keyboard.current.digit4Key.wasPressedThisFrame))
             {
                 // Card_Yellowの辺り
-                _player.transform.position = new Vector3(-24.45f, 0, 0f);
-                _player.transform.eulerAngles = new Vector3(0, 270, 0);
+                PlayerModel player = FindObjectOfType<PlayerModel>();
+                player.transform.position = new Vector3(-24.45f, 0, 0f);
+                player.transform.eulerAngles = new Vector3(0, 270, 0);
             }
         }
     }

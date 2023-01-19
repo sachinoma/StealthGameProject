@@ -60,10 +60,6 @@ public class PlayerModel : MonoBehaviour
     private OperationTerminal _operatingTerminal = null;
     private Transform _operatingRefTransform = null;
 
-
-    private Vector3 _initialPos;
-    private Quaternion _initialRot;
-
     private PlayerState _state = PlayerState.Moving;
 
     public List<CardType> obtainedItems { get; private set; } = new List<CardType>();
@@ -72,32 +68,21 @@ public class PlayerModel : MonoBehaviour
 
     void Awake()
     {
-        ResetStatus();
-
-        _initialPos = transform.position;
-        _initialRot = transform.rotation;
+        Init();
     }
 
-    // TODO : 今Respawnが使わない。もし使いたいなら、PlayerRespawnedとかのeventが必要があると思う。
-    public void Respawn()
+    private void Init()
     {
-        ResetStatus();
+        transform.position = GameProgress.GameStartPos;
+        transform.eulerAngles = GameProgress.GameStartRot;
 
-        transform.position = _initialPos;
-        transform.rotation = _initialRot;
-
-        _playerCamera.ResetRotation();
-
-        _animator.SetTrigger(ResetAnimTrigger);
-    }
-
-    private void ResetStatus()
-    {
         CurrentLife = _life;
         SetState(PlayerState.Moving);
 
-        obtainedItems.Clear();
-        obtainedItems.Add(CardType.White);
+        if(GameProgress.ObtainedItems != null)
+        {
+            obtainedItems.AddRange(GameProgress.ObtainedItems);
+        }
 
         _currentHidingPlace = null;
 
@@ -214,6 +199,8 @@ public class PlayerModel : MonoBehaviour
 
         _animator.SetTrigger(PickUpAnimTrigger);
         SetState(PlayerState.Acting);
+
+        SaveCurrentProgress();
 
         // TODO : アニメションのタイミングに合わせてアイテムを取る？
         Destroy(item.gameObject);
@@ -430,7 +417,8 @@ public class PlayerModel : MonoBehaviour
     }
 
     #endregion
-    #region TrapIdleSound
+    #region Trap
+
     private void TrapIdleCheck()
     {
         if(_isTrap)
@@ -453,15 +441,21 @@ public class PlayerModel : MonoBehaviour
     {
         _isTrapIdleWaiting = false;
     }
-    #endregion
-
-    #region ColliderTrap
 
     public void SetInTrap(bool isInTrap, float speedMultiplier)
     {
         _isTrap = isInTrap;
         _movement.SetSpeedMultiplier(speedMultiplier);
     }
+
     #endregion
 
+    #region Save GameProgress
+
+    private void SaveCurrentProgress()
+    {
+        GameProgress.Save(transform, obtainedItems);
+    }
+
+    #endregion
 }
