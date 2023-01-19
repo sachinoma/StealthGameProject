@@ -19,7 +19,7 @@ public class PlayerAniEvent : MonoBehaviour
 
     private void FootEvent()
     {
-        _playerModel.AnimSoundVolume();
+        _playerModel.AnimFootStep();
     }
 
     private void CardAppearEvent()

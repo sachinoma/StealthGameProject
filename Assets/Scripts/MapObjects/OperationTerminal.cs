@@ -6,6 +6,8 @@ public class OperationTerminal : ReactableBase
 {
     [SerializeField] private CardType _cardType;
     [SerializeField] private Transform _operateRefTransform;
+    [SerializeField] private AudioSource _audioSource;
+
     private bool _isActivated = false;
 
     public CardType GetCardType()
@@ -53,6 +55,8 @@ public class OperationTerminal : ReactableBase
     public void Operate()
     {
         _isActivated = true;
+
+        _audioSource.Play();
 
         TerminalOperatedEventArgs eventArgs = new TerminalOperatedEventArgs(_cardType);
         MainSceneEventManager.TerminalOperated.Invoke(this, eventArgs);

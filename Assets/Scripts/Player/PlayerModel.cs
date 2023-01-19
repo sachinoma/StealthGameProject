@@ -36,6 +36,7 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] private float _maxShoutChargeTime = 1.0f;
     private bool _isShoutCharging;
     private float _startShoutChargingTime;
+    [SerializeField] private AudioSource _footstepAudioSource;
 
     [Header("コライダー")]
     [SerializeField] private GameObject _playerCollider;
@@ -372,8 +373,25 @@ public class PlayerModel : MonoBehaviour
 
     #endregion
 
-    #region AnimationEvent
-    public void AnimSoundVolume()
+    #region Footstep
+
+    private void PlayFootStepSound()
+    {
+        float pitch;
+        if(_isTrap)
+        {
+            pitch = 0.5f;
+        }
+        else
+        {
+            pitch = UnityEngine.Random.Range(0.7f, 1.3f);
+        }
+
+        _footstepAudioSource.pitch = pitch;
+        _footstepAudioSource.Play();
+    }
+
+    private void SetFootStepVisibleVolume()
     {
         if(!_isTrap)
         {
@@ -382,7 +400,16 @@ public class PlayerModel : MonoBehaviour
         else
         {
             _micRange.AnimSetVolumeRate(_audioRangeVolume[1]);
-        }     
+        }
+    }
+
+    #endregion
+
+    #region AnimationEvent
+    public void AnimFootStep()
+    {
+        PlayFootStepSound();
+        SetFootStepVisibleVolume();
     }
 
     public void AnimCardAppear()
