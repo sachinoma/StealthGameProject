@@ -15,6 +15,8 @@ public class MainSceneUIManager : MonoBehaviour
     [Header("メッセージ")]
     [SerializeField] private float _messageDisplayTime = 3.0f;
 
+    private Dictionary<CardType, Image> _displayingIcons = new Dictionary<CardType, Image>();
+    
     private Coroutine _showMessageCoroutine = null;
 
     public void ShowItemGotMessage()
@@ -29,6 +31,12 @@ public class MainSceneUIManager : MonoBehaviour
 
     public void AddObtainedItem(CardType type)
     {
+        if(_displayingIcons.ContainsKey(type))
+        {
+            Debug.LogWarning("すでにアイコンを追加した。");
+            return;
+        }
+
         Color cardColor = Color.white;
         switch(type)
         {
@@ -47,6 +55,8 @@ public class MainSceneUIManager : MonoBehaviour
         {
             iconImage.color = cardColor;
         }
+
+        _displayingIcons.Add(type, iconImage);
     }
 
     public void AddObtainedItems(List<CardType> types)
@@ -59,6 +69,20 @@ public class MainSceneUIManager : MonoBehaviour
         foreach(CardType type in types)
         {
             AddObtainedItem(type);
+        }
+    }
+
+    public void SetItemUsed(CardType type)
+    {
+        if(_displayingIcons.ContainsKey(type))
+        {
+            Color newColor = _displayingIcons[type].color;
+            newColor.a = 0.3f;
+            _displayingIcons[type].color = newColor;
+        }
+        else
+        {
+            Debug.LogWarning("アイコンはまだ追加していない。");
         }
     }
 

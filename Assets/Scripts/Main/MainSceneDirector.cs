@@ -199,6 +199,7 @@ public class MainSceneDirector : MonoBehaviour
             return;
         }
 
+        _uiManager.SetItemUsed(terminalOperatedEventArgs.Type);
         switch(terminalOperatedEventArgs.Type)
         {
             case CardType.White:
@@ -230,6 +231,6 @@ public class MainSceneDirector : MonoBehaviour
     private void ActivateEndpoint()
     {
         _endpointDoor.Open();
-        _endpointAudio.Play();
+        _endpointAudio.PlayDelayed(1.0f);
     }
 }
