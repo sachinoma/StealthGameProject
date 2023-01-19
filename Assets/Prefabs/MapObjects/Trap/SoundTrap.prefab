@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trapFX: {fileID: 8626059743269193363}
-  _isShowDown: 0
+  _isShowDown: 1
   _showDownMultiplier: 0.5
 --- !u!54 &-8794471951104222104
 Rigidbody:
