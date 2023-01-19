@@ -7,7 +7,7 @@ public class EnemyAttack : MonoBehaviour
     [Header("敵のモデル")]
     private EnemyModel enemyModel;
 
-    [SerializeField] private float _damage = 5.0f;
+    //[SerializeField] private float _damage = 5.0f;
     [SerializeField] private Transform _caughtPos; 
 
     [Header("攻撃判定")]

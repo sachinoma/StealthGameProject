@@ -25,9 +25,13 @@ public class EnemyModel : MonoBehaviour
     private float _speed;
     private float _acceleration;
     int chaseTimer;
+    float moveTimer;
+    float attackTimer;
     [HideInInspector] public int stopTimer;
     [SerializeField] private SphereCollider playerSounds;
     [SerializeField] Transform enemySarch;//今どこに向かっているか
+    Transform playerPosition;
+    Transform soundsPosition;
     //視界
     [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
@@ -65,7 +69,7 @@ public class EnemyModel : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat("Speed", _agent.speed);
+        animator.SetFloat("Speed", GetAgentVelocity());
 
         SetColorLerp();
         SetEnemyEmission();
@@ -80,11 +84,14 @@ public class EnemyModel : MonoBehaviour
                     //追跡エフェクトを元に戻す
                     SetChase(false);
                     SetEnemyAudio((int)EnemyAudioName.audioNormal);
+                    _agent.speed = 0f;
+                    _agent.acceleration = 0f;
 
                     stateEnter = false;
-                    _agent.speed = 0f;
                 }
                 #endregion
+
+                _agent.destination = transform.position;
 
                 if (stopTimer <= 0)
                 {
@@ -103,12 +110,25 @@ public class EnemyModel : MonoBehaviour
                 if (stateEnter)
                 {
                     //追跡エフェクトを元に戻す
-                    stateEnter = false;
-                    //int rnd = random.Range(0, sarchPosition.Count);
+                    SetChase(false);
+                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
+
                     _agent.destination = sarchPosition[movePosition].position;
                     enemySarch.position = sarchPosition[movePosition].position;
+                    moveTimer = Time.time;
+
+                    stateEnter = false;
                 }
                 #endregion
+                if(Time.time - moveTimer > 10f)
+                {
+                    currentState = EnemyState.Idle;
+                    movePosition++;
+                    if (movePosition >= sarchPosition.Count) { movePosition = 0; }
+                    stateEnter = true;
+                    return;
+                }
+
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
@@ -122,10 +142,27 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    //追跡エフェクトを元に戻す
+                    //プレイヤーの音に反応した
+                    if(soundsPosition.root.gameObject.CompareTag(Tag.Player))
+                    {
+                        //追跡エフェクトをつける
+                        SetChase(true);
+                        SetEnemyAudio((int)EnemyAudioName.audioChase);
+                    }
+                    else
+                    {
+                        //追跡エフェクトを元に戻す
+                        SetChase(false);
+                        SetEnemyAudio((int)EnemyAudioName.audioNormal);
+                    }
+
                     stateEnter = false;
                 }
                 #endregion
+
+                _agent.destination = soundsPosition.position;
+                enemySarch.position = soundsPosition.position;
+
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
@@ -161,6 +198,9 @@ public class EnemyModel : MonoBehaviour
                     _agent.acceleration = _acceleration;
                 }
 
+                _agent.destination = playerPosition.position;
+                enemySarch.position = playerPosition.position;
+
                 if (_agent.remainingDistance <= 1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Attack;
@@ -192,7 +232,19 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    animator.SetBool("isChase", true);
                     animator.SetTrigger("Attack Trigger");
+
+                    attackTimer = Time.time;
+
+                    stateEnter = false;
+                }
+
+                if(Time.time - attackTimer > 2.5f)
+                {
+                    animator.SetBool("isChase", false);
+                    currentState = EnemyState.Idle;
+                    stopTimer = 0;
                     stateEnter = false;
                 }
                 #endregion
@@ -211,6 +263,12 @@ public class EnemyModel : MonoBehaviour
         _speed = _agent.speed;
         _acceleration = _agent.acceleration;
         stateEnter = true;
+        playerPosition = GameObject.FindGameObjectWithTag(Tag.Player).transform;
+    }
+
+    float GetAgentVelocity()
+    {
+        return _agent.velocity.magnitude;
     }
 
     private void SetChase(bool flag)
@@ -267,7 +325,7 @@ public class EnemyModel : MonoBehaviour
             {
                 RaycastHit hit;
                 Vector3 direction;   // Rayを飛ばす方向
-                float distance = 20f;    // Rayを飛ばす距離
+                float distance = 10f;    // Rayを飛ばす距離
 
                 Vector3 temp = collider.transform.position - transform.position;
                 direction = temp.normalized;
@@ -276,23 +334,19 @@ public class EnemyModel : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayをシーン上に描画
                 if (Physics.Raycast(ray.origin, ray.direction, out hit, distance, Layer.EnemySight))
                 {
-                    if (hit.collider.CompareTag(Tag.Player))
+                    if (hit.transform.root.CompareTag(Tag.Player))
                     {
                         stateEnter = currentState != EnemyState.Chase;
                         currentState = EnemyState.Chase;
-                        _agent.destination = collider.transform.position;
-                        enemySarch.position = collider.transform.position;
-                        chaseTimer = 60;
+                        chaseTimer = 120;
                     }
-                    else if(hit.collider.CompareTag(Tag.Sounds))
+                    else if (hit.collider.CompareTag(Tag.Sounds))
                     {
-                        if (hit.collider.gameObject.transform.parent.parent.CompareTag(Tag.Player))
+                        if (hit.transform.root.CompareTag(Tag.Player))
                         {
                             stateEnter = currentState != EnemyState.Chase;
                             currentState = EnemyState.Chase;
-                            _agent.destination = collider.transform.position;
-                            enemySarch.position = collider.transform.position;
-                            chaseTimer = 60;
+                            chaseTimer = 120;
                         }
                     }
                 }
@@ -303,12 +357,12 @@ public class EnemyModel : MonoBehaviour
     public void SoundSarch(Collider collider)
     {
         if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
+        if (playerSounds.gameObject.activeSelf == false) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
             stateEnter = currentState != EnemyState.SoundSarch;
             currentState = EnemyState.SoundSarch;
-            _agent.destination = collider.transform.position;
-            enemySarch.position = collider.transform.position;
+            soundsPosition = collider.transform;
         }
     }
     #endregion
@@ -316,7 +370,7 @@ public class EnemyModel : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (currentState == EnemyState.Chase)
+        if (currentState == EnemyState.Chase || currentState == EnemyState.Attack)
         {
             Handles.color = new Color(1f, 0f, 0f, 0.3f);
         }
@@ -328,7 +382,7 @@ public class EnemyModel : MonoBehaviour
         {
             Handles.color = new Color(0f, 1f, 0f, 0.3f);
         }
-        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.5f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.0f);
     }
 #endif
 }
