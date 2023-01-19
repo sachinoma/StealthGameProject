@@ -5,10 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#if BACKDOOR_ENABLED
-using UnityEngine.InputSystem;
-#endif
-
 public class MainSceneDirector : MonoBehaviour
 {
     [SerializeField] private MainSceneUIManager _uiManager;
@@ -46,6 +42,10 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.ItemGot.Handler += OnItemGot;
         MainSceneEventManager.GameClear.Handler += OnGameClear;
         MainSceneEventManager.TerminalOperated.Handler += OnTerminalOperated;
+
+#if BACKDOOR_ENABLED
+        gameObject.AddComponent<MainSceneBackdoor>();
+#endif
     }
 
     private void OnDestroy()
@@ -91,57 +91,6 @@ public class MainSceneDirector : MonoBehaviour
         }
     }
 
-#if BACKDOOR_ENABLED
-    private void LateUpdate()
-    {
-        if(!_isGameOver)
-        {
-            if((Gamepad.current != null && Gamepad.current.bButton.wasPressedThisFrame) ||
-               (Keyboard.current != null && Keyboard.current.digit9Key.wasPressedThisFrame))
-            {
-                SceneControl.ChangeScene(SceneControl.MainSceneName);
-            }
-            else if((Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame) ||
-                    (Keyboard.current != null && Keyboard.current.digit0Key.wasPressedThisFrame))
-            {
-                SceneControl.ChangeScene(SceneControl.TitleSceneName);
-            }
-            else if((Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame) ||
-                    (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame))
-            {
-                // 終点の辺り
-                PlayerModel player = FindObjectOfType<PlayerModel>();
-                player.transform.position = new Vector3(-6, 0, 0);
-                player.transform.eulerAngles = new Vector3(0, 90, 0);
-            }
-            else if((Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame) ||
-                    (Keyboard.current != null && Keyboard.current.digit2Key.wasPressedThisFrame))
-            {
-                // Card_Blueの辺り
-                PlayerModel player = FindObjectOfType<PlayerModel>();
-                player.transform.position = new Vector3(-12.8f, 0, -39.1f);
-                player.transform.eulerAngles = new Vector3(0, 135, 0);
-            }
-            else if((Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame) ||
-                    (Keyboard.current != null && Keyboard.current.digit3Key.wasPressedThisFrame))
-            {
-                // Card_Redの辺り
-                PlayerModel player = FindObjectOfType<PlayerModel>();
-                player.transform.position = new Vector3(28.6f, 0, 23.3f);
-                player.transform.eulerAngles = new Vector3(0, 135, 0);
-            }
-            else if((Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
-                    (Keyboard.current != null && Keyboard.current.digit4Key.wasPressedThisFrame))
-            {
-                // Card_Yellowの辺り
-                PlayerModel player = FindObjectOfType<PlayerModel>();
-                player.transform.position = new Vector3(-24.45f, 0, 0f);
-                player.transform.eulerAngles = new Vector3(0, 270, 0);
-            }
-        }
-    }
-#endif
-
     private void OnPlayerBrokeOut(object sender, EventArgs e)
     {
         if(_announcementManager == null)
@@ -155,9 +104,12 @@ public class MainSceneDirector : MonoBehaviour
     private void OnPlayerDied(object sender, EventArgs e)
     {
         Debug.Log("ゲームオーバー");
-        _isGameOver = true;
 
         StartCoroutine(WaitAndGameOver(5.0f));
+
+#if BACKDOOR_ENABLED
+        gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);
+#endif
     }
 
     private IEnumerator WaitAndGameOver(float waitTime)
@@ -185,10 +137,14 @@ public class MainSceneDirector : MonoBehaviour
     private void OnGameClear(object sender, EventArgs e)
     {
         Debug.Log("ゲームクリア");
-        _isGameOver = true;
+
         _endpointAudio.Stop();
 
         SceneControl.LoadUI(SceneControl.GameClearUISceneName);
+
+#if BACKDOOR_ENABLED
+        gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);
+#endif
     }
 
     private void OnTerminalOperated(object sender, EventArgs e)
