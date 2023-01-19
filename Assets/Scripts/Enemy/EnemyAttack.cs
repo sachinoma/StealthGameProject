@@ -7,7 +7,7 @@ public class EnemyAttack : MonoBehaviour
     [Header("敵のモデル")]
     private EnemyModel enemyModel;
 
-    [SerializeField] private float _damage = 5.0f;
+    //[SerializeField] private float _damage = 5.0f;
     [SerializeField] private Transform _caughtPos; 
 
     [Header("攻撃判定")]
@@ -38,6 +38,7 @@ public class EnemyAttack : MonoBehaviour
             if(playerModel != null)
             {
                 //playerModel.TakeDamage(_damage);
+                enemyModel.currentState = EnemyState.Catch;
                 playerModel.Die();
                 enemyModel.animator.SetBool("isGameOver", true);
                 CaughtPlayer(playerModel);

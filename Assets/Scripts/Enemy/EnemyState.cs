@@ -4,5 +4,6 @@
     Chase,
     SoundSarch,
     Idle,
-    Attack
+    Attack,
+    Catch
 }
