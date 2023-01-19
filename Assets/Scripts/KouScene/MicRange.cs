@@ -88,14 +88,17 @@ public class MicRange : MonoBehaviour
             FogSetting(_fogRangeChoose);
             CircleBlackSetting(_circleMaxRate * _maxRange, _circleMin * _minRange);
             CircleSetting(_circleMaxRate * _maxRangeForEnemy, _circleMin * _minRange);
+            FogRollBack(_fogMax / _minRange, _fogMin / _maxRange);
             CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);
+            CircleRollBack(_circleForEnemyMain, _circleMaxRate * _maxRangeForEnemy, _circleMin * _minRange);
             rollBackTimer = rollBackTime;
         }
         if(rollBackTimer <= 0)
         {
             FogRollBack(_fogMax / _minRange, _fogMin / _maxRange);
-            CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);       
+            CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);
         }
+        
         CircleRollBack(_circleForEnemyMain, _circleMaxRate * _maxRangeForEnemy, _circleMin * _minRange);
 
         rollBackTimer -= 1.0f * Time.deltaTime;
@@ -188,14 +191,11 @@ public class MicRange : MonoBehaviour
 
         if(RenderSettings.fogDensity < max)
         {
-            RenderSettings.fogDensity += ((max - min)/ _fogSpeedSet) * _rollBackSpeed * Time.deltaTime;
-            _circleForEnemy.transform.localScale = _circleForEnemyScale;
-            _circleForEnemy.SetActive(true);
+            RenderSettings.fogDensity += ((max - min)/ _fogSpeedSet) * _rollBackSpeed * Time.deltaTime;            
         }
         else
         {
-            RenderSettings.fogDensity = max;
-            _circleForEnemy.SetActive(false);
+            RenderSettings.fogDensity = max;           
         }
     }
     #endregion
@@ -252,10 +252,13 @@ public class MicRange : MonoBehaviour
         if(_circleValue > min)
         {
             _circleValue -= ((max - min) / _circleSpeedSet) * _rollBackSpeed * Time.deltaTime;
+            _circleForEnemy.transform.localScale = _circleForEnemyScale;
+            _circleForEnemy.SetActive(true);
         }
         else
         {
             _circleValue = min;
+            _circleForEnemy.SetActive(false);
         }
         circle.transform.localScale = _circleValue * _circleScaleBasic;
     }
