@@ -10,12 +10,20 @@ public class ReactableDetector : MonoBehaviour
 
     public ReactableBase GetReactable()
     {
-        if (_reactableList.Count == 0)
+        // 削除したものを残らないように
+        while(_reactableList.Count > 0)
         {
-            return null;
+            if(_reactableList[0] == null)
+            {
+                _reactableList.RemoveAt(0);
+            }
+            else
+            {
+                return _reactableList[0];
+            }
         }
 
-        return _reactableList[0];
+        return null;
     }
 
     public void PopReactable()

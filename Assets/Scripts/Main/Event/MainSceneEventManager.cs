@@ -12,6 +12,7 @@ public class MainSceneEventManager
     public static MainSceneEvent ItemGot            { get; } = new MainSceneEvent("ItemGot");
     public static MainSceneEvent GameClear          { get; } = new MainSceneEvent("GameClear");
     public static MainSceneEvent TerminalOperated   { get; } = new MainSceneEvent("TerminalOperated");
+    public static MainSceneEvent HintTriggered      { get; } = new MainSceneEvent("HintTriggered");
 
     private static MainSceneEvent[] RegisteredEvents =
     {
@@ -20,6 +21,7 @@ public class MainSceneEventManager
         ItemGot,
         GameClear,
         TerminalOperated,
+        HintTriggered,
     };
 
     #endregion
@@ -40,7 +42,7 @@ public class MainSceneEventManager
 
     #region TriggerEvent
 
-    public static void TriggerEvent(string eventId, object sender, EventArgs e)
+    public static void TriggerEvent(string eventId, object sender, EventArgs e = null)
     {
         GetEvent(eventId)?.Invoke(sender, e);
     }

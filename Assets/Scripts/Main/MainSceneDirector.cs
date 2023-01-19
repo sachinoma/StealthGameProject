@@ -23,8 +23,6 @@ public class MainSceneDirector : MonoBehaviour
 
     private AnnouncementManager _announcementManager = null;
 
-    private bool _isGameOver = false;
-
     private List<CardType> _operatedCardTypes = new List<CardType>();
 
     private void Start()
@@ -42,6 +40,7 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.ItemGot.Handler += OnItemGot;
         MainSceneEventManager.GameClear.Handler += OnGameClear;
         MainSceneEventManager.TerminalOperated.Handler += OnTerminalOperated;
+        MainSceneEventManager.HintTriggered.Handler += OnHintTriggered;
 
 #if BACKDOOR_ENABLED
         gameObject.AddComponent<MainSceneBackdoor>();
@@ -55,6 +54,7 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.ItemGot.Handler -= OnItemGot;
         MainSceneEventManager.GameClear.Handler -= OnGameClear;
         MainSceneEventManager.TerminalOperated.Handler -= OnTerminalOperated;
+        MainSceneEventManager.HintTriggered.Handler -= OnHintTriggered;
     }
 
     private void LoadGameProgress()
@@ -91,6 +91,8 @@ public class MainSceneDirector : MonoBehaviour
         }
     }
 
+    #region OnPlayerBrokeOut
+
     private void OnPlayerBrokeOut(object sender, EventArgs e)
     {
         if(_announcementManager == null)
@@ -100,6 +102,10 @@ public class MainSceneDirector : MonoBehaviour
 
         _announcementManager.PlayBreakOutAnnouncement();
     }
+
+    #endregion
+
+    #region OnPlayerDied
 
     private void OnPlayerDied(object sender, EventArgs e)
     {
@@ -120,6 +126,10 @@ public class MainSceneDirector : MonoBehaviour
         SceneControl.LoadUI(SceneControl.GameOverUISceneName);
     }
 
+    #endregion
+
+    #region OnItemGot
+
     private void OnItemGot(object sender, EventArgs e)
     {
         if(e is not ItemGotEventArgs itemGotEventArgs)
@@ -134,6 +144,10 @@ public class MainSceneDirector : MonoBehaviour
         _uiManager.AddObtainedItem(itemGotEventArgs.Type);
     }
 
+    #endregion
+
+    #region OnGameClear
+
     private void OnGameClear(object sender, EventArgs e)
     {
         Debug.Log("ゲームクリア");
@@ -146,6 +160,10 @@ public class MainSceneDirector : MonoBehaviour
         gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);
 #endif
     }
+
+    #endregion
+
+    #region OnTerminalOperated
 
     private void OnTerminalOperated(object sender, EventArgs e)
     {
@@ -189,4 +207,21 @@ public class MainSceneDirector : MonoBehaviour
         _endpointDoor.Open();
         _endpointAudio.PlayDelayed(1.0f);
     }
+
+    #endregion
+
+    #region OnHintTriggered
+
+    private void OnHintTriggered(object sender, EventArgs e)
+    {
+        if(e is not HintEventArgs hintEventArgs)
+        {
+            Debug.LogWarning($"EventArgsが合っていない");
+            return;
+        }
+
+        _uiManager.ShowHint(hintEventArgs.Type);
+    }
+
+    #endregion
 }

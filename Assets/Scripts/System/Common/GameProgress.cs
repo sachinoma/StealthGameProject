@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class GameProgress
@@ -10,6 +12,20 @@ public static class GameProgress
     public static Vector3 GameStartPos { get; private set; } = DefaultGameStartPos;
     public static Vector3 GameStartRot { get; private set; } = DefaultGameStartRot;
     public static List<CardType> ObtainedItems { get; private set; } = new List<CardType>();
+
+    private static List<HintType> RemainingHintsLazy = null;
+    private static List<HintType> RemainingHints
+    {
+        get
+        {
+            if(RemainingHintsLazy == null)
+            {
+                RemainingHintsLazy = new List<HintType>();
+                RemainingHintsLazy.AddRange(Enum.GetValues(typeof(HintType)).Cast<HintType>());
+            }
+            return RemainingHintsLazy;
+        }
+    }
 
     public static void Save(Transform playerTransform, List<CardType> obtainedItemsToSave)
     {
@@ -28,5 +44,21 @@ public static class GameProgress
         GameStartPos = DefaultGameStartPos;
         GameStartRot = DefaultGameStartRot;
         ObtainedItems.Clear();
+        RemainingHintsLazy = null;
     }
+
+    #region ヒント
+
+    public static bool CheckIsHintRemain(HintType hintType)
+    {
+        return RemainingHints.Contains(hintType);
+    }
+
+    public static bool SetHintDone(HintType hintType)
+    {
+        return RemainingHints.Remove(hintType);
+    }
+
+    #endregion
+
 }

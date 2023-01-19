@@ -33,6 +33,8 @@ public class Trap : MonoBehaviour
             trapFX.Play();
 
             SetPlayer(other, true);
+
+            Hint.TriggerHintIfRemain(this, HintType.Trap);
         }
     }
 

@@ -15,9 +15,19 @@ public class MainSceneUIManager : MonoBehaviour
     [Header("メッセージ")]
     [SerializeField] private float _messageDisplayTime = 3.0f;
 
+    [Header("ヒント")]
+    [SerializeField] private Animator _hintAnimator;
+    [SerializeField] private TextMeshProUGUI _hintText;
+    [SerializeField] private float _hintDisplayTime = 3.0f;
+    private const string IsShowHintAnimBool = "isShow";
+
+
     private Dictionary<CardType, Image> _displayingIcons = new Dictionary<CardType, Image>();
     
     private Coroutine _showMessageCoroutine = null;
+    private Coroutine _showHintCoroutine = null;
+
+    #region アイテム
 
     public void ShowItemGotMessage()
     {
@@ -95,4 +105,51 @@ public class MainSceneUIManager : MonoBehaviour
 
         _messageText.gameObject.SetActive(false);
     }
+
+    #endregion
+
+    #region ヒント
+
+    public void ShowHint(HintType hintType)
+    {
+        string hint = "";
+        switch(hintType)
+        {
+            case HintType.Trap:
+                hint = LocalizedText.TrapHint;
+                break;
+            case HintType.OperationTerminal:
+                hint = LocalizedText.OperationTerminalHint;
+                break;
+            case HintType.Card:
+                hint = LocalizedText.CardHint;
+                break;
+            case HintType.Enemy:
+                hint = LocalizedText.EnemyHint;
+                break;
+            default:
+                Debug.LogWarning("hintTypeによってのヒントまだ実装していない。");
+                return;
+        }
+
+        if(_showHintCoroutine != null)
+        {
+            StopCoroutine(_showHintCoroutine);
+        }
+
+        _showHintCoroutine = StartCoroutine(ShowHintCoroutine(hint));
+    }
+
+    private IEnumerator ShowHintCoroutine(string hint)
+    {
+        _hintText.text = hint;
+        _hintAnimator.SetBool(IsShowHintAnimBool, true);
+
+        yield return new WaitForSeconds(_hintDisplayTime);
+
+        _hintAnimator.SetBool(IsShowHintAnimBool, false);
+    }
+
+    #endregion
+
 }
