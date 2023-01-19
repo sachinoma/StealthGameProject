@@ -10,6 +10,8 @@ public class MicRange : MonoBehaviour
     [SerializeField] private bool _isMicMode = true;
     public bool IsMicMode => _isMicMode;
 
+    [SerializeField] private float rollBackTime = 1.0f;
+    private float rollBackTimer;
     //マイク機能
     private readonly int _sampleNum = (2 << 9); // サンプリング数は2のN乗(N=5-12)
     [Header("音量に掛ける倍率")]
@@ -86,10 +88,17 @@ public class MicRange : MonoBehaviour
             FogSetting(_fogRangeChoose);
             CircleBlackSetting(_circleMaxRate * _maxRange, _circleMin * _minRange);
             CircleSetting(_circleMaxRate * _maxRangeForEnemy, _circleMin * _minRange);
+            CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);
+            rollBackTimer = rollBackTime;
         }
-        FogRollBack(_fogMax / _minRange, _fogMin / _maxRange);
-        CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);
+        if(rollBackTimer <= 0)
+        {
+            FogRollBack(_fogMax / _minRange, _fogMin / _maxRange);
+            CircleBlackRollBack(_circleBlack, _circleMaxRate * _maxRange, _circleMin * _minRange);       
+        }
         CircleRollBack(_circleForEnemyMain, _circleMaxRate * _maxRangeForEnemy, _circleMin * _minRange);
+
+        rollBackTimer -= 1.0f * Time.deltaTime;
     }
 
     void FixedUpdate()

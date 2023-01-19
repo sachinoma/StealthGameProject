@@ -7935,6 +7935,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4349533346915684443, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: rollBackTime
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4349533346915684443, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: rollBackTimer
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4349533346915684443, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
       propertyPath: _maxRangeForEnemy
       value: 2
       objectReference: {fileID: 0}
