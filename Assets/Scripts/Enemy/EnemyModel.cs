@@ -25,7 +25,6 @@ public class EnemyModel : MonoBehaviour
     private float _speed;
     private float _acceleration;
     int chaseTimer;
-    float moveTimer;
     float attackTimer;
     [HideInInspector] public int stopTimer;
     [SerializeField] private SphereCollider playerSounds;
@@ -115,19 +114,10 @@ public class EnemyModel : MonoBehaviour
 
                     _agent.destination = sarchPosition[movePosition].position;
                     enemySarch.position = sarchPosition[movePosition].position;
-                    moveTimer = Time.time;
 
                     stateEnter = false;
                 }
                 #endregion
-                if(Time.time - moveTimer > 10f)
-                {
-                    currentState = EnemyState.Idle;
-                    movePosition++;
-                    if (movePosition >= sarchPosition.Count) { movePosition = 0; }
-                    stateEnter = true;
-                    return;
-                }
 
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
@@ -239,16 +229,25 @@ public class EnemyModel : MonoBehaviour
 
                     stateEnter = false;
                 }
-
-                if(Time.time - attackTimer > 2.5f)
+                #endregion
+                if (Time.time - attackTimer > 2.5f)
                 {
                     animator.SetBool("isChase", false);
                     currentState = EnemyState.Idle;
                     stopTimer = 0;
                     stateEnter = false;
                 }
+                break;
+            case EnemyState.Catch:
+                #region 開始1回の処理
+                if (stateEnter)
+                {
+                    _agent.speed = 0f;
+                    _agent.acceleration = 0f;
+                }
                 #endregion
                 break;
+
         }
         #endregion
     }
@@ -314,7 +313,7 @@ public class EnemyModel : MonoBehaviour
     #region 音やプレイヤーの捜索
     public void PlayerSarch(Collider collider)
     {
-        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
+        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle || currentState == EnemyState.Catch) { return; }
         if (playerSounds.gameObject.activeSelf == false) { return; }
         // 検知オブジェクトがPlayer
         if (collider.CompareTag(Tag.Player))
@@ -356,7 +355,7 @@ public class EnemyModel : MonoBehaviour
 
     public void SoundSarch(Collider collider)
     {
-        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
+        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack || currentState == EnemyState.Catch) { return; }
         if (playerSounds.gameObject.activeSelf == false) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
@@ -370,7 +369,7 @@ public class EnemyModel : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (currentState == EnemyState.Chase || currentState == EnemyState.Attack)
+        if (currentState == EnemyState.Chase || currentState == EnemyState.Attack || currentState == EnemyState.Catch)
         {
             Handles.color = new Color(1f, 0f, 0f, 0.3f);
         }

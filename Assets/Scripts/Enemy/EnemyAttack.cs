@@ -38,6 +38,7 @@ public class EnemyAttack : MonoBehaviour
             if(playerModel != null)
             {
                 //playerModel.TakeDamage(_damage);
+                enemyModel.currentState = EnemyState.Catch;
                 playerModel.Die();
                 enemyModel.animator.SetBool("isGameOver", true);
                 CaughtPlayer(playerModel);
