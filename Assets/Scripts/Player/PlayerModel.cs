@@ -207,8 +207,6 @@ public class PlayerModel : MonoBehaviour
         Destroy(item.gameObject);
         ItemGotEventArgs eventArgs = new ItemGotEventArgs(cardType);
         MainSceneEventManager.TriggerEvent(MainSceneEventManager.ItemGot.EventId, this, eventArgs);
-
-        Hint.TriggerHintIfRemain(this, HintType.Card);
     }
 
     Vector3 _posBeforeHide;    // TODO : 一時的なコード

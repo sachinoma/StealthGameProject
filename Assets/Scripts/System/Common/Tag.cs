@@ -11,4 +11,6 @@
     public const string Wall = "Wall";
     public const string SoundChecker = "SoundChecker";
     public const string Trap = "Trap";
+    public const string Card = "Card";
+    public const string OperationTerminal = "OperationTerminal";
 }

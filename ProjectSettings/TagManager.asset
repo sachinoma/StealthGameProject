@@ -9,6 +9,8 @@ TagManager:
   - Wall
   - SoundChecker
   - Trap
+  - Card
+  - OperationTerminal
   layers:
   - Default
   - TransparentFX

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8263641591386425401}
   m_Layer: 0
   m_Name: OperationTerminal
-  m_TagString: Untagged
+  m_TagString: OperationTerminal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,9 +43,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6946636395230786483}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: OperateRefTransform
-  m_TagString: Untagged
+  m_TagString: OperationTerminal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 2160587986698602948}
   m_Layer: 8
   m_Name: Trigger
-  m_TagString: Untagged
+  m_TagString: OperationTerminal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -298,6 +298,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0a2bbdef6db6df644b0232a7a758d407, type: 3}
       propertyPath: m_Name
       value: Map_Exit_Operation
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0a2bbdef6db6df644b0232a7a758d407, type: 3}
+      propertyPath: m_TagString
+      value: OperationTerminal
+      objectReference: {fileID: 0}
+    - target: {fileID: 8518653881987738413, guid: 0a2bbdef6db6df644b0232a7a758d407, type: 3}
+      propertyPath: m_TagString
+      value: OperationTerminal
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a2bbdef6db6df644b0232a7a758d407, type: 3}
