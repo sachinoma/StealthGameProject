@@ -1,4 +1,4 @@
-#define BACKDOOR_ENABLED
+﻿#define BACKDOOR_ENABLED
 
 using System;
 using System.Collections;
@@ -15,7 +15,7 @@ public class MainSceneDirector : MonoBehaviour
 
     [Header("扉と関連すること")]
     [SerializeField] private Door _tutorialDoor;
-    [SerializeField] private Door _endpointDoor;
+    [SerializeField] private Door[] _endpointDoors;
     [SerializeField] private AudioSource _endpointAudio;
 
     [Header("カーソルの表示")]
@@ -204,7 +204,11 @@ public class MainSceneDirector : MonoBehaviour
 
     private void ActivateEndpoint()
     {
-        _endpointDoor.Open();
+        foreach(Door door in _endpointDoors)
+        {
+            door.Open();
+        }
+
         _endpointAudio.PlayDelayed(1.0f);
     }
 
