@@ -30,7 +30,7 @@ public class EnemyAttackAnimation : MonoBehaviour
         enemyModel.currentState = EnemyState.Idle;
         enemyModel.animator.SetBool("isChase", false);
         enemyModel.stateEnter = true;
-        enemyModel.stopTimer = 30;
+        enemyModel.stopTimer = 60;
     }
 
     private void ColliderStart()

@@ -91,6 +91,7 @@ public class EnemyModel : MonoBehaviour
                 #endregion
 
                 _agent.destination = transform.position;
+                enemySarch.position = transform.position;
 
                 if (stopTimer <= 0)
                 {
@@ -112,12 +113,15 @@ public class EnemyModel : MonoBehaviour
                     SetChase(false);
                     SetEnemyAudio((int)EnemyAudioName.audioNormal);
 
-                    _agent.destination = sarchPosition[movePosition].position;
-                    enemySarch.position = sarchPosition[movePosition].position;
+                    _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
 
                     stateEnter = false;
                 }
                 #endregion
+
+                _agent.destination = sarchPosition[movePosition].position;
+                enemySarch.position = sarchPosition[movePosition].position;
 
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
@@ -159,6 +163,19 @@ public class EnemyModel : MonoBehaviour
                     stopTimer = 60;
                     stateEnter = true;
                     return;
+                }
+                else
+                {
+                    if (chaseTimer <= 0)
+                    {
+                        currentState = EnemyState.Idle;
+                        stopTimer = 30;
+                        stateEnter = true;
+                    }
+                    else
+                    {
+                        chaseTimer--;
+                    }
                 }
                 break;
             case EnemyState.Chase:
@@ -222,6 +239,10 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
                     animator.SetBool("isChase", true);
                     animator.SetTrigger("Attack Trigger");
 
@@ -230,6 +251,7 @@ public class EnemyModel : MonoBehaviour
                     stateEnter = false;
                 }
                 #endregion
+
                 if (Time.time - attackTimer > 2.5f)
                 {
                     animator.SetBool("isChase", false);
@@ -237,14 +259,22 @@ public class EnemyModel : MonoBehaviour
                     stopTimer = 0;
                     stateEnter = false;
                 }
+
                 break;
             case EnemyState.Catch:
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
                     _agent.speed = 0f;
                     _agent.acceleration = 0f;
                 }
+
+                _agent.destination = transform.position;
+                enemySarch.position = transform.position;
                 #endregion
                 break;
 
@@ -337,7 +367,7 @@ public class EnemyModel : MonoBehaviour
                     {
                         stateEnter = currentState != EnemyState.Chase;
                         currentState = EnemyState.Chase;
-                        chaseTimer = 120;
+                        chaseTimer = 180;
                     }
                     else if (hit.collider.CompareTag(Tag.Sounds))
                     {
@@ -345,7 +375,7 @@ public class EnemyModel : MonoBehaviour
                         {
                             stateEnter = currentState != EnemyState.Chase;
                             currentState = EnemyState.Chase;
-                            chaseTimer = 120;
+                            chaseTimer = 180;
                         }
                     }
                 }
@@ -362,6 +392,7 @@ public class EnemyModel : MonoBehaviour
             stateEnter = currentState != EnemyState.SoundSarch;
             currentState = EnemyState.SoundSarch;
             soundsPosition = collider.transform;
+            chaseTimer = 120;
         }
     }
     #endregion
