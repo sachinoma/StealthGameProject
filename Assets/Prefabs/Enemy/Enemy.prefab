@@ -140,9 +140,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 0
   MinDistance: 1
-  MaxDistance: 200
+  MaxDistance: 20
   Pan2D: 0
-  rolloffMode: 2
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -152,33 +152,33 @@ AudioSource:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -4.4353776
+      outSlope: -4.4353776
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.3499905
     - serializedVersion: 3
-      time: 0.026363924
-      value: 0.625863
-      inSlope: -7.0463376
-      outSlope: -7.0463376
+      time: 0.12160356
+      value: 0.58641905
+      inSlope: -3.312431
+      outSlope: -3.312431
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6500095
+      outWeight: 0.50155693
+    - serializedVersion: 3
+      time: 0.23222864
+      value: 0.32037175
+      inSlope: -1.9504967
+      outSlope: -1.9504967
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.11853824
+      outWeight: 0.3894001
     - serializedVersion: 3
-      time: 0.06854761
-      value: 0.4211713
-      inSlope: -2.8441148
-      outSlope: -2.8441148
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.36263913
-    - serializedVersion: 3
-      time: 0.2007528
-      value: 0.19740081
+      time: 0.37038475
+      value: 0.10539031
       inSlope: -0.726099
       outSlope: -0.726099
       tangentMode: 0
@@ -186,8 +186,8 @@ AudioSource:
       inWeight: 0.5839912
       outWeight: 0.3612633
     - serializedVersion: 3
-      time: 0.46874237
-      value: 0.099853516
+      time: 0.4746933
+      value: 0
       inSlope: -0.12211062
       outSlope: -0.12211062
       tangentMode: 0
@@ -588,7 +588,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
