@@ -23,9 +23,9 @@ public class MainSceneBackdoor : MonoBehaviour
         if((Gamepad.current != null && Gamepad.current.leftShoulder.isPressed && Gamepad.current.rightShoulder.isPressed) ||
             (Keyboard.current != null && Keyboard.current.digit5Key.wasPressedThisFrame))
         {
-            // 終点の辺り
-            transform.position = new Vector3(-6, 0, 0);
-            transform.eulerAngles = new Vector3(0, 90, 0);
+            // デフォルトの位置
+            transform.position = new Vector3(13.665f, 0.0f, -38.775f);
+            transform.eulerAngles = new Vector3(0.0f, -18.26f, 0.0f);
             GameProgress.Save(transform, new List<CardType> { CardType.White, CardType.Red, CardType.Blue, CardType.Yellow });
             SceneControl.ChangeScene(SceneControl.MainSceneName);
         }
