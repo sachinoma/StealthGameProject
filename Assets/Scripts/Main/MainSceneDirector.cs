@@ -1,4 +1,4 @@
-﻿#define BACKDOOR_ENABLED
+﻿//#define BACKDOOR_ENABLED
 
 using System;
 using System.Collections;
