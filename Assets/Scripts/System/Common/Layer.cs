@@ -16,5 +16,5 @@ public static class Layer
     public const int IgnoreDecal            = 1 << 10;
 
 
-    public const int EnemySight             = Physics.DefaultRaycastLayers & ~ReactableDetector;
+    public const int EnemySight             = Physics.DefaultRaycastLayers & ~ReactableDetector & ~Hint;
 }
