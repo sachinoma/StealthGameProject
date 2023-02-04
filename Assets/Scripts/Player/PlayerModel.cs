@@ -485,4 +485,9 @@ public class PlayerModel : MonoBehaviour
     }
 
     #endregion
+
+    public bool CanBeDetected()
+    {
+        return _micRange.CanBeDetected();
+    }
 }

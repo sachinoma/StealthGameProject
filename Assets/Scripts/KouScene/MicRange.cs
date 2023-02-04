@@ -301,4 +301,9 @@ public class MicRange : MonoBehaviour
         }       
     }
     #endregion
+
+    public bool CanBeDetected()
+    {
+        return _circleForEnemy.gameObject.activeSelf;
+    }
 }

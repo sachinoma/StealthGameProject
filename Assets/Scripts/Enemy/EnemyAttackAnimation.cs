@@ -27,10 +27,7 @@ public class EnemyAttackAnimation : MonoBehaviour
     #region 攻撃処理
     private void AttackEnd()
     {
-        enemyModel.currentState = EnemyState.Idle;
-        enemyModel.animator.SetBool("isChase", false);
-        enemyModel.stateEnter = true;
-        enemyModel.stopTimer = 60;
+        enemyModel.ChangeState(EnemyState.Idle);
     }
 
     private void ColliderStart()

@@ -13,7 +13,6 @@ public class EnemyModel : MonoBehaviour
 {
     [Header("ステート")]
      public EnemyState currentState;
-    [HideInInspector] public bool stateEnter;
 
     [Header("徘徊場所")]
     [SerializeField] List<Transform> sarchPosition;
@@ -22,15 +21,12 @@ public class EnemyModel : MonoBehaviour
     [Header("敵のベース")]
     private NavMeshAgent _agent;
     public Animator animator;
-    private float _speed;
-    private float _acceleration;
-    int chaseTimer;
-    float attackTimer;
-    [HideInInspector] public int stopTimer;
-    [SerializeField] private SphereCollider playerSounds;
-    [SerializeField] Transform enemySarch;//今どこに向かっているか
-    Transform playerPosition;
-    Transform soundsPosition;
+
+    private float chaseTimer;
+    private float stopTimer;
+    private PlayerModel _player;
+    private Transform _currentTarget;
+
     //視界
     [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
@@ -39,7 +35,6 @@ public class EnemyModel : MonoBehaviour
     [Header("敵の色変え")]
     [ColorUsage(false, true)] public Color color1;
     [ColorUsage(false, true)] public Color color2;
-    private Color lerpedColor = Color.white;
     private bool isChase = false;
     [SerializeField] private float colorLerp = 0;
 
@@ -63,236 +58,140 @@ public class EnemyModel : MonoBehaviour
 
     void Start()
     {
+        _player = FindObjectOfType<PlayerModel>();
         AgentSetUp();
+        EnterState(EnemyState.Idle);    // 初期化のために、ChangeState()ではなく、EnterState()を呼び出す
     }
 
     void Update()
     {
         animator.SetFloat("Speed", GetAgentVelocity());
 
-        SetColorLerp();
         SetEnemyEmission();
 
         #region 敵のステート
         switch (currentState)
         {
             case EnemyState.Idle:
-                #region 開始1回の処理
-                if (stateEnter)
+                stopTimer -= Time.deltaTime;
+                if (stopTimer < 0)
                 {
-                    //追跡エフェクトを元に戻す
-                    SetChase(false);
-                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
-                    _agent.speed = 0f;
-                    _agent.acceleration = 0f;
-
-                    stateEnter = false;
-                }
-                #endregion
-
-                _agent.destination = transform.position;
-                enemySarch.position = transform.position;
-
-                if (stopTimer <= 0)
-                {
-                    currentState = EnemyState.Move;
-                    _agent.speed = _speed;
-                    _agent.acceleration = _acceleration;
-                    stateEnter = true;
-                }
-                else
-                {
-                    stopTimer--;
+                    ChangeState(EnemyState.Move);
                 }
                 break;
             case EnemyState.Move:
-                #region 開始1回の処理
-                if (stateEnter)
+                if (CheckIsReachDestination(0.1f))
                 {
-                    //追跡エフェクトを元に戻す
-                    SetChase(false);
-                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
-
-                    _agent.speed = _speed;
-                    _agent.acceleration = _acceleration;
-
-                    stateEnter = false;
-                }
-                #endregion
-
-                _agent.destination = sarchPosition[movePosition].position;
-                enemySarch.position = sarchPosition[movePosition].position;
-
-                if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
-                {
-                    currentState = EnemyState.Idle;
                     movePosition++;
-                    if(movePosition >= sarchPosition.Count) {  movePosition = 0; }
-                    stateEnter = true;
-                    return;
+                    if(movePosition >= sarchPosition.Count) { movePosition = 0; }
+                    ChangeState(EnemyState.Idle);
                 }
                 break;
             case EnemyState.SoundSarch:
-                #region 開始1回の処理
-                if (stateEnter)
+                UpdateAgentTargetPos();
+
+                if (CheckIsReachDestination(0.1f))
                 {
-                    //プレイヤーの音に反応した
-                    if(soundsPosition.root.gameObject.CompareTag(Tag.Player))
-                    {
-                        //追跡エフェクトをつける
-                        SetChase(true);
-                        SetEnemyAudio((int)EnemyAudioName.audioChase);
-                    }
-                    else
-                    {
-                        //追跡エフェクトを元に戻す
-                        SetChase(false);
-                        SetEnemyAudio((int)EnemyAudioName.audioNormal);
-                    }
-
-                    stateEnter = false;
-                }
-                #endregion
-
-                _agent.destination = soundsPosition.position;
-                enemySarch.position = soundsPosition.position;
-
-                if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
-                {
-                    currentState = EnemyState.Idle;
-                    stopTimer = 60;
-                    stateEnter = true;
-                    return;
+                    ChangeState(EnemyState.Idle);
                 }
                 else
                 {
-                    if (chaseTimer <= 0)
+                    chaseTimer -= Time.deltaTime;
+                    if (chaseTimer < 0)
                     {
-                        currentState = EnemyState.Idle;
-                        stopTimer = 30;
-                        stateEnter = true;
-                    }
-                    else
-                    {
-                        chaseTimer--;
+                        ChangeState(EnemyState.Idle, 0.5f);
                     }
                 }
                 break;
             case EnemyState.Chase:
-                #region 開始1回の処理
-                if (stateEnter)
+                UpdateAgentTargetPos();
+
+                if (CheckIsReachDestination(1.0f))
                 {
-                    //追跡エフェクトをつける
-                    SetChase(true);
-                    SetEnemyAudio((int)EnemyAudioName.audioChase);
-
-                    _agent.speed = 0f;
-                    _agent.acceleration = 0f;
-                    stopTimer = 60;
-
-                    animator.SetBool("isChase", true);
-                    stateEnter = false;
+                    ChangeState(EnemyState.Attack);
                 }
-                #endregion
-
-                if(stopTimer > 0)
+                else if (!_player.CanBeDetected())
                 {
-                    stopTimer--;
+                    ChangeState(EnemyState.Idle, 0.5f);
                 }
                 else
                 {
-                    _agent.speed = _speed;
-                    _agent.acceleration = _acceleration;
-                }
-
-                _agent.destination = playerPosition.position;
-                enemySarch.position = playerPosition.position;
-
-                if (_agent.remainingDistance <= 1f && !_agent.pathPending)
-                {
-                    currentState = EnemyState.Attack;
-                    stateEnter = true;
-                }
-                else if (playerSounds.gameObject.activeSelf == false)
-                {
-                    currentState = EnemyState.Idle;
-                    animator.SetBool("isChase", false);
-                    stopTimer = 30;
-                    stateEnter = true;
-                }
-                else
-                {
-                    if(chaseTimer <= 0)
+                    chaseTimer -= Time.deltaTime;
+                    if(chaseTimer < 0)
                     {
-                        currentState = EnemyState.Idle;
-                        animator.SetBool("isChase", false);
-                        stopTimer = 30;
-                        stateEnter = true;
-                    }
-                    else
-                    {
-                        chaseTimer--;
+                        ChangeState(EnemyState.Idle, 0.5f);
                     }
                 }
                 break;
             case EnemyState.Attack:
-                #region 開始1回の処理
-                if (stateEnter)
-                {
-                    //追跡エフェクトをつける
-                    SetChase(true);
-                    SetEnemyAudio((int)EnemyAudioName.audioChase);
-
-                    animator.SetBool("isChase", true);
-                    animator.SetTrigger("Attack Trigger");
-
-                    attackTimer = Time.time;
-
-                    stateEnter = false;
-                }
-                #endregion
-
-                if (Time.time - attackTimer > 2.5f)
-                {
-                    animator.SetBool("isChase", false);
-                    currentState = EnemyState.Idle;
-                    stopTimer = 0;
-                    stateEnter = false;
-                }
-
                 break;
             case EnemyState.Catch:
-                #region 開始1回の処理
-                if (stateEnter)
-                {
-                    //追跡エフェクトをつける
-                    SetChase(true);
-                    SetEnemyAudio((int)EnemyAudioName.audioChase);
-
-                    _agent.speed = 0f;
-                    _agent.acceleration = 0f;
-                }
-
-                _agent.destination = transform.position;
-                enemySarch.position = transform.position;
-                #endregion
                 break;
-
         }
         #endregion
     }
 
     private void AgentSetUp()
     {
-        chaseTimer = 0;
-        stopTimer = 0;
-        currentState = EnemyState.Idle;
         _agent = GetComponent<NavMeshAgent>();
         _agent.stoppingDistance = 1f;
-        _speed = _agent.speed;
-        _acceleration = _agent.acceleration;
-        stateEnter = true;
-        playerPosition = GameObject.FindGameObjectWithTag(Tag.Player).transform;
+    }
+
+    public void ChangeState(EnemyState newState, object additionalInfo = null)
+    {
+        if(currentState == newState)
+        {
+            return;
+        }
+
+        ExitState(currentState, additionalInfo);
+        EnterState(newState, additionalInfo);
+    }
+
+    private void EnterState(EnemyState stateToEnter, object additionalInfo = null)
+    {
+        SetChase(stateToEnter);
+        UpdateEnemyAudio();
+        SetAgentEnable(stateToEnter);
+
+        switch(stateToEnter)
+        {
+            case EnemyState.Idle:
+                if(additionalInfo != null && additionalInfo is float idleTime)
+                {
+                    stopTimer = idleTime;
+                }
+                else
+                {
+                    stopTimer = 1.0f;
+                }
+                break;
+            case EnemyState.Move:
+                SetAgentTarget(sarchPosition[movePosition]);
+                UpdateAgentTargetPos();
+                break;
+            case EnemyState.Chase:
+                animator.SetBool("isChase", true);
+                StartCoroutine(DelayStartChasing(1.0f));
+                break;
+            case EnemyState.Attack:
+                animator.SetBool("isChase", true);
+                animator.SetTrigger("Attack Trigger");
+                break;
+        }
+
+        currentState = stateToEnter;
+    }
+
+    private void ExitState(EnemyState stateToExit, object additionalInfo = null)
+    {
+        switch(stateToExit)
+        {
+            case EnemyState.Chase:
+            case EnemyState.Attack:
+                animator.SetBool("isChase", false);
+                break;
+        }
     }
 
     float GetAgentVelocity()
@@ -300,32 +199,36 @@ public class EnemyModel : MonoBehaviour
         return _agent.velocity.magnitude;
     }
 
-    private void SetChase(bool flag)
+    private void SetChase(EnemyState enterState)
     {
-        isChase = flag;
-    }
-
-    private void SetColorLerp()
-    {
-        lerpedColor = Color.Lerp(color1, color2, colorLerp);
-        if(isChase)
+        switch(enterState)
         {
-            if(colorLerp < 1)
-            {
-                colorLerp += 0.3f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            if(colorLerp > 0)
-            {
-                colorLerp -= 0.7f * Time.deltaTime;
-            }
+            case EnemyState.Chase:
+            case EnemyState.Attack:
+            case EnemyState.Catch:
+                isChase = true;
+                return;
+            case EnemyState.SoundSarch:
+                // このチェックは必要ですか？
+                isChase = _currentTarget.root.gameObject.CompareTag(Tag.Player);
+                return;
+            default:
+                isChase = false;
+                return;
         }
     }
 
     private void SetEnemyEmission()
     {
+        if(isChase)
+        {
+            colorLerp = Mathf.Min(1, colorLerp + 0.3f * Time.deltaTime);
+        }
+        else
+        {
+            colorLerp = Mathf.Max(0, colorLerp - 0.7f * Time.deltaTime);
+        }
+        Color lerpedColor = Color.Lerp(color1, color2, colorLerp);
         mpb.SetColor(Shader.PropertyToID("_EmissionColor"), lerpedColor);
         for(int i = 0; i < meshRenderer.Length; i++)
         {
@@ -334,17 +237,61 @@ public class EnemyModel : MonoBehaviour
         }
     }
 
-    private void SetEnemyAudio(int clipNum)
+    private void UpdateEnemyAudio()
     {
-        audioSource.clip = audioClips[clipNum];
+        EnemyAudioName audioName = isChase ? EnemyAudioName.audioChase : EnemyAudioName.audioNormal;
+        audioSource.clip = audioClips[(int)audioName];
         audioSource.Play();
+    }
+
+    private void SetAgentEnable(EnemyState enterState)
+    {
+        switch(enterState)
+        {
+            case EnemyState.Chase:      // ちょっと止まる演出
+            case EnemyState.Idle:
+            case EnemyState.Catch:
+            case EnemyState.Attack:
+                _agent.isStopped = true;
+                return;
+            default:
+                _agent.isStopped = false;
+                return;
+        }
+    }
+
+    private bool CheckIsReachDestination(float allowDistance)
+    {
+        return !_agent.pathPending && _agent.remainingDistance <= allowDistance;
+    }
+
+    private void SetAgentTarget(Transform target)
+    {
+        _currentTarget = target;
+    }
+
+    private void UpdateAgentTargetPos()
+    {
+        _agent.destination = _currentTarget.position;
+    }
+
+    private IEnumerator DelayStartChasing(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        // delayTime経ってから、currentStateは変わる可能もある
+        if(currentState == EnemyState.Chase)
+        {
+            SetAgentTarget(_player.transform);
+            _agent.isStopped = false;
+        }
     }
 
     #region 音やプレイヤーの捜索
     public void PlayerSarch(Collider collider)
     {
         if (currentState == EnemyState.Attack || currentState == EnemyState.Idle || currentState == EnemyState.Catch) { return; }
-        if (playerSounds.gameObject.activeSelf == false) { return; }
+        if (!_player.CanBeDetected()) { return; }
         // 検知オブジェクトがPlayer
         if (collider.CompareTag(Tag.Player))
         {
@@ -365,18 +312,8 @@ public class EnemyModel : MonoBehaviour
                 {
                     if (hit.transform.root.CompareTag(Tag.Player))
                     {
-                        stateEnter = currentState != EnemyState.Chase;
-                        currentState = EnemyState.Chase;
-                        chaseTimer = 180;
-                    }
-                    else if (hit.collider.CompareTag(Tag.Sounds))
-                    {
-                        if (hit.transform.root.CompareTag(Tag.Player))
-                        {
-                            stateEnter = currentState != EnemyState.Chase;
-                            currentState = EnemyState.Chase;
-                            chaseTimer = 180;
-                        }
+                        ChangeState(EnemyState.Chase);
+                        chaseTimer = 3.0f;
                     }
                 }
             }
@@ -386,13 +323,12 @@ public class EnemyModel : MonoBehaviour
     public void SoundSarch(Collider collider)
     {
         if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack || currentState == EnemyState.Catch) { return; }
-        if (playerSounds.gameObject.activeSelf == false) { return; }
+        if (!_player.CanBeDetected()) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
-            stateEnter = currentState != EnemyState.SoundSarch;
-            currentState = EnemyState.SoundSarch;
-            soundsPosition = collider.transform;
-            chaseTimer = 120;
+            SetAgentTarget(collider.transform);
+            ChangeState(EnemyState.SoundSarch);
+            chaseTimer = 2.0f;
         }
     }
     #endregion
