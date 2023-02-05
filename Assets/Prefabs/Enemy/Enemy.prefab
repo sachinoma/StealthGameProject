@@ -92,33 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73c66304267bac248a6205189d6ef7f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onTriggerStay:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7559990500748918989}
-        m_TargetAssemblyTypeName: EnemyModel, Assembly-CSharp
-        m_MethodName: OnDetectObjectStay
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7559990500748918989}
-        m_TargetAssemblyTypeName: EnemyModel, Assembly-CSharp
-        m_MethodName: OnDetectObjectEnter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _model: {fileID: 7559990500748918989}
+  _agent: {fileID: 7559990500748918988}
+  _searchPosList: []
+  _searchAngle: 70
+  _searchArea: {fileID: 7559990500157691389}
 --- !u!82 &4050291730089281447
 AudioSource:
   m_ObjectHideFlags: 0
@@ -303,7 +281,7 @@ NavMeshAgent:
   m_Acceleration: 6.5
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -324,12 +302,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  stateEnter: 0
   sarchPosition: []
   animator: {fileID: 8602735039307219623}
-  stopTimer: 0
-  playerSounds: {fileID: 0}
-  enemySarch: {fileID: 0}
   searchAngle: 70
   searchArea: {fileID: 7559990500157691389}
   color1: {r: 0, g: 0, b: 0, a: 0}

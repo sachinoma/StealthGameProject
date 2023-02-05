@@ -5,5 +5,4 @@
     SoundSarch,
     Idle,
     Attack,
-    Catch
 }

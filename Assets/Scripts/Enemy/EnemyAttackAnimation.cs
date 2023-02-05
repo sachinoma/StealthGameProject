@@ -27,7 +27,7 @@ public class EnemyAttackAnimation : MonoBehaviour
     #region 攻撃処理
     private void AttackEnd()
     {
-        enemyModel.ChangeState(EnemyState.Idle);
+        enemyModel.FinishedAttack(false);
     }
 
     private void ColliderStart()
