@@ -42,7 +42,7 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.TerminalOperated.Handler += OnTerminalOperated;
         MainSceneEventManager.HintTriggered.Handler += OnHintTriggered;
 
-#if BACKDOOR_ENABLED
+#if BACKDOOR_ENABLED || UNITY_EDITOR
         gameObject.AddComponent<MainSceneBackdoor>();
 #endif
     }
@@ -113,7 +113,7 @@ public class MainSceneDirector : MonoBehaviour
 
         StartCoroutine(WaitAndGameOver(5.0f));
 
-#if BACKDOOR_ENABLED
+#if BACKDOOR_ENABLED || UNITY_EDITOR
         gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);
 #endif
     }
@@ -156,7 +156,7 @@ public class MainSceneDirector : MonoBehaviour
 
         SceneControl.LoadUI(SceneControl.GameClearUISceneName);
 
-#if BACKDOOR_ENABLED
+#if BACKDOOR_ENABLED || UNITY_EDITOR
         gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);
 #endif
     }
