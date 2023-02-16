@@ -29,15 +29,14 @@ public static class GameProgress
 
     public static bool IsTutorialRoomOpened { get; private set; } = false;
 
-    public static void Save(Transform playerTransform, List<CardType> obtainedItemsToSave)
+    public static void SaveObtainedItem(CardType obtainedItem, Transform respawnPointRef)
     {
-        GameStartPos = playerTransform.position;
-        GameStartRot = playerTransform.eulerAngles;
+        GameStartPos = respawnPointRef.position;
+        GameStartRot = respawnPointRef.eulerAngles;
 
-        ObtainedItems.Clear();
-        if(obtainedItemsToSave != null)
+        if(!ObtainedItems.Contains(obtainedItem))
         {
-            ObtainedItems.AddRange(obtainedItemsToSave);
+            ObtainedItems.Add(obtainedItem);
         }
     }
 

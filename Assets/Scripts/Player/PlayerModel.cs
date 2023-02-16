@@ -211,10 +211,9 @@ public class PlayerModel : MonoBehaviour
         _animator.SetTrigger(PickUpAnimTrigger);
         SetState(PlayerState.Acting);
 
-        SaveCurrentProgress();
-
         // TODO : アニメションのタイミングに合わせてアイテムを取る？
-        Destroy(item.gameObject);
+        item.PickUp();
+
         ItemGotEventArgs eventArgs = new ItemGotEventArgs(cardType);
         MainSceneEventManager.TriggerEvent(MainSceneEventManager.ItemGot.EventId, this, eventArgs);
     }
@@ -483,15 +482,6 @@ public class PlayerModel : MonoBehaviour
     {
         _isTrap = isInTrap;
         _movement.SetSpeedMultiplier(speedMultiplier);
-    }
-
-    #endregion
-
-    #region Save GameProgress
-
-    private void SaveCurrentProgress()
-    {
-        GameProgress.Save(transform, obtainedItems);
     }
 
     #endregion

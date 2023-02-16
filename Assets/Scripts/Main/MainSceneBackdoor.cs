@@ -26,7 +26,10 @@ public class MainSceneBackdoor : MonoBehaviour
             // デフォルトの位置
             transform.position = new Vector3(13.665f, 0.0f, -38.775f);
             transform.eulerAngles = new Vector3(0.0f, -18.26f, 0.0f);
-            GameProgress.Save(transform, new List<CardType> { CardType.White, CardType.Red, CardType.Blue, CardType.Yellow });
+            GameProgress.SaveObtainedItem(CardType.White, transform);
+            GameProgress.SaveObtainedItem(CardType.Red, transform);
+            GameProgress.SaveObtainedItem(CardType.Blue, transform);
+            GameProgress.SaveObtainedItem(CardType.Yellow, transform);
             SceneControl.ChangeScene(SceneControl.MainSceneName);
         }
         else if((Gamepad.current != null && Gamepad.current.leftTrigger.isPressed && Gamepad.current.rightTrigger.isPressed) ||

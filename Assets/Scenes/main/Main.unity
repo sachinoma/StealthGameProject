@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427135, b: 0.5645232, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10731,6 +10731,18 @@ PrefabInstance:
       propertyPath: audioClips.Array.data[2]
       value: 
       objectReference: {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
+    - target: {fileID: 6884363748250431863, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6884363748250431863, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6884363748250431863, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
 --- !u!1 &485699194
@@ -11747,6 +11759,18 @@ PrefabInstance:
     - target: {fileID: 3042539644682998944, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285539271187332592, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285539271187332592, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285539271187332592, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
       propertyPath: maxDistance
@@ -17752,7 +17776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 251780655031653257, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.017
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 251780655031653257, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
       propertyPath: m_LocalPosition.z
@@ -22727,6 +22751,22 @@ PrefabInstance:
     - target: {fileID: 4158347266882147592, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
       propertyPath: m_Name
       value: Card_White
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881136219729602274, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881136219729602274, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881136219729602274, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881136219729602274, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 135
       objectReference: {fileID: 0}
     - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
       propertyPath: maxDistance
