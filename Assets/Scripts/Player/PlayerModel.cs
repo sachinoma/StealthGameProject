@@ -186,6 +186,9 @@ public class PlayerModel : MonoBehaviour
             case ReactableType.OperationTerminal:
                 OperateTerminal(reactable);
                 break;
+            case ReactableType.MapBoard:
+                OpenMapBoard(reactable);
+                break;
         }
     }
 
@@ -308,6 +311,19 @@ public class PlayerModel : MonoBehaviour
         }
 
         SetState(PlayerState.Moving);
+    }
+
+    private void OpenMapBoard(ReactableBase reactable)
+    {
+        if(reactable is not MapBoard item)
+        {
+            Debug.LogWarning("MapBoard ではない reactable が PickUp 関数へ渡された。");
+            DoUselessAction();
+            return;
+        }
+
+        // TODO : アニメションのタイミングに合わせてアイテムを取る？
+        item.MapBoardFunc();
     }
 
     #endregion
