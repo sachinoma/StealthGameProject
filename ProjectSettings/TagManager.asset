@@ -11,6 +11,7 @@ TagManager:
   - Trap
   - Card
   - OperationTerminal
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - Reactable
   - ReactableDetector
   - IgnoreDecal
-  - 
-  - 
+  - Enemy
+  - Player
   - 
   - 
   - 

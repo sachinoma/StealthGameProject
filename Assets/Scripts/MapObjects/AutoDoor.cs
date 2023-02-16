@@ -6,7 +6,7 @@ public class AutoDoor : Door
 {
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(Tag.Player))
+        if(other.CompareTag(Tag.Player)|| other.CompareTag(Tag.Enemy))
         {
             Open();
         }
@@ -14,7 +14,7 @@ public class AutoDoor : Door
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag(Tag.Player))
+        if(other.CompareTag(Tag.Player)|| other.CompareTag(Tag.Enemy))
         {
             Close();
         }
