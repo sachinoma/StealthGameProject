@@ -12,6 +12,7 @@ public class MapBoardUI : MonoBehaviour
 
     public void SetNowPos(int posNum)
     {
-        nowPosUI.position = nowPos[posNum].position;
+        nowPosUI.position = nowPos[posNum-1].position;
+        nowPosUI.rotation = nowPos[posNum - 1].rotation;
     }
 }
