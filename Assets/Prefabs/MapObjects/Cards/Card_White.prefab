@@ -337,7 +337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isMoving: 0
-  _maxMovePos: 0.2
-  _moveSpeed: 0.25
+  _defMoveSpeed: 0.25
   _isRot: 0
   _rotSpeed: 20
+  Grav: 0.25
+  _speed: 0

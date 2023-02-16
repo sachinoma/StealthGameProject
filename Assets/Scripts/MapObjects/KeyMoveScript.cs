@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class KeyMoveScript : MonoBehaviour
 {
@@ -8,15 +6,10 @@ public class KeyMoveScript : MonoBehaviour
     [SerializeField]
     private bool _isMoving = false;
 
-    private enum MoveState { MoveUp, MoveDown }
-    private MoveState _state = MoveState.MoveUp;
     private Transform _startTransform;
-    [Header("最高移動量　移動速度")]
+    [Header("移動速度")]
     [SerializeField]
-    private float _maxMovePos = 1f;
-    private float _nowMovePos = 0f;
-    [SerializeField]
-    private float _moveSpeed = 0.7f;
+    private float _defMoveSpeed = 0.7f;
 
     [Header("回転スイッチ")]
     [SerializeField]
@@ -24,6 +17,11 @@ public class KeyMoveScript : MonoBehaviour
     [Header("回転速度")]
     [SerializeField]
     private float _rotSpeed = 20f;
+
+    [SerializeField]
+    private float Grav = 0.05f;
+    [SerializeField]
+    private float _speed;
 
     public void Moving(bool onoff)
     { _isMoving = onoff; }
@@ -34,27 +32,13 @@ public class KeyMoveScript : MonoBehaviour
     void Start()
     {
         _startTransform = transform;
+        _speed = _defMoveSpeed;
     }
 
-    private void StateChange()
-    {
-        if(_state == MoveState.MoveUp)
-            _state = MoveState.MoveDown;
-        else
-            _state = MoveState.MoveUp;
-
-        StateReset();
-    }
-
-    private void StateReset()
-    {
-        _nowMovePos = 0;
-    }
 
     private void PositionReset()
     {
         transform.position = _startTransform.position;
-        StateReset();
     }
 
     private void RotReset()
@@ -66,13 +50,15 @@ public class KeyMoveScript : MonoBehaviour
     {
         if(_isMoving)
         {
-            Vector3 Direct = _state == MoveState.MoveUp ? Vector3.up : Vector3.down;
+            transform.position += _speed * Vector3.up * Time.deltaTime;
 
-            transform.position += Direct * _moveSpeed * Time.deltaTime;
-            _nowMovePos += _moveSpeed * Time.deltaTime;
+            _speed += Grav * Time.deltaTime;
 
-            if(_nowMovePos >= _maxMovePos)
-                StateChange();
+            if(_defMoveSpeed <= Mathf.Abs(_speed))
+            {
+                Grav = -Grav;
+                _speed = Mathf.Sign(_speed) * _defMoveSpeed;
+            }
         }
         else
             PositionReset();
