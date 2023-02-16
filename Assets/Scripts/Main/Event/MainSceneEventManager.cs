@@ -7,7 +7,6 @@ public class MainSceneEventManager
 {
     #region イベント
 
-    public static MainSceneEvent PlayerBrokeOut     { get; } = new MainSceneEvent("PlayerBrokeOut");
     public static MainSceneEvent PlayerDied         { get; } = new MainSceneEvent("PlayerDied");
     public static MainSceneEvent ItemGot            { get; } = new MainSceneEvent("ItemGot");
     public static MainSceneEvent GameClear          { get; } = new MainSceneEvent("GameClear");
@@ -16,7 +15,6 @@ public class MainSceneEventManager
 
     private static MainSceneEvent[] RegisteredEvents =
     {
-        PlayerBrokeOut,
         PlayerDied,
         ItemGot,
         GameClear,

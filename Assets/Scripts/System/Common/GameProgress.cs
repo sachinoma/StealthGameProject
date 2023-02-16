@@ -27,6 +27,8 @@ public static class GameProgress
         }
     }
 
+    public static bool IsTutorialRoomOpened { get; private set; } = false;
+
     public static void Save(Transform playerTransform, List<CardType> obtainedItemsToSave)
     {
         GameStartPos = playerTransform.position;
@@ -39,12 +41,18 @@ public static class GameProgress
         }
     }
 
+    public static void SaveTutorialDone()
+    {
+        IsTutorialRoomOpened = true;
+    }
+
     public static void Reset()
     {
         GameStartPos = DefaultGameStartPos;
         GameStartRot = DefaultGameStartRot;
         ObtainedItems.Clear();
         RemainingHintsLazy = null;
+        IsTutorialRoomOpened = false;
     }
 
     #region ヒント

@@ -35,7 +35,6 @@ public class MainSceneDirector : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        MainSceneEventManager.PlayerBrokeOut.Handler += OnPlayerBrokeOut;
         MainSceneEventManager.PlayerDied.Handler += OnPlayerDied;
         MainSceneEventManager.ItemGot.Handler += OnItemGot;
         MainSceneEventManager.GameClear.Handler += OnGameClear;
@@ -49,7 +48,6 @@ public class MainSceneDirector : MonoBehaviour
 
     private void OnDestroy()
     {
-        MainSceneEventManager.PlayerBrokeOut.Handler -= OnPlayerBrokeOut;
         MainSceneEventManager.PlayerDied.Handler -= OnPlayerDied;
         MainSceneEventManager.ItemGot.Handler -= OnItemGot;
         MainSceneEventManager.GameClear.Handler -= OnGameClear;
@@ -59,10 +57,16 @@ public class MainSceneDirector : MonoBehaviour
 
     private void LoadGameProgress()
     {
+        // カード
         List<CardType> obtainedItems = GameProgress.ObtainedItems;
         _uiManager.AddObtainedItems(obtainedItems);
-
         SetCardsActive(obtainedItems);
+
+        // チュートリアルルーム
+        if(GameProgress.IsTutorialRoomOpened)
+        {
+            _tutorialDoor.Open();
+        }
     }
 
     private void SetCardsActive(List<CardType> obtainedItems)
@@ -91,10 +95,12 @@ public class MainSceneDirector : MonoBehaviour
         }
     }
 
-    #region OnPlayerBrokeOut
+    #region Broke out announcement
 
-    private void OnPlayerBrokeOut(object sender, EventArgs e)
+    private IEnumerator DelayPlayBrokeOutAnnouncement(float delayTime)
     {
+        yield return new WaitForSeconds(delayTime);
+
         if(_announcementManager == null)
         {
             _announcementManager = Instantiate(_announcementManagerTemplate);
@@ -178,6 +184,8 @@ public class MainSceneDirector : MonoBehaviour
         {
             case CardType.White:
                 _tutorialDoor.Open();
+                StartCoroutine(DelayPlayBrokeOutAnnouncement(0.5f));
+                GameProgress.SaveTutorialDone();
                 return;
             case CardType.Red:
             case CardType.Blue:
