@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427135, b: 0.5645232, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10651,6 +10651,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1623688909}
     m_Modifications:
+    - target: {fileID: 621432369830561262, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4008969682162516637, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
       propertyPath: m_Name
       value: Card_Yellow
@@ -10699,6 +10703,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: maxDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: minDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: middleDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: audioClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c2074dd201834d34188b32182fe3b192, type: 3}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: audioClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: d073934da4f042f46ae65f5b688d22d7, type: 3}
+    - target: {fileID: 6753659384975663551, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
+      propertyPath: audioClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37bc90019899c4785b823ca4169c37cf, type: 3}
 --- !u!1 &485699194
@@ -11664,6 +11696,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1623688909}
     m_Modifications:
+    - target: {fileID: 2184220386925365609, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2410152591971307034, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
       propertyPath: m_Name
       value: Card_Red
@@ -11712,6 +11748,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: maxDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: minDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: middleDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: audioClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c2074dd201834d34188b32182fe3b192, type: 3}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: audioClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: d073934da4f042f46ae65f5b688d22d7, type: 3}
+    - target: {fileID: 5434152334093544760, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
+      propertyPath: audioClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38a3732e1fd3a476f8f2b74b781baeef, type: 3}
 --- !u!1 &546970521 stripped
@@ -17726,6 +17790,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card_Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 3965468240078949952, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: maxDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: minDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: middleDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: audioClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c2074dd201834d34188b32182fe3b192, type: 3}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: audioClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: d073934da4f042f46ae65f5b688d22d7, type: 3}
+    - target: {fileID: 7074653935816206865, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
+      propertyPath: audioClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ece16b91477b647c2bb5ae241653ae76, type: 3}
 --- !u!1 &1063707607
@@ -22580,6 +22676,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1623688909}
     m_Modifications:
+    - target: {fileID: 470651533379211899, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3674579276948721586, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -22628,6 +22728,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card_White
       objectReference: {fileID: 0}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: maxDistance
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: minDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: middleDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: audioClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c2074dd201834d34188b32182fe3b192, type: 3}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: audioClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: d073934da4f042f46ae65f5b688d22d7, type: 3}
+    - target: {fileID: 6029760302459172394, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
+      propertyPath: audioClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a6e34a8aaa1647b6bb00fef59e44120, type: 3}
 --- !u!4 &1452410502 stripped
