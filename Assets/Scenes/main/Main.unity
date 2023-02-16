@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11572,7 +11572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _messageText: {fileID: 557142055}
   _cardIconBaseTransform: {fileID: 1782811651}
-  _cardIconTemplate: {fileID: 7419149084655531895, guid: 9bce836132d36448cb5ba058b0ff8f63, type: 3}
+  _cardIconTemplate: {fileID: 4246658333358029989, guid: 9bce836132d36448cb5ba058b0ff8f63, type: 3}
   _messageDisplayTime: 3
   _hintAnimator: {fileID: 1093576488}
   _hintText: {fileID: 1349291502}
@@ -11591,7 +11591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiManager: {fileID: 532589678}
   _announcementManagerTemplate: {fileID: 8340377546390049666, guid: e829e1fa93ce04495aed21fd454de637, type: 3}
-  _cardsBaseTrasnform: {fileID: 1623688909}
+  _cardsBaseTransform: {fileID: 1623688909}
   _tutorialDoor: {fileID: 1123158609}
   _endpointDoors:
   - {fileID: 1178406337}

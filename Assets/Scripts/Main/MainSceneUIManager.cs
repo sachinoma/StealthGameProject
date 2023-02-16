@@ -10,7 +10,7 @@ public class MainSceneUIManager : MonoBehaviour
 
     [Header("取得したアイテム")]
     [SerializeField] private Transform _cardIconBaseTransform;
-    [SerializeField] private GameObject _cardIconTemplate;
+    [SerializeField] private CardIcon _cardIconTemplate;
 
     [Header("メッセージ")]
     [SerializeField] private float _messageDisplayTime = 3.0f;
@@ -21,11 +21,15 @@ public class MainSceneUIManager : MonoBehaviour
     [SerializeField] private float _hintDisplayTime = 3.0f;
     private const string IsShowHintAnimBool = "isShow";
 
-
-    private Dictionary<CardType, Image> _displayingIcons = new Dictionary<CardType, Image>();
+    private List<CardIcon> _cardIcons;
     
     private Coroutine _showMessageCoroutine = null;
     private Coroutine _showHintCoroutine = null;
+
+    private void Awake()
+    {
+        GenerateCardIcons();
+    }
 
     #region アイテム
 
@@ -39,34 +43,34 @@ public class MainSceneUIManager : MonoBehaviour
         _showMessageCoroutine = StartCoroutine(ShowMessage(LocalizedText.ItemGot));
     }
 
+    private void GenerateCardIcons()
+    {
+        _cardIcons = new List<CardIcon>();
+
+        CardType[] cardTypes = { CardType.White, CardType.Red, CardType.Blue, CardType.Yellow };
+        Color[] cardColors = { Color.white, Color.red, Color.blue, Color.yellow };
+
+        for(int i = 0; i < cardTypes.Length; ++i)
+        {
+            CardIcon cardIcon = Instantiate(_cardIconTemplate, _cardIconBaseTransform);
+            cardIcon.Init(cardTypes[i], cardColors[i]);
+            _cardIcons.Add(cardIcon);
+        }
+    }
+
+
     public void AddObtainedItem(CardType type)
     {
-        if(_displayingIcons.ContainsKey(type))
+        foreach(CardIcon cardIcon in _cardIcons)
         {
-            Debug.LogWarning("すでにアイコンを追加した。");
-            return;
-        }
-
-        Color cardColor = Color.white;
-        switch(type)
-        {
-            case CardType.White:    cardColor = Color.white;    break;
-            case CardType.Red:      cardColor = Color.red;      break;
-            case CardType.Blue:     cardColor = Color.blue;     break;
-            case CardType.Yellow:   cardColor = Color.yellow;   break;
-            default:
-                Debug.LogError($"まだ実装していない。CardType：{type}");
+            if(cardIcon.Type == type)
+            {
+                cardIcon.SetObtained();
                 return;
+            }
         }
 
-        GameObject icon = Instantiate(_cardIconTemplate, _cardIconBaseTransform);
-        Image iconImage = icon.GetComponent<Image>();
-        if(iconImage != null)
-        {
-            iconImage.color = cardColor;
-        }
-
-        _displayingIcons.Add(type, iconImage);
+        Debug.LogError($"CardType：{type} のCardIconはまだ配置していない。");
     }
 
     public void AddObtainedItems(List<CardType> types)
@@ -84,16 +88,16 @@ public class MainSceneUIManager : MonoBehaviour
 
     public void SetItemUsed(CardType type)
     {
-        if(_displayingIcons.ContainsKey(type))
+        foreach(CardIcon cardIcon in _cardIcons)
         {
-            Color newColor = _displayingIcons[type].color;
-            newColor.a = 0.3f;
-            _displayingIcons[type].color = newColor;
+            if(cardIcon.Type == type)
+            {
+                cardIcon.SetUsed();
+                return;
+            }
         }
-        else
-        {
-            Debug.LogWarning("アイコンはまだ追加していない。");
-        }
+
+        Debug.LogError($"CardType：{type} のCardIconはまだ配置していない。");
     }
 
     private IEnumerator ShowMessage(string message)

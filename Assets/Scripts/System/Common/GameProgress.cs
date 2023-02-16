@@ -45,6 +45,11 @@ public static class GameProgress
         IsTutorialRoomOpened = true;
     }
 
+    public static CardType GetTutorialCardType()
+    {
+        return CardType.White;
+    }
+
     public static void Reset()
     {
         GameStartPos = DefaultGameStartPos;

@@ -13,7 +13,7 @@ public class OperationTerminal : ReactableBase
     private void Awake()
     {
         // チュートリアルルームのターミナル
-        if(_cardType == CardType.White)
+        if(_cardType == GameProgress.GetTutorialCardType())
         {
             _isActivated = GameProgress.IsTutorialRoomOpened;
         }

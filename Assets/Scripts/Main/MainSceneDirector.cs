@@ -12,7 +12,7 @@ public class MainSceneDirector : MonoBehaviour
     [SerializeField] private AnnouncementManager _announcementManagerTemplate;
 
     [Header("カード")]
-    [SerializeField] private Transform _cardsBaseTrasnform;
+    [SerializeField] private Transform _cardsBaseTransform;
 
     [Header("扉と関連すること")]
     [SerializeField] private Door _tutorialDoor;
@@ -77,6 +77,7 @@ public class MainSceneDirector : MonoBehaviour
         if(GameProgress.IsTutorialRoomOpened)
         {
             _tutorialDoor.Open();
+            _uiManager.SetItemUsed(GameProgress.GetTutorialCardType());
         }
     }
 
@@ -87,7 +88,7 @@ public class MainSceneDirector : MonoBehaviour
             return;
         }
 
-        PickUpItem[] cardsInMap = _cardsBaseTrasnform.GetComponentsInChildren<PickUpItem>();
+        PickUpItem[] cardsInMap = _cardsBaseTransform.GetComponentsInChildren<PickUpItem>();
         if(cardsInMap == null)
         {
             return;
@@ -191,19 +192,17 @@ public class MainSceneDirector : MonoBehaviour
         }
 
         _uiManager.SetItemUsed(terminalOperatedEventArgs.Type);
-        switch(terminalOperatedEventArgs.Type)
+
+        if(terminalOperatedEventArgs.Type == GameProgress.GetTutorialCardType())
         {
-            case CardType.White:
-                _tutorialDoor.Open();
-                StartCoroutine(DelayPlayBrokeOutAnnouncement(0.5f));
-                GameProgress.SaveTutorialDone();
-                return;
-            case CardType.Red:
-            case CardType.Blue:
-            case CardType.Yellow:
-                _operatedCardTypes.Add(terminalOperatedEventArgs.Type);
-                CheckAndActivateEndpoint();
-                return;
+            _tutorialDoor.Open();
+            StartCoroutine(DelayPlayBrokeOutAnnouncement(0.5f));
+            GameProgress.SaveTutorialDone();
+        }
+        else
+        {
+            _operatedCardTypes.Add(terminalOperatedEventArgs.Type);
+            CheckAndActivateEndpoint();
         }
     }
 
