@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,14 +16,36 @@ public class SceneControl
 
     #endregion
 
+    private static bool HasRegisteredSceneLoadedEvent = false;
+
     public static void ChangeScene(string targetSceneName)
     {
-        // TODO : トランジション
-        SceneManager.LoadScene(targetSceneName);
+        if(!HasRegisteredSceneLoadedEvent)
+        {
+            HasRegisteredSceneLoadedEvent = true;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        Action onFadeOutFinished = () =>
+        {
+            SceneManager.LoadScene(targetSceneName);
+        };
+
+        SceneTransition.Instance.FadeOut(onFadeOutFinished);
     }
 
     public static void LoadUI(string uiSceneName)
     {
         SceneManager.LoadScene(uiSceneName, LoadSceneMode.Additive);
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if(mode == LoadSceneMode.Additive)
+        {
+            return;
+        }
+
+        SceneTransition.Instance.FadeIn();
     }
 }
