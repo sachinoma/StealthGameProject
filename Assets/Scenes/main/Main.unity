@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -27943,6 +27943,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HintEventTrigger_Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6439130906901930521, guid: afa45fbae95fa42dc9746d43610134bf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa45fbae95fa42dc9746d43610134bf, type: 3}
 --- !u!4 &1748384981 stripped
@@ -29675,6 +29679,10 @@ PrefabInstance:
     - target: {fileID: 6439130906901930521, guid: afa45fbae95fa42dc9746d43610134bf, type: 3}
       propertyPath: m_Name
       value: HintEventTrigger_Card
+      objectReference: {fileID: 0}
+    - target: {fileID: 6439130906901930521, guid: afa45fbae95fa42dc9746d43610134bf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa45fbae95fa42dc9746d43610134bf, type: 3}
