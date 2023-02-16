@@ -24,6 +24,8 @@ public class RangeVisualChanger: MonoBehaviour
     [SerializeField] private float middleDistance = 5f;
     [SerializeField] private float maxDistance = 7f;
 
+    [SerializeField] private KeyMoveScript _moveScript;
+
     private AudioSource audioSource;
 
     private float _seconds;
@@ -90,14 +92,22 @@ public class RangeVisualChanger: MonoBehaviour
         {
             _seconds = 0f;
             color = 0f;
-        }
-        else if(_seconds < _releaseTime)
-        {
-            _seconds += Time.deltaTime;
-            color = _seconds / _releaseTime;
+            _moveScript.Moving(false);
         }
         else
-            color = 1f;
+        {
+            if(_seconds < _releaseTime)
+            {
+                _seconds += Time.deltaTime;
+                color = _seconds / _releaseTime;
+            }
+            else
+                color = 1f;
+
+            _moveScript.Moving(true);
+        }
+        
+        
 
         return color;
     }
@@ -105,12 +115,20 @@ public class RangeVisualChanger: MonoBehaviour
     private float RangeChangeAlpha(float dist, float color)
     {
         if(dist > _startDistance)
+        {
             color = 0f;
-        else if(dist > _endDistance)
-            color = (_startDistance - dist) / (_startDistance - _endDistance);
+            _moveScript.Moving(false);
+        }
         else
-            color = 1f;
-        
+        {
+            if(dist > _endDistance)
+                color = (_startDistance - dist) / (_startDistance - _endDistance);
+            else
+                color = 1f;
+
+            _moveScript.Moving(true);
+        } 
+
         return color;
     }
 
