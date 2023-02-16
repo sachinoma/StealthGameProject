@@ -161,7 +161,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 28418dcc9910dc9469c51305966ecd49, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -316,3 +316,10 @@ MonoBehaviour:
   _endDistance: 2
   _isTimeChange: 1
   _releaseTime: 3
+  audioClips:
+  - {fileID: 8300000, guid: c2074dd201834d34188b32182fe3b192, type: 3}
+  - {fileID: 8300000, guid: d073934da4f042f46ae65f5b688d22d7, type: 3}
+  - {fileID: 8300000, guid: 8a2bd318ed2280949b2a45a487191f80, type: 3}
+  minDistance: 3
+  middleDistance: 5
+  maxDistance: 7
