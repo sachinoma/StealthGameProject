@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MainSceneDirector : MonoBehaviour
 {
@@ -53,6 +54,16 @@ public class MainSceneDirector : MonoBehaviour
         MainSceneEventManager.GameClear.Handler -= OnGameClear;
         MainSceneEventManager.TerminalOperated.Handler -= OnTerminalOperated;
         MainSceneEventManager.HintTriggered.Handler -= OnHintTriggered;
+    }
+
+    private void Update()
+    {
+        // 簡単にタイトルシーンに戻るように
+        if((Gamepad.current != null && Gamepad.current.leftShoulder.isPressed && Gamepad.current.startButton.isPressed) ||
+           (Keyboard.current != null && Keyboard.current.digit0Key.wasPressedThisFrame))
+        {
+            SceneControl.ChangeScene(SceneControl.TitleSceneName);
+        }
     }
 
     private void LoadGameProgress()

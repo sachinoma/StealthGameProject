@@ -38,15 +38,10 @@ public class MainSceneBackdoor : MonoBehaviour
             GameProgress.Reset();
             SceneControl.ChangeScene(SceneControl.MainSceneName);
         }
-        else if((Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame) ||
+        else if((Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame) ||
                (Keyboard.current != null && Keyboard.current.digit9Key.wasPressedThisFrame))
         {
             SceneControl.ChangeScene(SceneControl.MainSceneName);
-        }
-        else if((Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame) ||
-                (Keyboard.current != null && Keyboard.current.digit0Key.wasPressedThisFrame))
-        {
-            SceneControl.ChangeScene(SceneControl.TitleSceneName);
         }
         else if((Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame) ||
                 (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame))
