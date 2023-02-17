@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,10 +17,28 @@ public class GameClear : MonoBehaviour
 
     PlayerInput _playerInput;
 
+    [Header("サウンド")]
+    [SerializeField, Range(0, 1)] private float bgmStart = 0.9f;
+
+    [SerializeField] private AudioSource clearSFX;
+    [SerializeField] private AudioSource bgm;
+    private bool isBgmPlay = false;
     // Start is called before the first frame update
     private void Awake()
     {
         Initialize();
+    }
+
+    private void Update()
+    {
+        if(!isBgmPlay)
+        {
+            if(clearSFX.time / clearSFX.clip.length >= bgmStart)
+            {
+                bgm.Play();
+                isBgmPlay = true;
+            }
+        }
     }
 
     private void Initialize()
