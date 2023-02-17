@@ -74,12 +74,6 @@ public class PlayerModel : MonoBehaviour
 
     private void Init()
     {
-        transform.position = GameProgress.GameStartPos;
-        transform.eulerAngles = GameProgress.GameStartRot;
-
-        // 1フレームを遅延して、上のtransformの変更を確保する
-        StartCoroutine(DelayEnableMovement());
-
         CurrentLife = _life;
         SetState(PlayerState.Moving);
 
@@ -98,6 +92,17 @@ public class PlayerModel : MonoBehaviour
         _animator.SetFloat(MoveAnimFloat, _movement.GetNormalized01InputSpeed());
 
         TrapIdleCheck();
+    }
+
+    public void SetPosition(Vector3 pos, Vector3 rot)
+    {
+        _movement.enabled = false;
+
+        transform.position = pos;
+        transform.eulerAngles = rot;
+
+        // 1フレームを遅延して、上のtransformの変更を確保する
+        StartCoroutine(DelayEnableMovement());
     }
 
     private IEnumerator DelayEnableMovement()

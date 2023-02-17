@@ -79,6 +79,13 @@ public class MainSceneDirector : MonoBehaviour
             _tutorialDoor.Open();
             _uiManager.SetItemUsed(GameProgress.GetTutorialCardType());
         }
+
+        // プレイヤー位置
+        PlayerModel player = FindObjectOfType<PlayerModel>();
+        if(player != null)
+        {
+            player.SetPosition(GameProgress.GameStartPos, GameProgress.GameStartRot);
+        }
     }
 
     private void SetCardsActive(List<CardType> obtainedItems)
