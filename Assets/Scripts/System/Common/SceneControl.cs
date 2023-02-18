@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class SceneControl
 {
     public const string TitleSceneName = "Title";
+    public const string IntroSceneName = "Intro";
     public const string MainSceneName = "Main";
 
     #region UI

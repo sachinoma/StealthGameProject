@@ -1,10 +1,16 @@
-public static class LocalizedText
+﻿public static class LocalizedText
 {
     #region メインメニュー
 
     public const string GameStart = "gamestart";
     public const string Credit = "credit";
     public const string Quit = "quit";
+
+    #endregion
+
+    #region イントロメニュー
+
+    public const string Skip = "skip";
 
     #endregion
 

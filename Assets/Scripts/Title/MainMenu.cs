@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -67,7 +67,7 @@ public class MainMenu : MonoBehaviour
     private void OnGameStartBtnClicked()
     {
         GameProgress.Reset();
-        SceneControl.ChangeScene(SceneControl.MainSceneName);
+        SceneControl.ChangeScene(SceneControl.IntroSceneName);
     }
 
     private void OnCreditBtnClicked()
