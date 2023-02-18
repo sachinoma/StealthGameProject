@@ -12,30 +12,19 @@ public class IntroSceneDirector : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _introMenu.ViewChanged += OnIntroViewChanged;
+        SetVideoActive(_videoIntro);
         _introMenu.Initialize();
     }
 
     private void OnDestroy()
     {
-        _introMenu.ViewChanged -= OnIntroViewChanged;
+
     }
 
-    private void OnIntroViewChanged(IntroMenu.View view)
+    private void SetVideoActive(VideoPlayer video)
     {
-        bool isPlayVideoWithLogo = view != IntroMenu.View.Credit;
-
-        SetVideoActive(_videoIntro, isPlayVideoWithLogo);
-    }
-
-    private void SetVideoActive(VideoPlayer video, bool isActive)
-    {
-        video.renderMode = isActive ? VideoRenderMode.CameraFarPlane : VideoRenderMode.APIOnly;
-        if(isActive)
-        {
-            video.targetCamera = _cameraForVideo;
-        }
-        video.SetDirectAudioMute(0, !isActive);
+        video.renderMode = VideoRenderMode.CameraFarPlane ;
+        video.targetCamera = _cameraForVideo;
         video.loopPointReached += LoopPointReached;
     }
 
