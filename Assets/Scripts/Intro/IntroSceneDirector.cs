@@ -31,7 +31,7 @@ public class IntroSceneDirector : MonoBehaviour
     public void LoopPointReached(VideoPlayer video)
     {
         // 動画再生完了時の処理
-        video.Pause();
+        video.Stop();
         SceneControl.ChangeScene(SceneControl.MainSceneName);
     }
 }
