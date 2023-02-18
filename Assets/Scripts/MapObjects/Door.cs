@@ -8,20 +8,27 @@ public class Door : MonoBehaviour
     [SerializeField] protected Animator _animator;
     NavMeshObstacle obstacle;
 
+    private AudioSource audio;
+
     private void Awake()
     {
         AddObstacle();
     }
 
+    private void Start()
+    {
+        audio = GetComponent<AudioSource>();
+    }
+
     public void Open()
     {
-        _animator.SetBool("isOpen", true);
+        _animator.SetBool("isOpen", true);        
         RemoveObstacle();
     }
 
     public void Close()
     {
-        _animator.SetBool("isOpen", false);
+        _animator.SetBool("isOpen", false);       
         AddObstacle();
     }
 
@@ -44,5 +51,17 @@ public class Door : MonoBehaviour
         obstacle.carving = true;
         obstacle.center = new(0, 1.5f, 0);
         obstacle.size = new(0.6f, 3f, 5.5f);
+    }
+
+    //扉のサウンドを流す
+    void PlayAudio()
+    {
+        audio.Play();
+    }
+
+    //扉のサウンドを止める
+    void StopAudio()
+    {
+        audio.Stop();
     }
 }
