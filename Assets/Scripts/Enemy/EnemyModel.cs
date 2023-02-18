@@ -55,6 +55,7 @@ public class EnemyModel : MonoBehaviour
     [Header("サウンド")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClips;
+    private float audioVolumeOriginal;
     private enum EnemyAudioName
     {
         audioNormal,
@@ -64,6 +65,7 @@ public class EnemyModel : MonoBehaviour
     void Start()
     {
         AgentSetUp();
+        audioVolumeOriginal = audioSource.volume;
     }
 
     void Update()
@@ -337,6 +339,14 @@ public class EnemyModel : MonoBehaviour
     private void SetEnemyAudio(int clipNum)
     {
         audioSource.clip = audioClips[clipNum];
+        if(clipNum > 0)
+        {
+            audioSource.volume = 1.0f;
+        }
+        else
+        {
+            audioSource.volume = audioVolumeOriginal;
+        }
         audioSource.Play();
     }
 
