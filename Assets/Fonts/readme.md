@@ -25,6 +25,7 @@
 ### 使われた場所
 
 * Title Scene
+* Intro Scene
 
 # NotoSansJP-Regular
 
