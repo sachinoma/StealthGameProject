@@ -7,25 +7,25 @@ public class IntroSceneDirector : MonoBehaviour
 {
     [SerializeField] IntroMenu _introMenu;
     [SerializeField] Camera _cameraForVideo;
-    [SerializeField] VideoPlayer _videoWithLogo;
+    [SerializeField] VideoPlayer _videoIntro;
 
     // Start is called before the first frame update
     private void Start()
     {
-        _introMenu.ViewChanged += OnMainMenuViewChanged;
+        _introMenu.ViewChanged += OnIntroViewChanged;
         _introMenu.Initialize();
     }
 
     private void OnDestroy()
     {
-        _introMenu.ViewChanged -= OnMainMenuViewChanged;
+        _introMenu.ViewChanged -= OnIntroViewChanged;
     }
 
-    private void OnMainMenuViewChanged(IntroMenu.View view)
+    private void OnIntroViewChanged(IntroMenu.View view)
     {
         bool isPlayVideoWithLogo = view != IntroMenu.View.Credit;
 
-        SetVideoActive(_videoWithLogo, isPlayVideoWithLogo);
+        SetVideoActive(_videoIntro, isPlayVideoWithLogo);
     }
 
     private void SetVideoActive(VideoPlayer video, bool isActive)
@@ -36,5 +36,13 @@ public class IntroSceneDirector : MonoBehaviour
             video.targetCamera = _cameraForVideo;
         }
         video.SetDirectAudioMute(0, !isActive);
+        video.loopPointReached += LoopPointReached;
+    }
+
+    public void LoopPointReached(VideoPlayer video)
+    {
+        // 動画再生完了時の処理
+        video.Pause();
+        SceneControl.ChangeScene(SceneControl.MainSceneName);
     }
 }
