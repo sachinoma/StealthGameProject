@@ -276,6 +276,7 @@ MonoBehaviour:
   _homeButton: {fileID: 4197731398259175423}
   _gameClearText: {fileID: 3750007257822840599}
   _homeText: {fileID: 4197731397143136193}
+  bgmStart: 0.9
   clearSFX: {fileID: 1935972929471921270}
   bgm: {fileID: 1173545070521328098}
 --- !u!82 &1935972929471921270
@@ -389,7 +390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3750007258860787975
 RectTransform:
   m_ObjectHideFlags: 0
@@ -428,7 +429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3750007258933835386
 RectTransform:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ public class GameClear : MonoBehaviour
 
     private void Update()
     {
+        /*
         if(!isBgmPlay)
         {
             if(clearSFX.time / clearSFX.clip.length >= bgmStart)
@@ -39,10 +40,14 @@ public class GameClear : MonoBehaviour
                 isBgmPlay = true;
             }
         }
+        */
     }
 
     private void Initialize()
     {
+        SceneControl.ChangeScene(SceneControl.EndingSceneName);
+
+        /*
         _gameClearText.text = LocalizedText.GameClear;
         _homeText.text = LocalizedText.Home;
 
@@ -50,6 +55,7 @@ public class GameClear : MonoBehaviour
         _playerInput?.SwitchCurrentActionMap("UI");
 
         _homeButton.onClick.AddListener(OnHomeBtnClicked);
+        */
     }
 
     private void OnDestroy()
