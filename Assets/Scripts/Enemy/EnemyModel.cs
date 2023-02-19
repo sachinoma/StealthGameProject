@@ -55,6 +55,7 @@ public class EnemyModel : MonoBehaviour
     [Header("サウンド")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClips;
+    [SerializeField, Range(0.0f, 1.0f)] private float audioVolumeChase;
     private float audioVolumeOriginal;
     private enum EnemyAudioName
     {
@@ -341,7 +342,7 @@ public class EnemyModel : MonoBehaviour
         audioSource.clip = audioClips[clipNum];
         if(clipNum > 0)
         {
-            audioSource.volume = 1.0f;
+            audioSource.volume = audioVolumeChase;
         }
         else
         {
