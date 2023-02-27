@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class RangeVisualChanger: MonoBehaviour
 {
@@ -17,6 +18,16 @@ public class RangeVisualChanger: MonoBehaviour
     [SerializeField, Range(0.1f, 20f)]
     private float _releaseTime = 3f;
 
+    [Header("サウンド近いほうから")]
+    [SerializeField] private List<AudioClip> audioClips = new List<AudioClip>();
+    [SerializeField] private float minDistance = 3f;
+    [SerializeField] private float middleDistance = 5f;
+    [SerializeField] private float maxDistance = 7f;
+
+    [SerializeField] private KeyMoveScript _moveScript;
+
+    private AudioSource audioSource;
+
     private float _seconds;
 
     private void OnEnable()
@@ -26,6 +37,9 @@ public class RangeVisualChanger: MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+        //オーディオのキャッシュ
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -41,8 +55,35 @@ public class RangeVisualChanger: MonoBehaviour
         else
             color.a = RangeChangeAlpha(distance, color.a);
             
+        //距離に応じてオーディオの再生速度を変化
+        AudioPitchChenge(distance);
+
         //変更した色を実際に入れる
         this.GetComponent<Renderer>().material.color = color;
+    }
+
+    private void AudioPitchChenge(float dist)
+    {
+        int num = 0;
+        var currentClip = audioSource.clip;
+        if(dist < minDistance)
+        {
+            num = 0;
+        }
+        else if(dist < middleDistance)
+        {
+            num = 1;
+        }
+        else if (dist < maxDistance)
+        {
+            num = 2;
+        }
+        else
+        {
+            return;
+        }
+        audioSource.clip = audioClips[num];
+        if(currentClip != audioSource.clip) { audioSource.Play(); }
     }
 
     private float TimeChangeAlpha(float dist, float color)
@@ -51,14 +92,22 @@ public class RangeVisualChanger: MonoBehaviour
         {
             _seconds = 0f;
             color = 0f;
-        }
-        else if(_seconds < _releaseTime)
-        {
-            _seconds += Time.deltaTime;
-            color = _seconds / _releaseTime;
+            _moveScript.Moving(false);
         }
         else
-            color = 1f;
+        {
+            if(_seconds < _releaseTime)
+            {
+                _seconds += Time.deltaTime;
+                color = _seconds / _releaseTime;
+            }
+            else
+                color = 1f;
+
+            _moveScript.Moving(true);
+        }
+        
+        
 
         return color;
     }
@@ -66,12 +115,20 @@ public class RangeVisualChanger: MonoBehaviour
     private float RangeChangeAlpha(float dist, float color)
     {
         if(dist > _startDistance)
+        {
             color = 0f;
-        else if(dist > _endDistance)
-            color = (_startDistance - dist) / (_startDistance - _endDistance);
+            _moveScript.Moving(false);
+        }
         else
-            color = 1f;
-        
+        {
+            if(dist > _endDistance)
+                color = (_startDistance - dist) / (_startDistance - _endDistance);
+            else
+                color = 1f;
+
+            _moveScript.Moving(true);
+        } 
+
         return color;
     }
 

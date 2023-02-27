@@ -8,24 +8,31 @@ public class ReactableDetector : MonoBehaviour
 {
     private List<ReactableBase> _reactableList = new List<ReactableBase>();
 
-    private ReactableBase GetReactable()
+    public ReactableBase GetReactable()
     {
-        if (_reactableList.Count == 0)
+        // 削除したものを残らないように
+        while(_reactableList.Count > 0)
         {
-            return null;
+            if(_reactableList[0] == null)
+            {
+                _reactableList.RemoveAt(0);
+            }
+            else
+            {
+                return _reactableList[0];
+            }
         }
 
-        return _reactableList[0];
+        return null;
     }
 
-    public ReactableBase PopReactable()
+    public void PopReactable()
     {
         ReactableBase reactable = GetReactable();
         if(reactable != null)
         {
             _reactableList.Remove(reactable);
         }
-        return reactable;
     }
 
     #region Trigger
@@ -36,6 +43,7 @@ public class ReactableDetector : MonoBehaviour
         {
             if(!_reactableList.Contains(reactable))
             {
+                print($"Reactableを検出した：{reactable.gameObject.name}");
                 _reactableList.Add(reactable);
             }
         }
@@ -48,6 +56,7 @@ public class ReactableDetector : MonoBehaviour
         {
             if(_reactableList.Contains(reactable))
             {
+                print($"Reactableから離した：{reactable.gameObject.name}");
                 _reactableList.Remove(reactable);
             }
         }

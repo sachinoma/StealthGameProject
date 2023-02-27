@@ -12,40 +12,69 @@ using UnityEditor;
 public class EnemyModel : MonoBehaviour
 {
     [Header("ステート")]
-    EnemyState currentState;
-    bool stateEnter;
+     public EnemyState currentState;
+    [HideInInspector] public bool stateEnter;
 
     [Header("徘徊場所")]
     [SerializeField] List<Transform> sarchPosition;
+    private int movePosition = 0;
 
     [Header("敵のベース")]
     private NavMeshAgent _agent;
-    private Animator _animator;
+    public Animator animator;
     private float _speed;
+    private float _acceleration;
     int chaseTimer;
-    int stopTimer;
+    float attackTimer;
+    [HideInInspector] public int stopTimer;
     [SerializeField] private SphereCollider playerSounds;
     [SerializeField] Transform enemySarch;//今どこに向かっているか
+    Transform playerPosition;
+    Transform soundsPosition;
     //視界
     [SerializeField] float searchAngle = 100f;
     [SerializeField] private SphereCollider searchArea;
 
-    [Header("攻撃判定")]
-    BoxCollider leftCollider;
-    BoxCollider rightCollider;
+
+    [Header("敵の色変え")]
+    [ColorUsage(false, true)] public Color color1;
+    [ColorUsage(false, true)] public Color color2;
+    private Color lerpedColor = Color.white;
+    private bool isChase = false;
+    [SerializeField] private float colorLerp = 0;
+
+    [SerializeField, Header("メッシュレンダラー")]
+    private SkinnedMeshRenderer[] meshRenderer;
+
+    private MaterialPropertyBlock m_mpb;
+    public MaterialPropertyBlock mpb
+    {
+        get { return m_mpb ?? (m_mpb = new MaterialPropertyBlock()); }
+    }
+
+    [Header("サウンド")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] audioClips;
+    [SerializeField, Range(0.0f, 1.0f)] private float audioVolumeChase;
+    private float audioVolumeOriginal;
+    private enum EnemyAudioName
+    {
+        audioNormal,
+        audioChase,
+    }
 
     void Start()
     {
         AgentSetUp();
-
-        _animator = GameObject.Find("robot_enemy").GetComponent<Animator>();
-        leftCollider = GameObject.Find("forearm_L.002").GetComponent<BoxCollider>();
-        rightCollider = GameObject.Find("forearm_R.002").GetComponent<BoxCollider>();
+        audioVolumeOriginal = audioSource.volume;
     }
 
     void Update()
     {
-        _animator.SetFloat("Speed", _agent.speed);
+        animator.SetFloat("Speed", GetAgentVelocity());
+
+        SetColorLerp();
+        SetEnemyEmission();
 
         #region 敵のステート
         switch (currentState)
@@ -54,15 +83,24 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    stateEnter = false;
+                    //追跡エフェクトを元に戻す
+                    SetChase(false);
+                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
                     _agent.speed = 0f;
+                    _agent.acceleration = 0f;
+
+                    stateEnter = false;
                 }
                 #endregion
+
+                _agent.destination = transform.position;
+                enemySarch.position = transform.position;
 
                 if (stopTimer <= 0)
                 {
                     currentState = EnemyState.Move;
                     _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
                     stateEnter = true;
                 }
                 else
@@ -74,15 +112,25 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //追跡エフェクトを元に戻す
+                    SetChase(false);
+                    SetEnemyAudio((int)EnemyAudioName.audioNormal);
+
+                    _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
+
                     stateEnter = false;
-                    int rnd = random.Range(0, sarchPosition.Count);
-                    _agent.destination = sarchPosition[rnd].position;
-                    enemySarch.position = sarchPosition[rnd].position;
                 }
                 #endregion
+
+                _agent.destination = sarchPosition[movePosition].position;
+                enemySarch.position = sarchPosition[movePosition].position;
+
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
+                    movePosition++;
+                    if(movePosition >= sarchPosition.Count) {  movePosition = 0; }
                     stateEnter = true;
                     return;
                 }
@@ -91,9 +139,27 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
+                    //プレイヤーの音に反応した
+                    if(soundsPosition.root.gameObject.CompareTag(Tag.Player))
+                    {
+                        //追跡エフェクトをつける
+                        SetChase(true);
+                        SetEnemyAudio((int)EnemyAudioName.audioChase);
+                    }
+                    else
+                    {
+                        //追跡エフェクトを元に戻す
+                        SetChase(false);
+                        SetEnemyAudio((int)EnemyAudioName.audioNormal);
+                    }
+
                     stateEnter = false;
                 }
                 #endregion
+
+                _agent.destination = soundsPosition.position;
+                enemySarch.position = soundsPosition.position;
+
                 if (_agent.remainingDistance <= 0.1f && !_agent.pathPending)
                 {
                     currentState = EnemyState.Idle;
@@ -101,15 +167,49 @@ public class EnemyModel : MonoBehaviour
                     stateEnter = true;
                     return;
                 }
+                else
+                {
+                    if (chaseTimer <= 0)
+                    {
+                        currentState = EnemyState.Idle;
+                        stopTimer = 30;
+                        stateEnter = true;
+                    }
+                    else
+                    {
+                        chaseTimer--;
+                    }
+                }
                 break;
             case EnemyState.Chase:
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    _animator.SetBool("isChase", true);
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
+                    _agent.speed = 0f;
+                    _agent.acceleration = 0f;
+                    stopTimer = 60;
+
+                    animator.SetBool("isChase", true);
                     stateEnter = false;
                 }
                 #endregion
+
+                if(stopTimer > 0)
+                {
+                    stopTimer--;
+                }
+                else
+                {
+                    _agent.speed = _speed;
+                    _agent.acceleration = _acceleration;
+                }
+
+                _agent.destination = playerPosition.position;
+                enemySarch.position = playerPosition.position;
 
                 if (_agent.remainingDistance <= 1f && !_agent.pathPending)
                 {
@@ -119,7 +219,7 @@ public class EnemyModel : MonoBehaviour
                 else if (playerSounds.gameObject.activeSelf == false)
                 {
                     currentState = EnemyState.Idle;
-                    _animator.SetBool("isChase", false);
+                    animator.SetBool("isChase", false);
                     stopTimer = 30;
                     stateEnter = true;
                 }
@@ -128,7 +228,7 @@ public class EnemyModel : MonoBehaviour
                     if(chaseTimer <= 0)
                     {
                         currentState = EnemyState.Idle;
-                        _animator.SetBool("isChase", false);
+                        animator.SetBool("isChase", false);
                         stopTimer = 30;
                         stateEnter = true;
                     }
@@ -142,12 +242,45 @@ public class EnemyModel : MonoBehaviour
                 #region 開始1回の処理
                 if (stateEnter)
                 {
-                    _animator.SetTrigger("Attack Trigger");
-                    Attack();
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
+                    animator.SetBool("isChase", true);
+                    animator.SetTrigger("Attack Trigger");
+
+                    attackTimer = Time.time;
+
                     stateEnter = false;
                 }
                 #endregion
+
+                if (Time.time - attackTimer > 2.5f)
+                {
+                    animator.SetBool("isChase", false);
+                    currentState = EnemyState.Idle;
+                    stopTimer = 0;
+                    stateEnter = false;
+                }
+
                 break;
+            case EnemyState.Catch:
+                #region 開始1回の処理
+                if (stateEnter)
+                {
+                    //追跡エフェクトをつける
+                    SetChase(true);
+                    SetEnemyAudio((int)EnemyAudioName.audioChase);
+
+                    _agent.speed = 0f;
+                    _agent.acceleration = 0f;
+                }
+
+                _agent.destination = transform.position;
+                enemySarch.position = transform.position;
+                #endregion
+                break;
+
         }
         #endregion
     }
@@ -160,14 +293,68 @@ public class EnemyModel : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _agent.stoppingDistance = 1f;
         _speed = _agent.speed;
+        _acceleration = _agent.acceleration;
         stateEnter = true;
+        playerPosition = GameObject.FindGameObjectWithTag(Tag.Player).transform;
     }
 
+    float GetAgentVelocity()
+    {
+        return _agent.velocity.magnitude;
+    }
+
+    private void SetChase(bool flag)
+    {
+        isChase = flag;
+    }
+
+    private void SetColorLerp()
+    {
+        lerpedColor = Color.Lerp(color1, color2, colorLerp);
+        if(isChase)
+        {
+            if(colorLerp < 1)
+            {
+                colorLerp += 0.3f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            if(colorLerp > 0)
+            {
+                colorLerp -= 0.7f * Time.deltaTime;
+            }
+        }
+    }
+
+    private void SetEnemyEmission()
+    {
+        mpb.SetColor(Shader.PropertyToID("_EmissionColor"), lerpedColor);
+        for(int i = 0; i < meshRenderer.Length; i++)
+        {
+            meshRenderer[i].material.EnableKeyword("_EMISSION");
+            meshRenderer[i].SetPropertyBlock(m_mpb);
+        }
+    }
+
+    private void SetEnemyAudio(int clipNum)
+    {
+        audioSource.clip = audioClips[clipNum];
+        if(clipNum > 0)
+        {
+            audioSource.volume = audioVolumeChase;
+        }
+        else
+        {
+            audioSource.volume = audioVolumeOriginal;
+        }
+        audioSource.Play();
+    }
 
     #region 音やプレイヤーの捜索
     public void PlayerSarch(Collider collider)
     {
-        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle) { return; }
+        if (currentState == EnemyState.Attack || currentState == EnemyState.Idle || currentState == EnemyState.Catch) { return; }
         if (playerSounds.gameObject.activeSelf == false) { return; }
         // 検知オブジェクトがPlayer
         if (collider.CompareTag(Tag.Player))
@@ -187,23 +374,19 @@ public class EnemyModel : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * distance, Color.black);  // Rayをシーン上に描画
                 if (Physics.Raycast(ray.origin, ray.direction, out hit, distance, Layer.EnemySight))
                 {
-                    if (hit.collider.CompareTag(Tag.Player))
+                    if (hit.transform.root.CompareTag(Tag.Player))
                     {
                         stateEnter = currentState != EnemyState.Chase;
                         currentState = EnemyState.Chase;
-                        _agent.destination = collider.transform.position;
-                        enemySarch.position = collider.transform.position;
-                        chaseTimer = 60;
+                        chaseTimer = 180;
                     }
-                    else if(hit.collider.CompareTag(Tag.Sounds))
+                    else if (hit.collider.CompareTag(Tag.Sounds))
                     {
-                        if (hit.collider.gameObject.transform.parent.parent.CompareTag(Tag.Player))
+                        if (hit.transform.root.CompareTag(Tag.Player))
                         {
                             stateEnter = currentState != EnemyState.Chase;
                             currentState = EnemyState.Chase;
-                            _agent.destination = collider.transform.position;
-                            enemySarch.position = collider.transform.position;
-                            chaseTimer = 60;
+                            chaseTimer = 180;
                         }
                     }
                 }
@@ -213,50 +396,22 @@ public class EnemyModel : MonoBehaviour
 
     public void SoundSarch(Collider collider)
     {
-        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack) { return; }
+        if(currentState == EnemyState.Chase || currentState == EnemyState.Idle || currentState == EnemyState.Attack || currentState == EnemyState.Catch) { return; }
+        if (playerSounds.gameObject.activeSelf == false) { return; }
         if (collider.CompareTag(Tag.Sounds))
         {
             stateEnter = currentState != EnemyState.SoundSarch;
             currentState = EnemyState.SoundSarch;
-            _agent.destination = collider.transform.position;
-            enemySarch.position = collider.transform.position;
+            soundsPosition = collider.transform;
+            chaseTimer = 120;
         }
-    }
-    #endregion
-
-    #region 攻撃処理
-    void Attack()
-    {
-        Invoke("ColliderStart", 0.12f);
-        Invoke("ColliderReset", 1.12f);
-        Invoke("AttackEnd", 2.15f);
-    }
-
-    private void AttackEnd()
-    {
-        currentState = EnemyState.Idle;
-        _animator.SetBool("isChase", false);
-        stateEnter = true;
-        stopTimer = 30;
-    }
-
-    private void ColliderStart()
-    {
-        rightCollider.enabled = true;
-        leftCollider.enabled = true;
-    }
-
-    private void ColliderReset()
-    {
-        rightCollider.enabled = false;
-        leftCollider.enabled = false;
     }
     #endregion
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (currentState == EnemyState.Chase)
+        if (currentState == EnemyState.Chase || currentState == EnemyState.Attack || currentState == EnemyState.Catch)
         {
             Handles.color = new Color(1f, 0f, 0f, 0.3f);
         }
@@ -268,7 +423,7 @@ public class EnemyModel : MonoBehaviour
         {
             Handles.color = new Color(0f, 1f, 0f, 0.3f);
         }
-        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.5f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2f, searchArea.radius * 1.0f);
     }
 #endif
 }

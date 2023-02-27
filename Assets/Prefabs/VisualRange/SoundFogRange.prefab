@@ -1,5 +1,69 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2179868723374890701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3919449703786539996}
+  m_Layer: 0
+  m_Name: CircleEnemyMain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3919449703786539996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2179868723374890701}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3842264070712925624}
+  m_Father: {fileID: 4865418877102918713}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4250305336073830183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7669351090082549953}
+  m_Layer: 0
+  m_Name: CircleBlackMain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7669351090082549953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4250305336073830183}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4904360404566234085}
+  m_Father: {fileID: 4865418877102918713}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4865418877102918712
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,8 +94,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4904360404566234085}
-  - {fileID: 3842264070712925624}
+  - {fileID: 7669351090082549953}
+  - {fileID: 3919449703786539996}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,16 +113,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isMicMode: 1
   m_gain: 1500
+  _volumeRate: 0
   _minRate: 0.2
   _rollBackSpeed: 0.3
+  _fogRange:
+  - 0.05
+  - 0.01
+  - 0.25
   _maxRange: 1.5
   _minRange: 1
-  _circleBlackMax: 2
+  _circleMaxRate: 2
+  _maxRangeForEnemy: 2
+  _circleForEnemyMain: {fileID: 2179868723374890701}
   _circleForEnemy: {fileID: 4474790757192386306}
   _circleForEnemyScaleValue: 5
-  _circleBlack: {fileID: 4865418877102918712}
+  _circleBlack: {fileID: 4250305336073830183}
   _rangeParticle: []
-  _rangeParticlePos: {fileID: 0}
+  _frontRangeParticlePos: {fileID: 0}
+  _centerRangeParticlePos: {fileID: 0}
 --- !u!82 &4865418877102918714
 AudioSource:
   m_ObjectHideFlags: 0
@@ -160,11 +232,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 4865418877102918713}
+    m_TransformParent: {fileID: 3919449703786539996}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: adc7f2409d2e20d47b80b49eb000ed0e, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adc7f2409d2e20d47b80b49eb000ed0e, type: 3}
       propertyPath: m_LocalScale.x
@@ -289,7 +361,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 4865418877102918713}
+    m_TransformParent: {fileID: 7669351090082549953}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: adc7f2409d2e20d47b80b49eb000ed0e, type: 3}
       propertyPath: m_RootOrder

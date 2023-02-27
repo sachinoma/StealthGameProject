@@ -19,10 +19,10 @@ public class PrototypeSceneUIManager : MonoBehaviour
         if(_playerModel != null)
         {
             UpdateLifeDisplay();
-            UpdateKeyDisplay(false);
+            //UpdateKeyDisplay(false);
 
-            _playerModel.DamageTaken += UpdateLifeDisplay;
-            _playerModel.PickedUp += UpdateKeyDisplay;
+            //_playerModel.DamageTaken += UpdateLifeDisplay;
+            //_playerModel.PickedUp += UpdateKeyDisplay;
         }
 
         PrototypeMessageEvent.MessageReceived += MessageReceivedHandler;
@@ -40,8 +40,8 @@ public class PrototypeSceneUIManager : MonoBehaviour
     {
         if(_playerModel != null)
         {
-            _playerModel.DamageTaken -= UpdateLifeDisplay;
-            _playerModel.PickedUp -= UpdateKeyDisplay;
+            //_playerModel.DamageTaken -= UpdateLifeDisplay;
+            //_playerModel.PickedUp -= UpdateKeyDisplay;
         }
 
         PrototypeMessageEvent.MessageReceived -= MessageReceivedHandler;
@@ -52,18 +52,18 @@ public class PrototypeSceneUIManager : MonoBehaviour
         _lifeText.text = $"生命 : {_playerModel.CurrentLife}";
     }
 
-    private void UpdateKeyDisplay(PickUpItem.ItemType itemType)
-    {
-        if(itemType == PickUpItem.ItemType.Key)
-        {
-            UpdateKeyDisplay(true);
-        }
-    }
+    //private void UpdateKeyDisplay(PickUpItem.ItemType itemType)
+    //{
+    //    if(itemType == PickUpItem.ItemType.Key)
+    //    {
+    //        UpdateKeyDisplay(true);
+    //    }
+    //}
 
-    private void UpdateKeyDisplay(bool hasKey)
-    {
-        _keyText.text = "鍵 : " + (hasKey ? "O" : "X");
-    }
+    //private void UpdateKeyDisplay(bool hasKey)
+    //{
+    //    _keyText.text = "鍵 : " + (hasKey ? "O" : "X");
+    //}
 
     private void MessageReceivedHandler(string message)
     {

@@ -9,6 +9,9 @@ TagManager:
   - Wall
   - SoundChecker
   - Trap
+  - Card
+  - OperationTerminal
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -17,12 +20,12 @@ TagManager:
   - Water
   - UI
   - MiniMap
-  - 
+  - Hint
   - Reactable
   - ReactableDetector
-  - 
-  - 
-  - 
+  - IgnoreDecal
+  - Enemy
+  - Player
   - 
   - 
   - 

@@ -17,7 +17,7 @@ public class PrototypeSceneDirector : MonoBehaviour
         _playerModel = FindObjectOfType<PlayerModel>();
         if(_playerModel != null)
         {
-            _playerModel.Died += PlayerDiedHandler;
+            //_playerModel.Died += PlayerDiedHandler;
         }
 
         if(InvisibleCursor)
@@ -31,13 +31,14 @@ public class PrototypeSceneDirector : MonoBehaviour
     {
         if(_playerModel != null)
         {
-            _playerModel.Died -= PlayerDiedHandler;
+            //_playerModel.Died -= PlayerDiedHandler;
         }
     }
 
     private void Update()
     {
-        if(Keyboard.current.mKey.wasPressedThisFrame)
+
+        if(Keyboard.current != null && Keyboard.current.mKey.wasPressedThisFrame)
         {
             MicRange micRange = FindObjectOfType<MicRange>();
             if(micRange != null)
@@ -46,14 +47,22 @@ public class PrototypeSceneDirector : MonoBehaviour
                 FindObjectOfType<PrototypeSceneUIManager>()?.UpdateInputModeText(micRange.IsMicMode);
             }
         }
+        else if(Gamepad.current != null && Gamepad.current.bButton.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else if(Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
 
     private void PlayerDiedHandler()
     {
         Debug.LogWarning("Game Over!!");
 
-        PrototypeMessageEvent.Invoke($"やられました！");
-        StartCoroutine(RestartGame(4.0f));
+        //PrototypeMessageEvent.Invoke($"やられました！");
+        StartCoroutine(RestartGame(7.0f));
     }
 
     private IEnumerator RestartGame(float waitTime)

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class PickUpItem : ReactableBase
 {
-    public enum ItemType
+    [SerializeField] private Transform _respawnPointRef;
+    [SerializeField] private CardType _cardType;
+
+    public CardType GetCardType()
     {
-        Key,
+        return _cardType;
     }
 
-    [SerializeField] private ItemType _itemType;
-
-    public ItemType GetItemType()
+    public void PickUp()
     {
-        return _itemType;
+        GameProgress.SaveObtainedItem(_cardType, _respawnPointRef);
+        Destroy(gameObject);
     }
 
     #region ReactableBase
