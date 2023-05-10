@@ -9,6 +9,7 @@ public class MicRange : MonoBehaviour
 {
     [SerializeField] private bool _isMicMode = true;
     public bool IsMicMode => _isMicMode;
+    private bool _isMicStarted = false;
 
     [SerializeField] private float rollBackTime = 1.0f;
     private float rollBackTimer;
@@ -66,7 +67,10 @@ public class MicRange : MonoBehaviour
 
     void Start()
     {
-        MicStart();
+        if(_isMicMode){
+            MicStart();
+        }
+
         RenderSettings.fogDensity = _fogMax / _minRange;
         _circleForEnemyScale = new Vector3(_circleForEnemyScaleValue, _circleForEnemyScaleValue, _circleForEnemyScaleValue);
     }
@@ -112,11 +116,19 @@ public class MicRange : MonoBehaviour
     public void SwitchMicMode()
     {
         _isMicMode = !_isMicMode;
+        if(_isMicMode){
+            MicStart();
+        }
     }
 
     //マイク設定
     public void MicStart()
     {
+        if(_isMicStarted){
+            return;
+        }
+        _isMicStarted = true;
+
         m_source = GetComponent<AudioSource>();
         _currentValues = new float[_sampleNum];
         if((m_source != null) && (Microphone.devices.Length > 0)) // オーディオソースとマイクがある
