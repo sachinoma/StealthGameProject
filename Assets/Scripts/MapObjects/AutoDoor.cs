@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class AutoDoor : Door
 {
+    private int count = 0;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(Tag.Player)|| other.CompareTag(Tag.Enemy))
         {
-            Open();
+            if(isEmpty())
+            {
+                Open();
+            }              
+            ++count;            
         }
     }
 
@@ -16,7 +22,16 @@ public class AutoDoor : Door
     {
         if(other.CompareTag(Tag.Player)|| other.CompareTag(Tag.Enemy))
         {
-            Close();
+            --count;
+            if(isEmpty())
+            {
+                Close();
+            }
         }
+    }
+
+    bool isEmpty()
+    {
+        return count == 0;
     }
 }
