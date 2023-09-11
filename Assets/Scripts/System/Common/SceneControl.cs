@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class SceneControl
 {
     public const string TitleSceneName = "Title";
+    public const string DemoSceneName = "Demo";
     public const string IntroSceneName = "Intro";
     public const string MainSceneName = "Main";
     public const string EndingSceneName = "Ending";
