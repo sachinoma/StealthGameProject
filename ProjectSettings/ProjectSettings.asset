@@ -649,7 +649,7 @@ PlayerSettings:
   enableCrashReportAPI: 0
   cameraUsageDescription: 
   locationUsageDescription: 
-  microphoneUsageDescription: 
+  microphoneUsageDescription: Use Microphone to simulate sonar
   bluetoothUsageDescription: 
   switchNMETAOverride: 
   switchNetLibKey: 
