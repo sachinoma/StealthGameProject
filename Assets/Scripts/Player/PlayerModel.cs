@@ -362,6 +362,7 @@ public class PlayerModel : MonoBehaviour
         _playerCollider.SetActive(false);
         _animator.SetTrigger(DieAnimTrigger);
         SetState(PlayerState.Died);
+        SetInTrap(false, 1);
         MainSceneEventManager.PlayerDied.Invoke(this, null);
     }
 
