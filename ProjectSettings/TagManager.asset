@@ -12,6 +12,7 @@ TagManager:
   - Card
   - OperationTerminal
   - Ground
+  - BillboardUIBase
   layers:
   - Default
   - TransparentFX

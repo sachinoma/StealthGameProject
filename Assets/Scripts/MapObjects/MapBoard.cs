@@ -11,11 +11,6 @@ public class MapBoard : ReactableBase
 
     public GameObject UI;
 
-    void Start()
-    {
-        
-    }
-
     public void MapBoardFunc()
     {
         isOpen = !isOpen;
@@ -23,11 +18,13 @@ public class MapBoard : ReactableBase
         {
             UI.SetActive(true);
             UI.GetComponent<MapBoardUI>().SetNowPos(posNum);
+            _billboardUIController?.Hide();
             Time.timeScale = 0f;
         }
         else
         {
             UI.SetActive(false);
+            _billboardUIController?.Show();
             Time.timeScale = 1f;
         }
 

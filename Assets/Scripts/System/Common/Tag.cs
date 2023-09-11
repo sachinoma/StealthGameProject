@@ -13,4 +13,5 @@
     public const string Trap = "Trap";
     public const string Card = "Card";
     public const string OperationTerminal = "OperationTerminal";
+    public const string BillboardUIBase = "BillboardUIBase";
 }

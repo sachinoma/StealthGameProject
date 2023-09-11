@@ -45,6 +45,7 @@ public class ReactableDetector : MonoBehaviour
             {
                 print($"Reactableを検出した：{reactable.gameObject.name}");
                 _reactableList.Add(reactable);
+                reactable.SetInReactableRange(true);
             }
         }
     }
@@ -58,6 +59,7 @@ public class ReactableDetector : MonoBehaviour
             {
                 print($"Reactableから離した：{reactable.gameObject.name}");
                 _reactableList.Remove(reactable);
+                reactable.SetInReactableRange(false);
             }
         }
     }

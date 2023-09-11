@@ -10,8 +10,10 @@ public class OperationTerminal : ReactableBase
 
     private bool _isActivated = false;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // チュートリアルルームのターミナル
         if(_cardType == GameProgress.GetTutorialCardType())
         {
