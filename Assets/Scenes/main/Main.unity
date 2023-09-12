@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8058,9 +8058,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1402472878}
     - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: _footstepAudioClip.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
       propertyPath: _audioRangeVolume.Array.data[0]
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: _footstepAudioClip.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5e1c2ac15938df544990502e334a9e1d, type: 3}
+    - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: _footstepAudioClip.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4506f0a99f40a394992689ee8e3161ca, type: 3}
+    - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: _footstepAudioClip.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: c057c24eb2357c24faab9a84548002ac, type: 3}
+    - target: {fileID: 3266016420745283099, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
+      propertyPath: _footstepAudioClip.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5c05e0c0961b7894ca9fc2cd262ad789, type: 3}
     - target: {fileID: 3278950566822698399, guid: bb625ecba8ed542e1aad66fedee14011, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.92400014
