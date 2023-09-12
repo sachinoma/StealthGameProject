@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class SceneControl
 {
     public const string TitleSceneName = "Title";
+    public const string DemoSceneName = "Demo";
     public const string IntroSceneName = "Intro";
     public const string MainSceneName = "Main";
     public const string EndingSceneName = "Ending";
@@ -19,10 +21,17 @@ public class SceneControl
     #endregion
 
     private static bool HasRegisteredSceneLoadedEvent = false;
+    public static bool IsChangingScene { get; private set; } = false;
 
-    public static void ChangeScene(string targetSceneName)
+    /// <returns>シーンの遷移ができるか</returns>
+    public static bool ChangeScene(string targetSceneName, bool isDisableUIControl = true)
     {
-        if(!HasRegisteredSceneLoadedEvent)
+        if(IsChangingScene)
+        {
+            return false;
+        }
+
+        if (!HasRegisteredSceneLoadedEvent)
         {
             HasRegisteredSceneLoadedEvent = true;
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -33,7 +42,18 @@ public class SceneControl
             SceneManager.LoadScene(targetSceneName);
         };
 
-        SceneTransition.Instance.FadeOut(onFadeOutFinished);
+        IsChangingScene = SceneTransition.Instance.Fade(false, onFadeOutFinished);
+
+        if(IsChangingScene && isDisableUIControl)
+        {
+            EventSystem eventSystem = EventSystem.current;
+            if(eventSystem != null)
+            {
+                eventSystem.enabled = false;
+            }
+        }
+
+        return IsChangingScene;
     }
 
     public static void LoadUI(string uiSceneName)
@@ -48,6 +68,15 @@ public class SceneControl
             return;
         }
 
-        SceneTransition.Instance.FadeIn();
+        if(!IsChangingScene){
+            return;
+        }
+
+        Action onFadeInFinished = () =>
+        {
+            IsChangingScene = false;
+        };
+
+        SceneTransition.Instance.Fade(true, onFadeInFinished);
     }
 }

@@ -8,6 +8,12 @@
 
     #endregion
 
+    #region デモメニュー
+
+    public const string PressAToContinue = "press A to continue";
+
+    #endregion
+
     #region イントロメニュー
 
     public const string Skip = "skip";

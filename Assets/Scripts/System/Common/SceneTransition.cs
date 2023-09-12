@@ -19,6 +19,8 @@ public class SceneTransition : MonoBehaviour
 
     private const string ResourcesFilePath = "SceneTransitionCanvas";
 
+    private bool _isFading = false;
+
     private static SceneTransition _Instance = null;
     public static SceneTransition Instance
     {
@@ -34,18 +36,26 @@ public class SceneTransition : MonoBehaviour
         }
     }
 
-    public void FadeIn(Action onFinished = null)
+    /// <returns>フェードができるか</returns>
+    public bool Fade(bool isFadeIn, Action onFinished = null)
     {
-        StartCoroutine(FadeCoroutine(true, onFinished));
-    }
+        if(_isFading)
+        {
+            return false;
+        }
 
-    public void FadeOut(Action onFinished = null)
-    {
-        StartCoroutine(FadeCoroutine(false, onFinished));
+        StartCoroutine(FadeCoroutine(isFadeIn, onFinished));
+        return true;
     }
 
     private IEnumerator FadeCoroutine(bool isFadeIn, Action onFinished = null)
     {
+        if(_isFading)
+        {
+            yield break;
+        }
+        _isFading = true;
+
         // 音声
         AudioMixerSnapshot targetSnapshot = isFadeIn ? _normalSnapshot : _muteSnapshot;
         targetSnapshot.TransitionTo(_transitionTime);
@@ -92,5 +102,7 @@ public class SceneTransition : MonoBehaviour
         }
 
         onFinished?.Invoke();
+
+        _isFading = false;
     }
 }

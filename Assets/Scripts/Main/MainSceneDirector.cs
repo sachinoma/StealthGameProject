@@ -136,7 +136,7 @@ public class MainSceneDirector : MonoBehaviour
     {
         Debug.Log("ゲームオーバー");
 
-        StartCoroutine(WaitAndGameOver(5.0f));
+        StartCoroutine(WaitAndGameOver(3.0f));
 
 #if BACKDOOR_ENABLED || UNITY_EDITOR
         gameObject.GetComponent<MainSceneBackdoor>()?.SetBackdoorActive(false);

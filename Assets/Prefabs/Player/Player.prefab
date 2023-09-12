@@ -221,6 +221,11 @@ MonoBehaviour:
   - 0.28
   _maxShoutChargeTime: 1
   _footstepAudioSource: {fileID: 2837972595989648432}
+  _footstepAudioClip:
+  - {fileID: 8300000, guid: 5e1c2ac15938df544990502e334a9e1d, type: 3}
+  - {fileID: 8300000, guid: 4506f0a99f40a394992689ee8e3161ca, type: 3}
+  - {fileID: 8300000, guid: c057c24eb2357c24faab9a84548002ac, type: 3}
+  - {fileID: 8300000, guid: 5c05e0c0961b7894ca9fc2cd262ad789, type: 3}
   _playerCollider: {fileID: 3266016420168292139}
   _isTrap: 0
   _cardMeshForAnim: {fileID: 377208188865099540}

@@ -35,19 +35,17 @@ public class Door : MonoBehaviour
     //扉の障害物判定を解除する
     void RemoveObstacle()
     {
-        Destroy(gameObject.GetComponent<NavMeshObstacle>());
+        if(obstacle == null) return;
+        Destroy(obstacle);
+        obstacle = null;
     }
 
     //扉を障害物判定する
     void AddObstacle()
     {
+        if (obstacle != null) return;
         obstacle = gameObject.AddComponent<NavMeshObstacle>();
-        SetNavMeshObstacle();
-    }
-
-    //障害物のサイズと避ける設定
-    void SetNavMeshObstacle()
-    {
+        //障害物のサイズと避ける設定
         obstacle.carving = true;
         obstacle.center = new(0, 1.5f, 0);
         obstacle.size = new(0.6f, 3f, 5.5f);

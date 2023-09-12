@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
@@ -143,7 +142,7 @@ public class MainMenu : MonoBehaviour
         string[] titleNameArray = LocalizedText.CreditDetails.Split('\n');
         if(titleNameArray == null || titleNameArray.Length == 0)
         {
-            Debug.LogWarning(@"titleNameArrayは何もない。");
+            Debug.LogWarning("titleNameArrayは何もない。");
             return;
         }
 
@@ -152,7 +151,7 @@ public class MainMenu : MonoBehaviour
             string[] split = titleName.Split('|');
             if(split == null || split.Length != 2)
             {
-                Debug.LogWarning(@"titleNameの仕組みは合っていない。");
+                Debug.LogWarning("titleNameの仕組みは合っていない。");
                 return;
             }
 
